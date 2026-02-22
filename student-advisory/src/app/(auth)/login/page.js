@@ -7,9 +7,19 @@ import { useState } from "react";
 
 export default function Login() {
     const router = useRouter();
+    const [open, setOpen] = useState(false);
+    const [selectRole, setSelectRole] = useState("Options");
+
+    const roles = ["Admin", "Student", "Lecture"];
 
     const handleForgot = () => {
         router.push("/forgot-password")
+    }
+    const handleSignUp = () => {
+        router.push("/register");
+    }
+    const handleSelected = () => {
+        setOpen(true);
     }
 
     return(
@@ -29,7 +39,7 @@ export default function Login() {
                 </div>
 
                 <div className="flex flex-row justify-center items-center w-[50%]">
-                    <div className="bg-white w-[450px] h-[600px] rounded-[15px] flex flex-col">
+                    <div className="bg-white w-[450px] h-[540px] rounded-[15px] flex flex-col">
                         <h1 className="flex flex-row justify-center mt-8 text-[30px] font-bold text-shadow-lg">Login</h1>
 
                         <form action="" className="flex flex-col items-center mt-10">
@@ -42,14 +52,38 @@ export default function Login() {
                                 <input type="password" placeholder="Password" name="password" className="w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" />
                             </div>
                             <div className="mt-3 w-[350px] flex flex-row justify-end cursor-pointer">
-                                <h3 className="text-blue-600 text-shadow-md" onClick={handleForgot}>Forgot password?</h3>
+                                <h3 className="text-blue-600 text-shadow-md text-[15px]" onClick={handleForgot}>Forgot password?</h3>
                             </div>
-                            <div className="mt-5 flex flex-row justify-start w-[350px]">
-                                <button type="button" className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 shadow-md">Options
-                                    <ChevronDown className="h-5 w-5"/>    
-                                </button> 
+
+                            <div className="relative mt-5 flex flex-row justify-start w-[350px]">
+                                <button type="button" className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 shadow-md" onClick={handleSelected}>{selectRole}
+                                    <ChevronDown className="h-5 w-5"/>   
+                                </button>
+                                {open && (
+                                    <div className="absolute w-32 border mt-1 rounded-md bg-white mt-10">
+                                    {roles.map((item) => (
+                                        <div
+                                        key={item}
+                                        onClick={() => {
+                                            setSelectRole(item)
+                                            setOpen(false)
+                                        }}
+                                        className="p-2 hover:bg-gray-100 cursor-pointer rounded-md"
+                                        >
+                                        {item}
+                                        </div>
+                                    ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex flex-row justify-end w-[350px]">
+                               <button type="submit" className="bg-blue-600 w-24 h-[35px] rounded-[20px] mt-8 text-white cursor-pointer shadow-md ">Login</button> 
                             </div>
                             
+                            <div className="mt-15">
+                                <h3 className="font-bold">Don't have an account? <span className="text-blue-600 cursor-pointer" onClick={handleSignUp}>Sign Up</span></h3>
+                            </div>
                         </form>
                     </div>
                 </div>
