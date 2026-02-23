@@ -33,29 +33,29 @@ export default function Login() {
             />
 
             <div className="relative scroll-smooth flex flex-col w-screen sm:flex-row h-screen justify-center sm:items-center">
-                <div className="flex flex-col justify-center items-center w-full text-center sm:text-center ">
-                    <h1 className="text-2xl sm:text-5xl/14  mt-3 font-bold tracking-[2px] text-white w-[350px] sm:w-[500px]">WELCOME TO THE STUDENT ADVISORY SYSTEM</h1>
-                    <h3 className="text-lg sm:text-[25px] text-white w-[350px] sm:w-[500px] mt-2 mb-5">SCHOOL OF COMPUTING</h3>
+                <div className="flex flex-col justify-center items-center w-full sm:w-1/2 text-center sm:text-center lg:text-start">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl/14  mt-3 font-bold tracking-[2px] text-white w-[350px] sm:w-[300px] md:w-[400px] lg:w-[500px]">WELCOME TO THE STUDENT ADVISORY SYSTEM</h1>
+                    <h3 className="text-lg sm:text-[23px] text-white w-[350px] sm:w-[500px] mt-2 mb-5">SCHOOL OF COMPUTING</h3>
                 </div>
 
-                <div className="flex flex-col justify-center items-center w-full  text-center ">
-                    <div className="bg-white w-[340px] sm:w-[450px] h-[430px] sm:h-[540px] rounded-[15px] flex flex-col">
-                        <h1 className="flex flex-row justify-center mt-3 sm:mt-10 text-[23px] sm:text-[30px] font-bold text-shadow-lg">Login</h1>
+                <div className="flex flex-col justify-center items-center w-full sm:w-1/2 text-center md:justify-center">
+                    <div className="bg-white w-[300px] sm:w-[320px] md:w-[360px] lg:w-[480px] h-[430px] sm:h-[480px] md:h-[500px] lg:h-[540px] rounded-[15px] flex flex-col">
+                        <h1 className="flex flex-row justify-center mt-3 sm:mt-10 text-[23px] sm:text-[25px] md:text-[30px] font-bold text-shadow-lg">Login</h1>
 
                         <form action="" className="flex flex-col items-center mt-5 sm:mt-10">
                             <div className="relative shadow-md">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input type="text" placeholder="Username" name="username" className="w-[300px] sm:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 "/> 
+                                <input type="text" placeholder="Username" name="username" className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 "/> 
                             </div>
                             <div className="relative mt-5 shadow-md">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input type="password" placeholder="Password" name="password" className="w-[300px] sm:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" />
+                                <input type="password" placeholder="Password" name="password" className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" />
                             </div>
-                            <div className="mt-3 w-[300px] sm:w-[350px] flex flex-row justify-end cursor-pointer">
+                            <div className="mt-3 w-[240px] sm:w-[270px] md:w-[300px] flex flex-row justify-end cursor-pointer">
                                 <h3 className="text-blue-600 text-shadow-md text-[15px]" onClick={handleForgot}>Forgot password?</h3>
                             </div>
 
-                            <div className="relative mt-5 flex flex-row justify-start w-[300px] sm:w-[350px]">
+                            <div className="relative mt-5 flex flex-row justify-start w-[240px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
                                 <button type="button" className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 shadow-md" onClick={handleSelected}>{selectRole}
                                     <ChevronDown className="h-5 w-5"/>   
                                 </button>
@@ -77,11 +77,11 @@ export default function Login() {
                                 )}
                             </div>
 
-                            <div className="flex flex-row justify-end w-[300px] sm:w-[350px]">
+                            <div className="flex flex-row justify-end w-[240px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
                                <button type="submit" className="bg-blue-600 w-24 h-[35px] rounded-[20px] mt-8 text-white cursor-pointer shadow-md ">Login</button> 
                             </div>
                             
-                            <div className="mt-10 sm:mt-15">
+                            <div className="mt-10 sm:mt-11 md:mt-13">
                                 <h3 className="font-bold">Don't have an account? <span className="text-blue-600 cursor-pointer" onClick={handleSignUp}>Sign Up</span></h3>
                             </div>
                         </form>
