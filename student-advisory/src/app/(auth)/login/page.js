@@ -9,6 +9,8 @@ export default function Login() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [selectRole, setSelectRole] = useState("Options");
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
 
     const roles = ["Admin", "Student", "Lecture"];
 
@@ -20,6 +22,26 @@ export default function Login() {
     }
     const handleSelected = () => {
         setOpen(true);
+    }
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        
+        const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({name, password}),
+        });
+        const data = await res.json();
+
+        if(data.success){
+            alert("Login Success")
+            
+        } else {
+            alert("Login failed")
+        }
     }
 
     return(
@@ -42,14 +64,14 @@ export default function Login() {
                     <div className="bg-white w-[300px] sm:w-[320px] md:w-[360px] lg:w-[480px] h-[430px] sm:h-[480px] md:h-[500px] lg:h-[540px] rounded-[15px] flex flex-col">
                         <h1 className="flex flex-row justify-center mt-3 sm:mt-10 text-[23px] sm:text-[25px] md:text-[30px] font-bold text-shadow-lg">Login</h1>
 
-                        <form action="" className="flex flex-col items-center mt-5 sm:mt-10">
+                        <form onSubmit={handleLogin} className="flex flex-col items-center mt-5 sm:mt-10">
                             <div className="relative shadow-md">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input type="text" placeholder="Username" name="username" className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 "/> 
+                                <input type="text" placeholder="Username" name="username" value={name} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 " onChange={(e) => {setName(e.target.value)}}/> 
                             </div>
                             <div className="relative mt-5 shadow-md">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input type="password" placeholder="Password" name="password" className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" />
+                                <input type="password" placeholder="Password" name="password" value={password} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" onChange={(e) => {setPassword(e.target.value)}} />
                             </div>
                             <div className="mt-3 w-[240px] sm:w-[270px] md:w-[300px] flex flex-row justify-end cursor-pointer">
                                 <h3 className="text-blue-600 text-shadow-md text-[15px]" onClick={handleForgot}>Forgot password?</h3>
