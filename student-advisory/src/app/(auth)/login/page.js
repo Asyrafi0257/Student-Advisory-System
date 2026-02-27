@@ -4,6 +4,7 @@ import Image from "next/image";
 import {User, Lock, ChevronDown} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Alert from "@/components/alert";
 
 export default function Login() {
     const router = useRouter();
@@ -11,8 +12,10 @@ export default function Login() {
     const [selectRole, setSelectRole] = useState("Options");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRoles] = useState(["Admin", "Student", "Lecture"]);
+    const [openModel, setOpenModel] = useState(false);
 
-    const roles = ["Admin", "Student", "Lecture"];
+    
 
     const handleForgot = () => {
         router.push("/forgot-password")
@@ -27,21 +30,29 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         
-        const res = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({name, password}),
-        });
-        const data = await res.json(); //wait response from server
+        if(name === "admin" && password === "1234" && selectRole === role[0] ){
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({name, password}),
+            });
+            const data = await res.json(); //wait response from server
 
-        if(data.success){
-            alert("Login Success")
-            router.replace("/admin")
-        } else {
-            alert("Login failed")
-            console.log(data);
+            if(data.success){
+                setOpenModel(true);
+                setTimeout(() => {
+                   router.replace("/admin") 
+                    
+                }, 1000);
+                
+            } else {
+                alert("Login failed")
+                console.log(data);
+            }
+        } else if(name === "" || password === "" || selectRole !== role[0]){
+            alert("userName, password and roles cannot empty")
         }
     }
 
@@ -74,7 +85,7 @@ export default function Login() {
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input type="password" placeholder="Password" name="password" value={password} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" onChange={(e) => {setPassword(e.target.value)}} />
                             </div>
-                            <div className="mt-3 w-[240px] sm:w-[270px] md:w-[300px] flex flex-row justify-end cursor-pointer">
+                            <div className="mt-3 w-[240px] sm:w-[270px] md:w-[350px] flex flex-row justify-end cursor-pointer">
                                 <h3 className="text-blue-600 text-shadow-md text-[15px]" onClick={handleForgot}>Forgot password?</h3>
                             </div>
 
@@ -84,7 +95,7 @@ export default function Login() {
                                 </button>
                                 {open && (
                                     <div className="absolute w-32 border mt-1 rounded-md bg-white mt-10">
-                                    {roles.map((item) => (
+                                    {role.map((item) => (
                                         <div
                                         key={item}
                                         onClick={() => {
@@ -112,6 +123,10 @@ export default function Login() {
                 </div>
 
             </div>
+            {/* for popup message */}
+            {openModel && (
+                <Alert/>
+            )}
         </div>
     )
 }
