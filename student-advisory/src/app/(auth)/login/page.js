@@ -34,13 +34,14 @@ export default function Login() {
             },
             body: JSON.stringify({name, password}),
         });
-        const data = await res.json();
+        const data = await res.json(); //wait response from server
 
         if(data.success){
             alert("Login Success")
-            
+            router.replace("/admin")
         } else {
             alert("Login failed")
+            console.log(data);
         }
     }
 
