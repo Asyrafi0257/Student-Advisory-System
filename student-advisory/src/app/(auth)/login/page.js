@@ -30,7 +30,11 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         
-        if(name === "admin" && password === "1234" && selectRole === role[0] ){
+        if(name === "" || password === "" || selectRole !== role[0]){
+            alert("userName, password and roles cannot empty")
+        }
+
+        try{
             const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
@@ -44,15 +48,14 @@ export default function Login() {
                 setOpenModel(true);
                 setTimeout(() => {
                    router.replace("/admin") 
-                    
                 }, 1000);
                 
             } else {
                 alert("Login failed")
                 console.log(data);
             }
-        } else if(name === "" || password === "" || selectRole !== role[0]){
-            alert("userName, password and roles cannot empty")
+        } catch(error){
+            alert("server error")
         }
     }
 
