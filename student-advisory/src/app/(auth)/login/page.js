@@ -14,6 +14,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [role, setRoles] = useState(["Admin", "Student", "Lecture"]);
     const [openModel, setOpenModel] = useState(false);
+    const [alertData, setAlertData] = useState(null);
 
     
 
@@ -31,7 +32,11 @@ export default function Login() {
         e.preventDefault();
         
         if(name === "" || password === "" || selectRole !== role[0]){
-            alert("userName, password and roles cannot empty")
+            setAlertData({
+                type : "error",
+                message : "Username, password and role cannot empty"
+            })
+            return;
         }
 
         try{
@@ -46,13 +51,20 @@ export default function Login() {
 
             if(data.success){
                 setOpenModel(true);
+                setAlertData({
+                    type : "success",
+                    message : "Login Successful"
+                })
                 setTimeout(() => {
                    router.replace("/admin") 
                 }, 1000);
                 
             } else {
-                alert("Login failed")
-                console.log(data);
+                openModel(true);
+                setAlertData({
+                    type : "error",
+                    message : "Login Failed"
+                })
             }
         } catch(error){
             alert("server error")
@@ -127,8 +139,12 @@ export default function Login() {
 
             </div>
             {/* for popup message */}
-            {openModel && (
-                <Alert/>
+            {alertData && (
+                <Alert 
+                    type = {alertData.type}
+                    message = {alertData.message}
+                    onClose = {() => {setAlertData(null)}}
+                />
             )}
         </div>
     )
