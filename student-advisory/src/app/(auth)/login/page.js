@@ -13,7 +13,6 @@ export default function Login() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRoles] = useState(["Admin", "Student", "Lecture"]);
-    const [openModel, setOpenModel] = useState(false);
     const [alertData, setAlertData] = useState(null);
 
     
@@ -28,13 +27,26 @@ export default function Login() {
         setOpen(true);
     }
 
+    //cara handle setTimeout
+    const showAlert = (data, duration = 2000) => {
+        setAlertData(data);
+
+        if(duration){
+            setTimeout(() => {
+                setAlertData(null);
+            }, duration)
+        }
+    }
+
     const handleLogin = async (e) => {
         e.preventDefault();
         
+        // check error handling
         if(name === "" || password === "" || selectRole !== role[0]){
-            setAlertData({
+            showAlert({
                 type : "error",
-                message : "Username, password and role cannot empty"
+                message : "Required Fields",
+                describe : "All fields are required."
             })
             return;
         }
@@ -43,31 +55,36 @@ export default function Login() {
             const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({name, password}),
             });
             const data = await res.json(); //wait response from server
 
             if(data.success){
-                setOpenModel(true);
                 setAlertData({
                     type : "success",
-                    message : "Login Successful"
+                    message : "Success!",
+                    describe: "You have successfully signed into Admin account."
                 })
                 setTimeout(() => {
                    router.replace("/admin") 
-                }, 1000);
+                }, 2000);
                 
             } else {
-                openModel(true);
-                setAlertData({
+                showAlert({
                     type : "error",
-                    message : "Login Failed"
+                    message : "Failed!",
+                    describe : "Username and password do not match"
                 })
             }
         } catch(error){
-            alert("server error")
+            showAlert({
+                type : "error",
+                message : "Server Error",
+                describe : "Something went wrong on our end. Please try again later."
+            })
+
         }
     }
 
@@ -143,7 +160,7 @@ export default function Login() {
                 <Alert 
                     type = {alertData.type}
                     message = {alertData.message}
-                    onClose = {() => {setAlertData(null)}}
+                    describe = {alertData.describe}
                 />
             )}
         </div>
