@@ -42,7 +42,7 @@ export default function Login() {
         e.preventDefault();
         
         // check error handling
-        if(name === "" || password === "" || selectRole !== role[0]){
+        if(name === "" && password === "" && selectRole !== role[0]){
             showAlert({
                 type : "error",
                 message : "Required Fields",
@@ -61,7 +61,7 @@ export default function Login() {
             });
             const data = await res.json(); //wait response from server
 
-            if(data.success){
+            if(data.success && selectRole === role[0]){
                 setAlertData({
                     type : "success",
                     message : "Success!",
@@ -71,11 +71,11 @@ export default function Login() {
                    router.replace("/admin") 
                 }, 2000);
                 
-            } else {
+            } else{
                 showAlert({
                     type : "error",
                     message : "Failed!",
-                    describe : "Username and password do not match"
+                    describe : "Username, password and role do not match"
                 })
             }
         } catch(error){
