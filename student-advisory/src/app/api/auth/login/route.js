@@ -7,7 +7,7 @@ export async function POST(req){
         const {name, password} = await req.json();
 
         //nak hash password
-        const hashPassword = await bcrypt.hash(password, 10);
+        //const hashPassword = await bcrypt.hash(password, 10);
 
         const [rows] = await pool.query(
             "SELECT * FROM tbl_admin WHERE admin_name = ?", [name]
