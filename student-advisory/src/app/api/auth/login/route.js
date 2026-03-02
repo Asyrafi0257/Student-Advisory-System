@@ -38,6 +38,8 @@ export async function POST(req){
             sameSite:"strict"
         })
 
+        return response;
+
     } catch(error) {
         return NextResponse.json({error:error.message});
     }
