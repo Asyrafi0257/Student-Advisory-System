@@ -12,7 +12,7 @@ export default function Alert({type, message, describe}){
     
     return (
         <div className="absolute inset-0 bg-black/45 z-10 flex justify-center items-start">
-            <div className={`bg-white flex flex-row mt-3 w-[300px] sm:w-md h-[80px] sm:h-[100px]  rounded-2xl border-4 ${styles[type]} transition duration-700 ease-in-out`}>
+            <div className={`bg-white flex flex-row mt-3 w-[300px] sm:w-md h-[80px] sm:h-[100px]  rounded-2xl border-3 ${styles[type]} transition duration-700 ease-in-out`}>
                 <div className="flex items-center justify-center w-24">
                     <Image
                     src={image[type]}

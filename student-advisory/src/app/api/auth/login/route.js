@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
+import { generateToken } from "@/lib/jwt";
+
 
 export async function POST(req){
     try{
@@ -22,7 +24,19 @@ export async function POST(req){
             return NextResponse.json({success:false});
         }
 
-        return NextResponse.json({success:true})
+        //generate token
+        const token = generateToken({
+            id: rows[0].admin_id,
+            name: rows[0].admin_name
+        })
+
+        const response = NextResponse.json({success: true});
+
+        response.cookies.set("token", token, {
+            httpOnly:true,
+            secure:true,
+            sameSite:"strict"
+        })
 
     } catch(error) {
         return NextResponse.json({error:error.message});
