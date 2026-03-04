@@ -4,7 +4,7 @@ export function generateToken(payload){
     //kita buat token baru
     return jwt.sign(
         payload, //data user yang kita nk simpan
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET, //secret key untuk jwt => for sign and verify token
         {expiresIn:"1h"}
     )
 }

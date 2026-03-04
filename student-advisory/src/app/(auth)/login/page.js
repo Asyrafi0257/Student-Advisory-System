@@ -109,11 +109,11 @@ export default function Login() {
                         <h1 className="flex flex-row justify-center mt-3 sm:mt-10 text-[23px] sm:text-[25px] md:text-[30px] font-bold text-shadow-lg">Login</h1>
 
                         <form onSubmit={handleLogin} className="flex flex-col items-center mt-5 sm:mt-10">
-                            <div className="relative shadow-md">
+                            <div className="relative shadow-md rounded-md">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input type="text" placeholder="Username" name="username" value={name} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 " onChange={(e) => {setName(e.target.value)}}/> 
                             </div>
-                            <div className="relative mt-5 shadow-md">
+                            <div className="relative mt-5 shadow-md rounded-md">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input type="password" placeholder="Password" name="password" value={password} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" onChange={(e) => {setPassword(e.target.value)}} />
                             </div>
