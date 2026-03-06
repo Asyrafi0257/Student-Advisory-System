@@ -5,6 +5,7 @@ import { sendResetEmail } from "@/lib/email";
 
 export async function POST(res){
     try {
+        //data yang dihantar oleh client
         const {resetEmail} = await res.json();
 
         const [rows] = await pool.query(
@@ -21,7 +22,6 @@ export async function POST(res){
         const token = generateToken({resetEmail});
         const resetLink = `http://localhost:3000/reset-password?token=${token}`;
 
-        //nk check email hantar ke tak
         await sendResetEmail(resetEmail, resetLink);
     
         return response;

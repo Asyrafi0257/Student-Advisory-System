@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 
+//email service => setup servis email (guna gmail)
 export const transporter = nodemailer.createTransport({
     service: "gmail",
     auth : {
@@ -8,7 +9,7 @@ export const transporter = nodemailer.createTransport({
     }
 })
 
-//function hantar email
+//function untuk hantar email
 export async function sendResetEmail(email, resetLink){
     try{
         await transporter.sendMail({

@@ -23,6 +23,10 @@ export default function ForgotPassword(){
             
             if(data.success){
                 alert("Please check your email for reset the password");
+                setResetEmail("")
+            } else {
+                alert("This email not exist");
+                setResetEmail("")
             }
 
         }catch(error){
@@ -32,7 +36,7 @@ export default function ForgotPassword(){
 
     return (
         <div className="bg-violet-600 flex flex-row h-screen w-screen justify-center items-center">
-            <div className="bg-white w-[300px] sm:w-md md:w-lg h-[400px] sm:w-md  rounded-xl flex flex-col items-center shadow-md">
+            <div className="bg-white w-[300px] sm:w-md md:w-lg h-[400px] sm:w-md  rounded-xl flex flex-col items-center shadow-xl/30">
                 <Image
                     src="/images/forgot-password.jpg"
                     alt="forgot-password.jpg"
@@ -47,7 +51,7 @@ export default function ForgotPassword(){
                 <form onSubmit={handleReset} className="flex flex-col justify-center">
                     <input type="email" name="email" placeholder="your email" value={resetEmail} onChange={(e)=>{setResetEmail(e.target.value)}} className="mt-5 pl-3 w-[220px] md:w-[280px] h-[30px] rounded-sm outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:outline-offset-2 shadow-md " />
                     <div className="mt-5 flex justify-center ">
-                        <button type="submit" className="bg-blue-400 w-40 h-[35px] p-1 rounded-md shadow-md font-bold text-white tracking-[1px] text-[15px]" >Reset Password</button>
+                        <button type="submit" className="bg-blue-400 w-40 h-[35px] p-1 rounded-md shadow-md font-bold text-white tracking-[1px] text-[15px]" >Send</button>
                     </div>
                 </form>
 
