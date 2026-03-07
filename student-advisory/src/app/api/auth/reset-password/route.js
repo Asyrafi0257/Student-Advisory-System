@@ -20,6 +20,7 @@ export async function POST(req){
 
         const hashPassword = await bcrypt.hash(newPass, 10);
 
+        //query untuk update data dalam database
         await pool.query(
             "UPDATE tbl_admin SET admin_password = ? WHERE admin_email = ?",[hashPassword, email]
         )

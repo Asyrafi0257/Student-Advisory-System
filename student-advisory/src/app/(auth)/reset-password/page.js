@@ -20,6 +20,8 @@ export default function ResetPassword(){
 
         } else if(newPass !== confirmPass){
             alert("Your password not matched!");
+            setNewPass("");
+            setConfirmPass("");
         } else {
             try{
                 const res = await fetch("/api/auth/reset-password", {
@@ -29,12 +31,17 @@ export default function ResetPassword(){
                     },
                     body:JSON.stringify({newPass, token}),
                 })
+                
                 const data = await res.json();
 
                 if(data.success){
                     alert("Your password already changed")
+                    setNewPass("");
+                    setConfirmPass("");
                 } else {
                     alert("Invalid or expired token");
+                    setNewPass("");
+                    setConfirmPass("");
                 }
             }catch(error){
                 alert(error.message);
