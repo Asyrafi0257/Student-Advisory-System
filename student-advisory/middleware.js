@@ -3,7 +3,7 @@ import { verifyToken } from "@/lib/jwt";
 
 export function middleware(req) {
 
-    //ambil token daripada jwt
+    //ambil cookies yang client simpan di browser
     const token = req.cookies.get("token")?.value;
 
     //redirect to login if not exist
