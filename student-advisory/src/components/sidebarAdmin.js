@@ -17,26 +17,27 @@ export default function SidebarAdmin(){
     }
         
     return(
-        <div className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-64" : "w-21"}`}>
+        <div className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-64" : "w-24"}`}>
             <div className="h-full bg-[#02577A] backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f]">
-                <div className="flex flex-col">
-                    <div className="flex w-full justify-center">
+                <div className="flex flex-col h-[180px]">
+                    <div className="flex w-full justify-between items-center transition-all duration-300">
                       <Image
                         src="/images/logo-uum.png"
-                        alt="/images/logo-uum.png"
+                        alt="logo-uum.png"
                         width={80}
                         height={80}
-                        className={` ${isSidebarOpen? "w-[180px] h-[100px]" : "w-[100px] h-[60px] "}`}
+                        className={`${isSidebarOpen ? "w-[180px] h-[100px] pl-10" : "w-[80px] h-[80px]"}`}
                         priority
+                        
                     />
-                    <button onClick={handleOpen} className="p-2 rounded-md w-10 h-10 transition-colors max-w-fit cursor-pointer mr-[-30px] bg-white shadow-md text-black">
+                    <button onClick={handleOpen} className="p-2 rounded-md w-10 h-10 transition-colors max-w-fit cursor-pointer bg-white shadow-md text-black">
                         <Menu 
                         size={20}
                         
                         />
                     </button>  
                     </div>
-                    <span className="flex justify-center mt-3 mb-10"> 
+                    <span className="flex justify-center mt-3 transition-all duration-300"> 
                         {isSidebarOpen ? <h3 className="uppercase text-white font-bold tracking-[2px] text-center">School of Computing</h3> : <h3 className="uppercase text-white font-bold tracking-[2px] text-center">Soc</h3>}
                     </span>    
                 </div>
