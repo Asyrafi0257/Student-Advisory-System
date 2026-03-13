@@ -51,7 +51,7 @@ export default function ForgotPassword(){
                 <form onSubmit={handleReset} className="flex flex-col justify-center">
                     <input type="email" name="email" placeholder="your email" value={resetEmail} onChange={(e)=>{setResetEmail(e.target.value)}} className="mt-5 pl-3 w-[220px] md:w-[280px] h-[30px] rounded-sm outline outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:outline-offset-2 shadow-md " />
                     <div className="mt-5 flex justify-center ">
-                        <button type="submit" className="bg-blue-400 w-40 h-[35px] p-1 rounded-md shadow-md font-bold text-white tracking-[1px] text-[15px]" >Send</button>
+                        <button type="submit" className="bg-blue-400 w-40 h-[35px] p-1 rounded-md shadow-md font-bold text-white tracking-[1px] text-[15px] cursor-pointer" >Send</button>
                     </div>
                 </form>
 

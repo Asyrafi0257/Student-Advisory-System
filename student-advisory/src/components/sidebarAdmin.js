@@ -1,6 +1,6 @@
 "use client"
 
-import { sidebarAdmin } from "@/lib/adminSidebar";
+import { sidebarAdmin } from "@/lib//sidebar/adminSidebar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -33,7 +33,6 @@ export default function SidebarAdmin(){
                     <button onClick={handleOpen} className="p-2 rounded-md w-10 h-10 transition-colors max-w-fit cursor-pointer bg-white shadow-md text-black">
                         <Menu 
                         size={20}
-                        
                         />
                     </button>  
                     </div>
@@ -48,12 +47,10 @@ export default function SidebarAdmin(){
                         const Icon = item.icon
                         return (
                             <Link key={item.name} href={item.href}>
-                                <div className={`flex items-center p-4 text-md font-bold tracking-[1.5px] rounded-lg hover:bg-[#ffffff] hover:text-black transition-colors mb-2 text-white ${
-                                    pathname === item.href ? "bg-white" : "" 
-                                }`}>
-                                <Icon size={23} style={{minWidth: "23px"}}/>
-                                {isSidebarOpen && <span className="ml-4 whitespace-nowrap">{item.name}</span>}
-                            </div>
+                                <div className={`flex items-center p-4 text-md font-bold tracking-[1.5px] rounded-lg transition-colors mb-2 ${pathname === item.href ? "bg-white" : "text-white hover:bg-white hover:text-black"}`}>
+                                <Icon size={23} className="min-w-[23px]"/>
+                                {isSidebarOpen && (<span className="ml-4 whitespace-nowrap">{item.name}</span>)}
+                                </div>
                             </Link>
                         )
                     })}
