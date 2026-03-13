@@ -1,6 +1,7 @@
 "use client";
 
 import StatCard from "@/components/statCard";
+import ListMentor from "@/components/listMentorTbl";
 import { User } from "lucide-react";
 import {motion} from "framer-motion";
 
@@ -18,6 +19,15 @@ export default function Dashboard(){
                     <StatCard name="Total Mentor" icon={User} value="100"/>
                     <StatCard name="Total Active" icon={User} value="100"/>
                     <StatCard name="Total Deactive" icon={User} value="100"/>
+                </motion.div>
+
+                <motion.div 
+                    className="grid grid-cols-1"
+                    initial={{opacity:0, y:20}}
+                    animate={{opacity:1, y:0}}
+                    transition={{duration:1}}
+                    >
+                    <ListMentor/>
                 </motion.div>
             </main>
         </div>
