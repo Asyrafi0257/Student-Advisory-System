@@ -2,7 +2,7 @@
 
 import StatCard from "@/components/statCard";
 import ListMentor from "@/components/listMentorTbl";
-import { User } from "lucide-react";
+import { Activity, ShieldMinus, User } from "lucide-react";
 import {motion} from "framer-motion";
 
 export default function Dashboard(){
@@ -17,8 +17,8 @@ export default function Dashboard(){
                 >
                     <StatCard name="Total Mentee" icon={User} value="100"/>
                     <StatCard name="Total Mentor" icon={User} value="100"/>
-                    <StatCard name="Total Active" icon={User} value="100"/>
-                    <StatCard name="Total Deactive" icon={User} value="100"/>
+                    <StatCard name="Total Active" icon={Activity} value="100"/>
+                    <StatCard name="Total Deactive" icon={ShieldMinus} value="100"/>
                 </motion.div>
 
                 <motion.div 
