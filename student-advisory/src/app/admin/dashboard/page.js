@@ -17,8 +17,8 @@ export default function Dashboard(){
                 >
                     <StatCard name="Total Mentee" icon={User} value="100"/>
                     <StatCard name="Total Mentor" icon={User} value="100"/>
-                    <StatCard name="Total Active" icon={Activity} value="100"/>
-                    <StatCard name="Total Deactive" icon={ShieldMinus} value="100"/>
+                    <StatCard name="Total Mentor Active" icon={Activity} value="100"/>
+                    <StatCard name="Total Mentor Deactive" icon={ShieldMinus} value="100"/>
                 </motion.div>
 
                 <motion.div 

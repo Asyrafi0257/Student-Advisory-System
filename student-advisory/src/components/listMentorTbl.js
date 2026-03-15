@@ -14,7 +14,7 @@ export default function ListMentor() {
     }
 
     return (
-        <div className="bg-[#ffffff] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 md:mx-0">
+        <div className="bg-[#ffffff] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 md:mx-0 h-[430px]">
             <div className="flex flex-row justify-between mb-2 border-b border-gray-300">
                 <h2 className="font-bold text-[25px] tracking-[1px]">List Mentor</h2>
                 <div className="relative flex items-center">

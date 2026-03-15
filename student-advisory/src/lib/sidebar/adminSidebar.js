@@ -8,7 +8,7 @@ export const sidebarAdmin = [
     },
     {
         name : "Upload files",
-        href : "/admin/upload",
+        href : "/admin/uploadFiles",
         icon : Upload
     },
     {
