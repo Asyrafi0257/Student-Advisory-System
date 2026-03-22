@@ -1,21 +1,47 @@
+"use client"
+
 import Image from "next/image";
+import axios from "axios";
+import { useState } from "react";
 
 export default function Upload() {
+    const [progress, setProgress] = useState(0);
+    const [isUploading, setIsUploading] = useState(false);
+
+    const uploadFile = async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        setIsUploading(true);
+        
+    }
+
+    const handleDrop = () => {
+
+    }
+
+    const handleFile = () => {
+
+    }
     return(
         <div className="bg-[#ffffff] rounded-xl shadow-md p-4 md:p-6 h-[300px]">
             <div className="flex border-b border-gray-300 mb-5">
                 <h2 className="font-semibold text-[24px]">Upload Files</h2>
             </div>
-            <div className="flex flex-col justify-center items-center h-[200px] border-3 border-dashed border-blue-300 rounded-xl cursor-pointer">
-                <Image 
-                    src="/images/upload-file.png"
-                    alt="upload-file.png"
-                    width={100}
-                    height={100}
-                    priority
-                />
-                <p className="mt-3"> <span className="text-blue-600">Click here</span> to upload your file or drag.</p>
-                <p className="text-gray-400 mt-3">Supported Format : xlsx, xls (10 mb each)</p>
+            <div 
+                onDrop={handleDrop}
+                onDragOver={(e) => {e.preventDefault()}}
+                className="flex flex-col justify-center items-center h-[200px] border-3 border-dashed border-blue-300 rounded-xl cursor-pointer">
+                    <input type="file" onChange={handleFile} className="hidden" id="fileInput" />
+                    <Image 
+                        src="/images/upload-file.png"
+                        alt="upload-file.png"
+                        width={100}
+                        height={100}
+                        priority
+                    />
+                    <p className="mt-3"> <span className="text-blue-600">Click here</span> to upload your file or drag.</p>
+                    <p className="text-gray-400 mt-3">Supported Format : xlsx, xls (10 mb each)</p>
             </div>
 
            

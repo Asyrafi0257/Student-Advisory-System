@@ -10,46 +10,38 @@ import { Menu } from "lucide-react";
 
 export default function SidebarAdmin(){
     const pathname = usePathname();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-    const handleOpen = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    }
         
     return(
-        <div className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-64" : "w-24"}`}>
+        <div className="relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 w-64">
             <div className="h-full bg-[#02577A] backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f]">
-                <div className="flex flex-col h-[180px]">
-                    <div className="flex w-full justify-between items-center transition-all duration-300">
+
+                <div className="flex flex-row h-[100px] w-full">
+                    <div className="flex items-center transition-all duration-300">
                       <Image
                         src="/images/logo-uum.png"
                         alt="logo-uum.png"
-                        width={80}
-                        height={80}
-                        className={`${isSidebarOpen ? "w-[180px] h-[100px] pl-10" : "w-[80px] h-[80px]"}`}
+                        width={180}
+                        height={100}
+                        className="object-cover w-[80px] h-[80px]"
                         priority
                         
                     />
-                    <button onClick={handleOpen} className="p-2 rounded-md w-10 h-10 transition-colors max-w-fit cursor-pointer bg-white shadow-md text-black">
-                        <Menu 
-                        size={20}
-                        />
-                    </button>  
                     </div>
-                    <span className="flex justify-center mt-3 transition-all duration-300"> 
-                        {isSidebarOpen ? <h3 className="uppercase text-white font-bold tracking-[2px] text-center">School of Computing</h3> : <h3 className="uppercase text-white font-bold tracking-[2px] text-center">Soc</h3>}
+                    <span className="flex flex-col justify-center"> 
+                        <h3 className="text-white uppercase font-semibold text-[13px] tracking-[0.6px]">Student Advisory</h3>
+                        <p className="text-gray-400 text-[10px] tracking-[1px] capitalize">School Of Computing</p>
                     </span>    
                 </div>
                 
 
-                <nav className="mt-8 flex-grow">
+                <nav className="mt-5 flex-grow">
                     {sidebarAdmin.map((item) => {
                         const Icon = item.icon
                         return (
                             <Link key={item.name} href={item.href}>
                                 <div className={`flex items-center p-4 text-md font-bold tracking-[1.5px] rounded-lg transition-colors mb-2 ${pathname === item.href ? "bg-white" : "text-white hover:bg-white hover:text-black"}`}>
                                 <Icon size={23} className="min-w-[23px]"/>
-                                {isSidebarOpen && (<span className="ml-4 whitespace-nowrap">{item.name}</span>)}
+                                <span className="ml-4 whitespace-nowrap">{item.name}</span>
                                 </div>
                             </Link>
                         )
