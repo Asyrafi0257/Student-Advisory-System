@@ -34,19 +34,54 @@ export default function SidebarAdmin(){
                 </div>
                 
 
-                <nav className="mt-5 flex-grow">
-                    {sidebarAdmin.map((item) => {
-                        const Icon = item.icon
-                        return (
-                            <Link key={item.name} href={item.href}>
-                                <div className={`flex items-center p-4 text-md font-bold tracking-[1.5px] rounded-lg transition-colors mb-2 ${pathname === item.href ? "bg-white" : "text-white hover:bg-white hover:text-black"}`}>
-                                <Icon size={23} className="min-w-[23px]"/>
-                                <span className="ml-4 whitespace-nowrap">{item.name}</span>
-                                </div>
+                <nav className="mt-5 flex flex-col justify-between h-full">
+                    <div>
+                        {sidebarAdmin.filter((item)=> item.name !== "Logout").map((item, index) => {
+                                //title section
+                                if (item.section) {
+                                    return (
+                                        <p
+                                            key={index}
+                                            className="text-gray-400 text-sm mt-4 mb-1 px-1"
+                                        >
+                                            {item.section}
+                                        </p>
+                                    );
+                                    }
+                                    const Icon = item.icon
+                                    return (
+                                        <Link
+                                            key={index}
+                                            href={item.href}
+                                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200
+                                            ${
+                                                pathname === item.href
+                                                    ? "bg-white text-black"
+                                                    : "hover:bg-white hover:text-black text-white"
+                                                }`}
+                                                >
+                                                <Icon size={18} />
+                                                <span>{item.name}</span>
+                                                </Link>
+                                            );
+                                            })}
+                    </div>
+                    <div>
+                        {sidebarAdmin
+                        .filter((item) => item.name === "Logout")
+                        .map((item, index) => (
+                            <Link
+                                key={index}
+                                href={item.href}
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-600 transition-all text-white"
+                            >
+                                <item.icon size={18} />
+                                <span>{item.name}</span>
                             </Link>
-                        )
-                    })}
+                        ))}
+                </div>        
                 </nav>
+                
 
             </div>
         </div>

@@ -1,24 +1,30 @@
-import { House, LogOut, Upload, View } from "lucide-react";
+import { House, LogOut, Upload, Users, LayoutDashboard } from "lucide-react";
 
 export const sidebarAdmin = [
-    {
-        name : "Dashboard",
-        href : "/admin/dashboard",
-        icon : House
-    },
-    {
-        name : "Upload Student",
-        href : "/admin/uploadFiles",
-        icon : Upload
-    },
-    {
-        name : "View Mentor",
-        href : "/admin/view",
-        icon : View
-    },
-    {
-        name : "logout",
-        href : "/admin/logout",
-        icon : LogOut
-    }
-]
+  { section: "Menu" },
+  {
+    name: "Dashboard",
+    href: "/admin/dashboard",
+    icon: LayoutDashboard,
+  },
+
+  { section: "Students" },
+  {
+    name: "Upload Students",
+    href: "/admin/uploadFiles",
+    icon: Upload,
+  },
+
+  { section: "Mentors" },
+  {
+    name: "Manage Mentors",
+    href: "/admin/view",
+    icon: Users,
+  },
+
+  {
+    name: "Logout",
+    href: "/admin/logout",
+    icon: LogOut,
+  },
+];
