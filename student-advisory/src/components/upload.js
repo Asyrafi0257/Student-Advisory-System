@@ -2,37 +2,75 @@
 
 import Image from "next/image";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { FileSpreadsheet } from "lucide-react";
 
 export default function Upload() {
     const [progress, setProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
+    const [file, setFile] = useState(null);
+    const fileInputRef = useRef(null);
 
-    const uploadFile = async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
+    const uploadFile = async (fileToUpload) => {
 
-        setIsUploading(true);
+        //untuk simpan data seperti fail or form before send to server
+        const formData = new FormData(); 
+
+        //file => name file server expect while fileToUpload => file yang user input
+        formData.append("file", fileToUpload);
+
+        try{
+            setIsUploading(true);
+            const res = await axios.post("/api/upload", formData, {
+                headers:{"Content-Type": "multipart/form-data"},
+                onUploadProgress: (ProgressEvent) => {
+                    const percent = Math.round(
+                        (ProgressEvent.loaded * 100) / ProgressEvent.total
+                    );
+                    setProgress(percent);
+                }
+            });
+            alert(res.data.message);
+        } catch(err){
+            alert(err.response?.data?.error || "Upload failed");
+        } finally{
+            setIsUploading(false);
+            setProgress(0);
+            setFile(null);
+        }
         
     }
 
-    const handleDrop = () => {
+    const handleDrop = (e) => {
+        e.preventDefault();
+        if(e.dataTransfer.files && e.dataTransfer.files.length > 0){
+            setFile(e.dataTransfer.files[0]);
+            uploadFile(e.dataTransfer.files[0]);
+            e.dataTransfer.clearData();
+        }
+    };
 
+    const handleFile = (e) => {
+        if(e.target.files && e.target.files.length > 0) {
+            setFile(e.target.files[0]);
+            uploadFile(e.target.files[0]);
+        }
     }
-
-    const handleFile = () => {
-
+    const handleClick = () => {
+        fileInputRef.current.click();
     }
     return(
-        <div className="bg-[#ffffff] rounded-xl shadow-md p-4 md:p-6 h-[300px]">
+        <div>
+        <div className="bg-[#ffffff] rounded-xl shadow-md p-4 md:p-6">
             <div className="flex border-b border-gray-300 mb-5">
                 <h2 className="font-semibold text-[24px]">Upload Files</h2>
             </div>
             <div 
+                onClick={handleClick}
                 onDrop={handleDrop}
                 onDragOver={(e) => {e.preventDefault()}}
                 className="flex flex-col justify-center items-center h-[200px] border-3 border-dashed border-blue-300 rounded-xl cursor-pointer">
-                    <input type="file" onChange={handleFile} className="hidden" id="fileInput" />
+                    <input type="file" onChange={handleFile} ref={fileInputRef} accept=".xlsx, .xls" className="hidden" id="fileInput" />
                     <Image 
                         src="/images/upload-file.png"
                         alt="upload-file.png"
@@ -43,8 +81,26 @@ export default function Upload() {
                     <p className="mt-3"> <span className="text-blue-600">Click here</span> to upload your file or drag.</p>
                     <p className="text-gray-400 mt-3">Supported Format : xlsx, xls (10 mb each)</p>
             </div>
-
            
+        </div>
+         {isUploading && (
+                <div className="w-full h-[80px] bg-[#ffffff] rounded-xl mt-4 mb-4 px-3 pt-1">
+                    <div className="w-full flex justify-between">
+                    <div className="ml-10">{file?.name}</div>
+                     <span>{progress}%</span>   
+                    </div>
+                    
+                    <div className="flex items-center">
+                        <FileSpreadsheet className="w-8 h-8 text-green-500 mr-2"/>
+                        <progress className="w-full" value={progress} max="100"/>
+                    </div>
+                    
+                    
+                </div>
+            )}
+            {file && !isUploading && (
+                    <p className="mt-2 text-green-600">Selected: {file.name}</p>
+            )}
         </div>
     )
 }

@@ -12,6 +12,7 @@ export default function UploadFile() {
                 initial={{opacity:0, y:20}}
                 animate={{opacity:1, y:0}}
                 transition={{duration:1}}
+                className="mb-5"
                 >
                     <Upload/>
                 </motion.div>
