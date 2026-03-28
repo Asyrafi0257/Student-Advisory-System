@@ -12,6 +12,8 @@
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
+    "formidable": "^3.5.4",
+    "formidable-serverless": "^1.1.1",
     "framer-motion": "^12.36.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.575.0",

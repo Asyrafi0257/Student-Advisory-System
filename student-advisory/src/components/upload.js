@@ -16,16 +16,20 @@ export default function Upload() {
         //untuk simpan data seperti fail or form before send to server
         const formData = new FormData(); 
 
-        //file => name file server expect while fileToUpload => file yang user input
+        //file => name file what server expect, while fileToUpload => file yang user input
         formData.append("file", fileToUpload);
 
         try{
             setIsUploading(true);
             const res = await axios.post("/api/upload", formData, {
+
+                //nak bagitahu server bahawa data yang dihantar adalah file
                 headers:{"Content-Type": "multipart/form-data"},
-                onUploadProgress: (ProgressEvent) => {
+                onUploadProgress: (progressEvent) => {
                     const percent = Math.round(
-                        (ProgressEvent.loaded * 100) / ProgressEvent.total
+                        //progressEvent.loaded => jumlah data yang dh upload
+                        //progressEvent.total => jumlah keseluruhan data
+                        (progressEvent.loaded * 100) / progressEvent.total
                     );
                     setProgress(percent);
                 }
@@ -41,11 +45,17 @@ export default function Upload() {
         
     }
 
+    //function ni akan trigger bila event onDrop berlaku
     const handleDrop = (e) => {
+        //nk pastikan browser tak buka file secara default
         e.preventDefault();
+
+        //dataTransfer.file => senarai file yang user drag
         if(e.dataTransfer.files && e.dataTransfer.files.length > 0){
             setFile(e.dataTransfer.files[0]);
             uploadFile(e.dataTransfer.files[0]);
+
+            //buang data drag untuk elak daripada duplicate
             e.dataTransfer.clearData();
         }
     };
