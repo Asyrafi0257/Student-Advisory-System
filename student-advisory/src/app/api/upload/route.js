@@ -1,63 +1,59 @@
 import {NextResponse} from "next/server";
-import formidable from "formidable-serverless";
 import pool from "@/lib/db";
+import {writeFile} from "fs/promises";
+import path from "path";
 
-//kena disable dulu body parse default sbb nak upload file kena raw multipart/formdata
-//configuration khas untuk app router
+//config => paksa nextjs untuk guna node.js runtime
 export const runtime = "nodejs";
-export const requestBody = {
-    sizeLimit:"10mb", 
-};
 
+// api endpoint untuk handle request
 export async function POST(req){
-    // Convert NextRequest body (ReadableStream) ke Buffer
-    const bodyBuffer = Buffer.from(await req.arrayBuffer());
-    return new Promise((resolve) => {
-        const form = formidable({
-            //uploadDir => kita nk simpan file sementara di server
-            uploadDir: "./public/uploads",
+    try{
+        //nak ambil data dari request(form)
+        const formData = await req.formData();
+        
+        //file yang user upload
+        const file = formData.get("file");
 
-            //keepExtensions => nak simpan extension asal file(.xlsx, .jpg, dll)
-            keepExtensions:true,
-        });
+        //check if ada user upload file ke tak
+        if(!file) {
+            return NextResponse.json(
+                {error : "No file Uploaded"},
+                {status : 400}
+            );
+        }
 
-        //formidable baca file dan fields dari request
-        form.parse(bodyBuffer, async (err, fields, files) => {
-            if(err){
-                return resolve(
-                    //status:500 => internal server error
-                    NextResponse.json({
-                        error: "Upload Failed"
-                    }, 
-                    {status: 500})
-                );
-            }
+        //nak convert file guna buffer => so buffer boleh simpan file dan juga boleh process(excel later)
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
 
-            const file = Array.isArray(files.file) ? files.file[0] : files.file;
-            const fileName = file.originalFilename; //nama asal file dari komputer user
-            const filePath = "/uploads/" + file.newFilename; //path file yg disimpan di server(lokasi file di server)
+        //generate unik name
+        const fileName = Date.now() + "-" + file.name;
 
-            try {
-                    //simpan info file ke dalam database
-                await pool.execute(
-                    "INSERT INTO tbl_uploads(file_name, file_path) VALUES(?, ?)",
-                    [fileName, filePath]
-                );
+        //path dalam server
+        //process.cwd() => root project
+        const filePath = path.join(process.cwd(), "/public/uploads", fileName);
 
-                return resolve(
-                    NextResponse.json({
-                        message: "Upload success",
-                        fileName,
-                    })
-                )
-            } catch(err){
-                return resolve(NextResponse.json({
-                    error:"Database insert failed"
-                },
-                {status:500}
-            ))
-            }
-            
+        //simpan file dalam folder
+        await writeFile(filePath, buffer);
+
+        //letak path ke dalam database
+        const dbPath = "/uploads/" + fileName;
+
+        //simpan ke database
+        await pool.execute(
+            "INSERT INTO tbl_uploads(file_name, file_path) VALUES(?, ?)", [fileName, filePath]
+        )
+
+        return NextResponse.json({
+            message : "File uploaded & saved to DB",
+            file : dbPath
         })
-    })
+    }catch(error){
+        console.error(error);
+        return NextResponse,json(
+            {error : "Upload failed"},
+            {status : 500}
+        )
+    }
 }
