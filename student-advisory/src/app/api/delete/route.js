@@ -7,7 +7,7 @@ export async function DELETE(req) {
     try{
         const {searchParams} = new URL(req.url);
         const id = searchParams.get("id");
-
+        
         //check id valid ke tak
         if(!id){
             return NextResponse.json(
@@ -32,14 +32,14 @@ export async function DELETE(req) {
         const file = rows[0];
 
         //delete file dari server
-        const filePath = path.join(process.cwd(), "public", file.file_path)
+        const filePath = path.join(process.cwd(), "public/uploads", file.file_name)
 
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
         }
 
         //delete file dari database
-        const deleteFile = await pool.execute(
+        await pool.execute(
             "DELETE FROM tbl_uploads WHERE uploads_id = ?", [id]
         );
 

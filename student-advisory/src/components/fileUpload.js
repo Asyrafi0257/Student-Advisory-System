@@ -72,7 +72,7 @@ export default function FileUpload() {
                             <tr key={file.uploads_id} className="text-center border-b-1 border-gray-200">
                                 <td className="text-base py-2 flex flex-row">
                                     <FileSpreadsheet className="text-green-400 ml-2"/>
-                                    <div className="pl-2">
+                                    <div className="pl-2 w-full flex justify-start">
                                        {file.file_name}
                                     </div>
                                     </td> 
