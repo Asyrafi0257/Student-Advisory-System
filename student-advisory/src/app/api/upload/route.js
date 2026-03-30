@@ -69,7 +69,7 @@ export async function POST(req){
             pmk_masuk: row["PMK Masuk"] || null,
             band_muet: row["Band MUET"] || null,
             status_oku: row["Status OKU"] || null,
-            disability_description: row["Keterangan Cacat"] || null,
+            disability_description: row["Keterangan Cacat"],
             inasis: row.Inasis || null,
             no_phone: row["No Phone"] || null,
             email_alternatif: row["Email Alternatif"] || null,
@@ -99,10 +99,12 @@ export async function POST(req){
 
         //simpan dalam database
         for(const row of cleanData){
-            if (!row.Matrik) {
+            if (!row.stud_matric) {
                 console.warn("Skipping row without Matric:", row);
                 continue; // skip row
             }
+            try{
+
             await pool.execute(
                 "INSERT INTO tbl_students(stud_matric, stud_name, gender, code_uum, academic_qualifications, pmk_masuk, band_muet, status_oku, disability_description, inasis, no_phone, email_alternatif, email_uum, stud_address, state, parent_income) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 [
@@ -124,6 +126,9 @@ export async function POST(req){
                 row.parent_income
                 ]
             )
+        }catch(err){
+            console.error("Failed to insert row:", row, err.message);
+        }
             }
 
         return NextResponse.json({
