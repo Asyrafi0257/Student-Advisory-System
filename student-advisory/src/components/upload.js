@@ -21,10 +21,12 @@ export default function Upload() {
 
         try{
             setIsUploading(true);
-            const res = await axios.post("/api/upload", formData, {
 
+            //request to server
+            const res = await axios.post("/api/upload", formData, { 
                 //nak bagitahu server bahawa data yang dihantar adalah file
                 headers:{"Content-Type": "multipart/form-data"},
+                //kita nk track progress in real time
                 onUploadProgress: (progressEvent) => {
                     const percent = Math.round(
                         //progressEvent.loaded => jumlah data yang dh upload

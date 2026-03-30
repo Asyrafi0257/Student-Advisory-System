@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { FileSpreadsheet, Search } from "lucide-react";
+import { FileSpreadsheet, Search, Trash2 } from "lucide-react";
 
 
 export default function FileUpload() {
@@ -11,6 +11,13 @@ export default function FileUpload() {
     useEffect(() => {
         fetchFile();
     },[])
+
+    //format untuk convert bytes to mb
+    const formatFileSize = (bytes) => {
+        if(bytes < 1024) return bytes + " B";
+        if(bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
+        return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    }
 
     const fetchFile = async () => {
         try{
@@ -33,26 +40,39 @@ export default function FileUpload() {
               </div>
             </div>
 
-            <div>
+            <div className="w-full">
                 {files.length === 0 ? ( 
                     <p>No Files found</p>
                 ) : (
-                    files.map((file) => (
-                        <div key={file.uploads_id} className="mb-5 mt-5 pb-4 flex flex-row border-b-1 border-gray-300">
-                            {/* icon file excel */}
-                            <FileSpreadsheet className="w-[30px] h-[30px] text-green-400"/>
-                            {/* display file name */}
-                            <p>{file.file_name}</p>
-                            <a
-                                href={file.file_path}
-                                target="_blank"
-                                className="ml-4 text-blue-500 underline"
-                            >
-                                Open
-                            </a>
-                        </div>
-                    ))
-                )}
+                    <table className="w-full mt-3">
+                        <thead className="bg-gray-200 w-full">
+                            <tr className="w-full justify-around">
+                                <th className="text-lg">File Name</th>
+                                <th className="text-lg">Size</th>
+                                <th className="text-lg">Date</th>
+                                <th className="text-lg">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           {files.map((file) => (
+                            <tr key={file.uploads_id} className="text-center border-b-1 border-gray-200">
+                                <td className="text-base py-2 flex flex-row">
+                                    <FileSpreadsheet className="text-green-400 ml-2"/>
+                                    <div className="pl-2">
+                                       {file.file_name}
+                                    </div>
+                                    </td> 
+                                <td className="text-base py-2">{formatFileSize(file.file_size)}</td>
+                                <td className="text-base py-2">{file.created_at}</td>
+                                <td className="text-base py-2 flex justify-center">
+                                    <Trash2 className="text-red-400"/>
+                                </td>
+                            </tr>
+                        ))} 
+                        </tbody>
+                        
+                    </table>
+                 )}
             </div>
 
         </div>

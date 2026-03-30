@@ -2,7 +2,7 @@ import {NextResponse} from "next/server";
 import pool from "@/lib/db";
 import {writeFile} from "fs/promises";
 import path from "path";
-
+ 
 //config => paksa nextjs untuk guna node.js runtime
 export const runtime = "nodejs";
 
@@ -23,6 +23,9 @@ export async function POST(req){
             );
         }
 
+        //nak daptkan size fail
+        const fileSize = file.size;
+
         //nak convert file guna buffer => so buffer boleh simpan file dan juga boleh process(excel later)
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
@@ -42,7 +45,7 @@ export async function POST(req){
 
         //simpan ke database
         await pool.execute(
-            "INSERT INTO tbl_uploads(file_name, file_path) VALUES(?, ?)", [fileName, filePath]
+            "INSERT INTO tbl_uploads(file_name, file_size, file_path) VALUES(?, ?, ?)", [fileName, fileSize, filePath]
         )
 
         return NextResponse.json({
