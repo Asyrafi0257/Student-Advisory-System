@@ -26,6 +26,20 @@ export default function FileUpload() {
             setFiles(res.data.rows);
         }catch(err){
             console.error(err);
+            alert(err.message)
+        }
+    }
+    const handleDelete = async (id) =>  {
+        //confirmation before delete file
+        if(!confirm("Are you sure to delete this file?")) return;
+
+        try{
+            const res = await axios.delete(`/api/delete?id=${id}`);
+            //refresh file
+            fetchFile()
+            console.log(res.data);
+        }catch(err){
+            console.log(err);
         }
     }
     return (
@@ -64,7 +78,7 @@ export default function FileUpload() {
                                     </td> 
                                 <td className="text-base py-2">{formatFileSize(file.file_size)}</td>
                                 <td className="text-base py-2">{file.created_at}</td>
-                                <td className="text-base py-2 flex justify-center">
+                                <td className="text-base py-2 flex justify-center cursor-pointer" onClick={() => handleDelete(file.uploads_id)}>
                                     <Trash2 className="text-red-400"/>
                                 </td>
                             </tr>
