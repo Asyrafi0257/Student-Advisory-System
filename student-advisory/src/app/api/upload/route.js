@@ -61,22 +61,22 @@ export async function POST(req){
 
         //buat clean data dulu
         const cleanData = data.map(row => ({
-            stud_matric: row.Matrik,
+            stud_matric: parseInt(row.Matrik),
             stud_name: row.Nama || null,
             gender: row.Jantina || null,
             code_uum: row["Kod UUM"] || null,
             academic_qualifications: row["Kelayakan Akademik"] || null,
-            pmk_masuk: row["PMK Masuk"] || null,
-            band_muet: row["Band MUET"] || null,
+            pmk_masuk: parseFloat(row["PMK Masuk"]) || null,
+            band_muet: parseFloat(row["Band MUET"]) || null,
             status_oku: row["Status OKU"] || null,
-            disability_description: row["Keterangan Cacat"],
+            disability_description: row["Keterangan Cacat"] || "",
             inasis: row.Inasis || null,
             no_phone: row["No Phone"] || null,
             email_alternatif: row["Email Alternatif"] || null,
             email_uum: row["Email UUM"] || null,
             stud_address: row.Alamat || null,
             state: row.Negeri || null,
-            parent_income: row["Pendapatan Waris"] || null
+            parent_income:row["Pendapatan Waris"] || "Tiada Pendapatan"
         }));
 
         //generate unik name
@@ -105,31 +105,31 @@ export async function POST(req){
             }
             try{
 
-            await pool.execute(
-                "INSERT INTO tbl_students(stud_matric, stud_name, gender, code_uum, academic_qualifications, pmk_masuk, band_muet, status_oku, disability_description, inasis, no_phone, email_alternatif, email_uum, stud_address, state, parent_income) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [
-                row.stud_matric,
-                row.stud_name,
-                row.gender,
-                row.code_uum,
-                row.academic_qualifications,
-                row.pmk_masuk,
-                row.band_muet,
-                row.status_oku,
-                row.disability_description,
-                row.inasis,
-                row.no_phone,
-                row.email_alternatif,
-                row.email_uum,
-                row.stud_address,
-                row.state,
-                row.parent_income
-                ]
-            )
+                await pool.execute(
+                    "INSERT INTO tbl_students(stud_matric, stud_name, gender, code_uum, academic_qualifications, pmk_masuk, band_muet, status_oku, disability_description, inasis, no_phone, email_alternatif, email_uum, stud_address, state, parent_income) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [
+                    row.stud_matric,
+                    row.stud_name,
+                    row.gender,
+                    row.code_uum,
+                    row.academic_qualifications,
+                    row.pmk_masuk,
+                    row.band_muet,
+                    row.status_oku,
+                    row.disability_description,
+                    row.inasis,
+                    row.no_phone,
+                    row.email_alternatif,
+                    row.email_uum,
+                    row.stud_address,
+                    row.state,
+                    row.parent_income
+                    ]
+                )
         }catch(err){
             console.error("Failed to insert row:", row, err.message);
         }
-            }
+        }
 
         return NextResponse.json({
             message : "File uploaded & saved to DB",
