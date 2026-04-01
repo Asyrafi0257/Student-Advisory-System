@@ -15,7 +15,7 @@ export const sidebarAdmin = [
     icon: Upload,
   },
   {
-    name: "List All Mentor",
+    name: "List All Student",
     href:"/admin/listStudent",
     icon: UserRoundCheck
   },

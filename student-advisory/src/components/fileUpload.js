@@ -7,6 +7,7 @@ import { FileSpreadsheet, Search, Trash2 } from "lucide-react";
 
 export default function FileUpload() {
     const [files, setFiles] = useState([]);
+    const [searchFiles, setSearchFiles] = useState("");
 
     useEffect(() => {
         fetchFile();
@@ -42,20 +43,21 @@ export default function FileUpload() {
             console.log(err);
         }
     }
+
+    const filterFiles = files.filter((file) => file.file_name?.toLowerCase().includes(searchFiles.toLowerCase())
+);
     return (
         <div className="bg-[#ffffff] shadow-md rounded-xl h-[300px] p-4 md:p-6">
             <div className="flex flex-row border-b border-gray-300 pb-3 justify-between">
               <h3 className="font-bold text-[24px]">Attached Files</h3>
               <div className="relative w-sm">
-                <input type="text" placeholder="search..." className="w-full h-[40px] shadow-sm rounded-lg border-1 border-gray-200 px-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300"/>
-                <button className="absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer">
-                    <Search className="text-gray-400"/>
-                </button>
+                <input type="text" placeholder="search..." className="w-full h-[40px] shadow-sm rounded-lg border-1 border-gray-200 px-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" value={searchFiles} onChange={(e) =>{ setSearchFiles(e.target.value)}}/>
+                <Search className="absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-gray-400"/>
               </div>
             </div>
 
             <div className="w-full">
-                {files.length === 0 ? ( 
+                {!filterFiles || filterFiles.length === 0 ? ( 
                     <p>No Files found</p>
                 ) : (
                     <table className="w-full mt-3">
@@ -68,8 +70,8 @@ export default function FileUpload() {
                             </tr>
                         </thead>
                         <tbody>
-                           {files.map((file) => (
-                            <tr key={file.uploads_id} className="text-center border-b-1 border-gray-200">
+                           {filterFiles.map((file) => (
+                            <tr key={file.uploads_id} className="text-center border-b-1 border-gray-200 hover:bg-gray-100">
                                 <td className="text-base py-2 flex flex-row">
                                     <FileSpreadsheet className="text-green-400 ml-2"/>
                                     <div className="pl-2 w-full flex justify-start">
