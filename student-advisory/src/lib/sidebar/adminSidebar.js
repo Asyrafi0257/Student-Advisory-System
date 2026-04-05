@@ -28,7 +28,7 @@ export const sidebarAdmin = [
   },
   {
     name: "All Mentors",
-    href: "/admin/view",
+    href: "/admin/listMentor",
     icon: Users,
   },
 
