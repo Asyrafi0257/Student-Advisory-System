@@ -84,13 +84,13 @@ export async function POST(req){
 
         //path dalam server
         //process.cwd() => root project
-        const filePath = path.join(process.cwd(), "public/uploads", fileName);
+        const filePath = path.join(process.cwd(), "public/uploads/fileStud", fileName);
 
         //simpan file dalam folder
         await writeFile(filePath, buffer);
 
         //letak path ke dalam database
-        const dbPath = "/uploads/" + fileName;
+        const dbPath = "/uploads/fileStud/" + fileName;
 
         //simpan ke database
         await pool.execute(

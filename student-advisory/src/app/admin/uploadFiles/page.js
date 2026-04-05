@@ -14,7 +14,7 @@ export default function UploadFile() {
                 transition={{duration:1}}
                 className="mb-5"
                 >
-                    <Upload url="/api/upload"/>
+                    <Upload url="/api/uploadStudent"/>
                 </motion.div>
                 
                 <motion.div 
