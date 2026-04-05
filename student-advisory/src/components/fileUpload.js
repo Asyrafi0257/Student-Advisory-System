@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { FileSpreadsheet, Search, Trash2 } from "lucide-react";
 
 
-export default function FileUpload() {
+export default function FileUpload({url}) {
     const [files, setFiles] = useState([]);
     const [searchFiles, setSearchFiles] = useState("");
 
@@ -22,7 +22,7 @@ export default function FileUpload() {
 
     const fetchFile = async () => {
         try{
-            const res = await axios.get("/api/files");
+            const res = await axios.get(url);
             console.log(res.data.rows)
             setFiles(res.data.rows);
         }catch(err){
@@ -61,7 +61,7 @@ export default function FileUpload() {
                     <p>No Files found</p>
                 ) : (
                     <table className="w-full mt-3">
-                        <thead className="bg-gray-200 w-full">
+                        <thead className="bg-[#02577A] w-full text-white">
                             <tr className="w-full justify-around">
                                 <th className="text-lg">File Name</th>
                                 <th className="text-lg">Size</th>

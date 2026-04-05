@@ -1,4 +1,4 @@
-import { House, LogOut, Upload, Users, LayoutDashboard, UserRoundCheck } from "lucide-react";
+import { House, LogOut, Upload, Users, LayoutDashboard, UserRoundCheck, View } from "lucide-react";
 
 export const sidebarAdmin = [
   { section: "Menu" },
@@ -15,16 +15,33 @@ export const sidebarAdmin = [
     icon: Upload,
   },
   {
-    name: "List All Student",
+    name: "All Students",
     href:"/admin/listStudent",
     icon: UserRoundCheck
   },
 
   { section: "Mentors" },
   {
-    name: "Manage Mentors",
+    name: "Upload Mentors",
+    href: "/admin/uploadMentor",
+    icon: Upload
+  },
+  {
+    name: "All Mentors",
     href: "/admin/view",
     icon: Users,
+  },
+
+  {section:"Assignments"},
+  {
+    name: "Assigned Mentees",
+    href : "/admin/assignMentee",
+    icon : Users
+  },
+  {
+    name : "View Assignment",
+    href : "/admin/viewAssignment",
+    icon : View
   },
   
   {

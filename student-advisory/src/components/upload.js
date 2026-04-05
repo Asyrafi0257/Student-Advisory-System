@@ -5,7 +5,7 @@ import axios from "axios";
 import { useState, useRef } from "react";
 import { FileSpreadsheet } from "lucide-react";
 
-export default function Upload() {
+export default function Upload({url}) {
     const [progress, setProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [file, setFile] = useState(null);
@@ -23,7 +23,7 @@ export default function Upload() {
             setIsUploading(true);
 
             //request to server
-            const res = await axios.post("/api/upload", formData, { 
+            const res = await axios.post(url, formData, { 
                 //nak bagitahu server bahawa data yang dihantar adalah file
                 headers:{"Content-Type": "multipart/form-data"},
                 //kita nk track progress in real time
