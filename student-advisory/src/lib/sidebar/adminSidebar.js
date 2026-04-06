@@ -35,7 +35,7 @@ export const sidebarAdmin = [
   {section:"Assignments"},
   {
     name: "Assigned Mentees",
-    href : "/admin/assignMentee",
+    href : "/admin/assignMentees",
     icon : Users
   },
   {
