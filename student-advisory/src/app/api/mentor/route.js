@@ -5,7 +5,7 @@ export async function GET(){
 
     try{
         const [rows] = await pool.query(
-            "SELECT * FROM tbl_mentee ORDER BY mentee_id"
+            "SELECT * FROM tbl_mentor ORDER BY mentor_id"
         )
 
         if(rows.length === 0){

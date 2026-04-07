@@ -7,7 +7,7 @@ import axios from "axios"
 
 export default function ListMentors(){
     const [search, setSearch] = useState("");
-    const [dataMentee, setDataMentee] = useState([]);
+    const [dataMentor, setDataMentor] = useState([]);
 
     useEffect(() => {
         featchData();
@@ -15,16 +15,16 @@ export default function ListMentors(){
 
     const featchData = async () => {
         try{
-            const res = await axios.get("/api/mentee");
+            const res = await axios.get("/api/mentor");
             console.log(res.data.rows)
-            setDataMentee(res.data.rows)
+            setDataMentor(res.data.rows)
         } catch(err){
             console.log(err)
         }
     }
 
-    const filterMentee = dataMentee.filter((data) => (
-        data.mentee_id?.toString().includes(search.toString()) || data.mentee_name?.toLowerCase().includes(search.toLowerCase())
+    const filterMentee = dataMentor.filter((data) => (
+        data.mentor_id?.toString().includes(search.toString()) || data.mentor_name?.toLowerCase().includes(search.toLowerCase())
     ))
 
     return(
@@ -41,21 +41,21 @@ export default function ListMentors(){
 
             <div className="mt-3">
                 {!filterMentee || filterMentee.length === 0 ? (
-                    <p>Not data mentee founded</p>
+                    <p>Not data mentor founded</p>
                 ) : (
                     <div className="w-full mt-3"> 
                         <table className="w-full table-auto mb-2">
                             <thead className="bg-[#02577A]">
                                 <tr className="text-white">
-                                    <th className="p-1 text-[15px]">Mentee Id</th>
-                                    <th className="p-1 text-[15px]">Mentee Name</th>
+                                    <th className="p-1 text-[15px]">Mentor Id</th>
+                                    <th className="p-1 text-[15px]">Mentor Name</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {filterMentee.map((data) => (
-                                <tr key={data.mentee_id} className="text-center border-b-1 border-gray-300 hover:bg-gray-100">
-                                    <td>{data.mentee_id}</td>
-                                    <td>{data.mentee_name}</td>
+                                <tr key={data.mentor_id} className="text-center border-b-1 border-gray-300 hover:bg-gray-100">
+                                    <td>{data.mentor_id}</td>
+                                    <td>{data.mentor_name}</td>
                                 </tr>
                             ))}
                              </tbody> 
