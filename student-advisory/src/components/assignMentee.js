@@ -4,7 +4,7 @@ import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
- /* ================= DRAGGABLE STUDENT ================= */
+        //student boleh dragged
         function DraggableStudent({ student }) {
         const { attributes, listeners, setNodeRef, transform } =
             useDraggable({
@@ -34,7 +34,7 @@ import axios from "axios";
         );
         }
 
-        /* ================= DRAGGABLE Mentor ================= */
+        //mentor boleh dragged
         function DraggableMentor({ mentor }) {
         const { attributes, listeners, setNodeRef, transform } =
             useDraggable({
@@ -63,50 +63,65 @@ import axios from "axios";
             </tr>
         );
         }
+//kawasan drop mentor
+function MentorDropZone({ assignedMentors, onDropMentor, assignments, onDropStudent }) {
+  const { setNodeRef, isOver } = useDroppable({ id: "mentor-drop-zone" });
 
-        /* ================= DROPPABLE MENTOR ================= */
-        function MentorRow({ mentor}) {
-        const { setNodeRef, isOver } = useDroppable({
-            id: `mentor-${mentor.mentor_id}`,
-            data: {
-            type: "mentor",
-            mentor,
-            },
-        });
+  return (
+    <div ref={setNodeRef} className={`border border-gray-300 p-2 w-full ${isOver ? "bg-green-100" : ""}`}>
+      <h3 className="font-semibold mb-2">Mentor Table</h3>
+      {assignedMentors.length === 0 && <p className="text-gray-500">Drag mentors here</p>}
+      {assignedMentors.map((mentor) => (
+        <div key={mentor.mentor_id} className="border-t-1 border-gray-300 p-2 mb-2 bg-gray-100 rounded flex flex-row ">
+            <div className="border-r-2 border-gray-300 w-full flex items-center justify-center">
+                <strong>{mentor.mentor_name}</strong>
+            </div>
+          
+            <div className="flex justify-center w-full">
+            <MenteeDropZone
+                mentor={mentor}
+                assignedStudents={assignments[mentor.mentor_id] || []}
+            />
+            </div>
+        </div>
+        
+      ))}
+    </div>
+  );
+}
 
-        return (
-            <tr
-            ref={setNodeRef}
-            className={`border-b ${
-                isOver ? "bg-green-200" : ""
-            }`}
-            >
-            
-            </tr>
-        );
-        }
+/* ================= DROPPABLE STUDENT PER MENTOR ================= */
+function MenteeDropZone({ mentor, assignedStudents }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `mentee-zone-${mentor.mentor_id}`,
+    data: { type: "mentor", mentor },
+  });
 
-        /* ================= DROPPABLE MENTEE ================= */
-        function MenteeRow({ mentee}) {
-        const { setNodeRef, isOver } = useDroppable({
-            id: `mentee-${mentee.stud_id}`,
-            data: {
-            type: "mentee",
-            mentee,
-            },
-        });
-
-        return (
-            <tr
-            ref={setNodeRef}
-            className={`border-b ${
-                isOver ? "bg-green-200" : ""
-            }`}
-            >
-            
-            </tr>
-        );
-        }
+  return (
+    <div
+      ref={setNodeRef}
+      className={`w-full mt-2 p-2 rounded ${isOver ? "bg-blue-100" : "bg-white"}`}
+    >
+      {assignedStudents.length === 0 ? (
+        <p className="text-gray-500">Drop students here</p>
+      ) : (
+        <table className="table-auto w-full">
+          <tbody>
+            {assignedStudents.map((student) => (
+              <tr key={student.stud_matric} className="border-b">
+                <td className="pl-2 py-1">
+                    <ul className="list-disc px-3">
+                        <li>{student.stud_name}</li>
+                    </ul>
+                    </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
 
 
 export default function Assigns(){
@@ -115,6 +130,7 @@ export default function Assigns(){
     
     // simpan assign: mentor_id → [students]
     const [assignments, setAssignments] = useState({});
+     const [assignedMentors, setAssignedMentors] = useState([]);
 
     
 
@@ -133,85 +149,36 @@ export default function Assigns(){
         }
     }
 
-     /* ================= HANDLE DROP ================= */
+    
+  /* ================= HANDLE DRAG END ================= */
   const handleDragEnd = (event) => {
-    //active => item yang kita drag
-    //over => tempat yang kita drop
     const { active, over } = event;
-
-    //kalo user drop luar daripada dropzone, ia terus stop
     if (!over) return;
 
-    //ambi data daripada dnd-kit
-    const dragged = active.data.current; //daripada useDragged
-    const dropped = over.data.current; //daripada useDropped
+    const dragged = active.data.current;
+    const dropped = over.data.current;
 
-    // hanya allow student → mentor
-    if (
-      dragged.type === "student" &&
-      dropped.type === "student"
-    ) {
-      //ambil object sebenar
-      const student = dragged.student;
-      //const mentor = dropped.mentor;
-
-      // update state assignment
-      setAssignments((prev) => {
-        const prevStudent = prev[student.stud_matric] || [];
-
-        return {
-          ...prev,
-          [student.stud_matric]: [...prevStudent, student],
-        };
-      });
-
-      // buang student dari list asal
-      setDataStudent((prev) =>
-        prev.filter(
-          (s) => s.stud_matric !== student.stud_matric
-        )
-      );
-
-      console.log(
-        "Assign:",
-        student.stud_name,
-        "→",
-        mentor.mentor_name
-      );
-
-      // OPTIONAL: save DB
-      // axios.post("/api/assign", {
-      //   student_id: student.stud_matric,
-      //   mentor_id: mentor.mentor_id,
-      // });
-    } else if( dragged.type === "mentor" && dropped.type ==="mentor"){
-        //ambil object sebenar
-        const mentor = dropped.mentor;
-
-      // update state assignment
-      setAssignments((prev) => {
-        const prevStudent = prev[student.stud_matric] || [];
-
-        return {
-          ...prev,
-          [student.stud_matric]: [...prevStudent, student],
-        };
-      });
-
-      // buang student dari list asal
-      setDataStudent((prev) =>
-        prev.filter(
-          (s) => s.stud_matric !== student.stud_matric
-        )
-      );
-
-      console.log(
-        "Assign:",
-        student.stud_name,
-        "→",
-        mentor.mentor_name
-      );
+    // Drag mentor → mentor table
+    if (dragged.type === "mentor" && over.id === "mentor-drop-zone") {
+      const mentor = dragged.mentor;
+      if (!assignedMentors.find((m) => m.mentor_id === mentor.mentor_id)) {
+        setAssignedMentors((prev) => [...prev, mentor]);
+        setDataMentor((prev) => prev.filter((m) => m.mentor_id !== mentor.mentor_id));
       }
+    }
+
+    // Drag student → mentor drop zone
+    if (dragged.type === "student" && dropped.type === "mentor") {
+      const student = dragged.student;
+      const mentor = dropped.mentor;
+
+      setAssignments((prev) => {
+        const prevStudents = prev[mentor.mentor_id] || [];
+        return { ...prev, [mentor.mentor_id]: [...prevStudents, student] };
+      });
+
+      setDataStudent((prev) => prev.filter((s) => s.stud_matric !== student.stud_matric));
+    }
   };
 
 
@@ -228,12 +195,12 @@ export default function Assigns(){
                 {/* mentee table */}
                 <div className="w-full h-[300px] overflow-auto flex justify-center">
                     {dataStudent.length === 0 ? (
-                        <p>No data student founded</p>
+                        <p>No student available</p>
                     ) : (
                         <table className="table-auto h-[280px] w-full">
                         <thead className="bg-[#02577A]">
                             <tr>
-                                <th className="text-white">Student Name</th>
+                                <th className="text-white">Student</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -254,12 +221,12 @@ export default function Assigns(){
                 {/* mentor */}
                     <div className="w-full h-[300px] overflow-auto flex justify-center">
                         {dataMentor.length === 0 ? (
-                            <p>No data Mentor founded</p>
+                            <p>No mentor available</p>
                         ) : (
                             <table className="table-auto h-[280px] w-full">
                                     <thead className="bg-[#02577A]">
                                         <tr>
-                                            <th className="text-white">Mentee Name</th>
+                                            <th className="text-white">Mentee</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -280,14 +247,17 @@ export default function Assigns(){
                 </div>
             </div>
 
-            <div className="border-b-2 border-gray-300 mt-5"></div>
+            <div className="border-b-2 border-gray-300 mt-10"></div>
 
-            <div className="w-full mt-5">
+            <div className="w-full mt-10">
                 <div className="w-full flex justify-center text-white bg-[#02577A] p-2">
                     <h3>Mentee to Mentor</h3>
                 </div>
                 <div className="w-full flex flex-row justify-between mt-3">
-                    
+                    <MentorDropZone
+            assignedMentors={assignedMentors}
+            assignments={assignments}
+          />
                 </div>
 
             </div>
