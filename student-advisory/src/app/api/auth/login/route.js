@@ -4,24 +4,24 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/jwt";
 
 
-export async function POST(req){
-    try{
-        const {name, password} = await req.json();
+export async function POST(req) {
+    try {
+        const { email, password } = await req.json();
 
         //nak hash password
         //const hashPassword = await bcrypt.hash(password, 10);
 
         const [rows] = await pool.query(
-            "SELECT * FROM tbl_admin WHERE admin_name = ?", [name]
+            "SELECT * FROM tbl_admin WHERE admin_email = ?", [email]
         );
-        
-        if(rows.length == 0){
-            return NextResponse.json({success:false});
-        } 
+
+        if (rows.length == 0) {
+            return NextResponse.json({ success: false });
+        }
 
         const isMatch = await bcrypt.compare(password, rows[0].admin_password);
-        if(!isMatch){
-            return NextResponse.json({success:false});
+        if (!isMatch) {
+            return NextResponse.json({ success: false });
         }
 
         //generate token
@@ -30,17 +30,17 @@ export async function POST(req){
             name: rows[0].admin_name
         })
 
-        const response = NextResponse.json({success: true});
+        const response = NextResponse.json({ success: true });
 
         response.cookies.set("token", token, {
-            httpOnly:true,
-            secure:true,
-            sameSite:"strict"
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict"
         })
 
         return response;
 
-    } catch(error) {
-        return NextResponse.json({error:error.message});
+    } catch (error) {
+        return NextResponse.json({ error: error.message });
     }
 }
