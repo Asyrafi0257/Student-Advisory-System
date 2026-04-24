@@ -208,7 +208,7 @@ export default function Assigns() {
                             <p>No student available</p>
                         ) : (
                             <table className="table-auto h-[280px] w-full">
-                                <thead className="bg-[#02577A]">
+                                <thead className="bg-[#02577A] sticky top-0 z-10 shadow-md">
                                     <tr>
                                         <th className="text-white">Student</th>
                                     </tr>
@@ -234,7 +234,7 @@ export default function Assigns() {
                             <p>No mentor available</p>
                         ) : (
                             <table className="table-auto h-[280px] w-full">
-                                <thead className="bg-[#02577A]">
+                                <thead className="bg-[#02577A] sticky top-0 z-10 shadow-md">
                                     <tr>
                                         <th className="text-white">Mentor</th>
                                     </tr>

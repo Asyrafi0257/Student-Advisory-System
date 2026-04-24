@@ -2,7 +2,7 @@ import { Search } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function StudentList(){
+export default function StudentList() {
     const [dataStudent, setDataStudent] = useState([]);
     const [searchStudent, setSearchStudent] = useState("")
 
@@ -11,14 +11,14 @@ export default function StudentList(){
     }, []);
 
     const fetchDataStudent = async () => {
-        try{
-          const res = await axios.get("/api/student");  
-          console.log(res.data);
-          setDataStudent(res.data.rows);
-        }catch(err){
+        try {
+            const res = await axios.get("/api/student");
+            console.log(res.data);
+            setDataStudent(res.data.rows);
+        } catch (err) {
             console.log(err);
         }
-        
+
     }
 
     //filter search
@@ -26,16 +26,16 @@ export default function StudentList(){
         data.stud_name?.toLowerCase().includes(searchStudent.toLowerCase()) || data.stud_matric?.toString().includes(searchStudent.toString())
     ))
 
-    return(
+    return (
         <div className="bg-[#ffffff] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 md:mx-0 h-auto">
             <div className="w-full flex flex-row justify-between border-b-1 border-gray-300 py-2">
                 <div className="w-full">
-                  <h3 className="text-black text-[20px] font-semibold">List Student (Mentee)</h3>  
+                    <h3 className="text-black text-[20px] font-semibold">List Student (Mentee)</h3>
                 </div>
-                
+
                 <div className="relative w-full flex justify-end">
                     <input type="text" placeholder="search name or matric..." className="w-[350px] shadow-sm h-[40px] py-2 pl-2 rounded-lg border-1 border-gray-200 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" value={searchStudent} onChange={(e) => setSearchStudent(e.target.value)} />
-                    <Search className="absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-gray-400"/>
+                    <Search className="absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-gray-400" />
                 </div>
             </div>
 
@@ -66,7 +66,7 @@ export default function StudentList(){
                         </thead>
                         <tbody>
                             {filterStudent.map((data) => (
-                                <tr key={data.stud_matric} className="text-center border-b-1 border-gray-300 hover:bg-gray-100"> 
+                                <tr key={data.stud_matric} className="text-center border-b-1 border-gray-300 hover:bg-gray-100">
                                     <td className="text-sm px-2">{data.stud_matric}</td>
                                     <td className="text-sm max-w-[200px] truncate hover:whitespace-normal hover:overflow-visible px-2">{data.stud_name}</td>
                                     <td className="text-sm px-2">{data.gender}</td>
@@ -86,10 +86,10 @@ export default function StudentList(){
                                 </tr>
                             ))}
                         </tbody>
-                 </table>
+                    </table>
                 )
                 }
-                
+
             </div>
 
         </div>
