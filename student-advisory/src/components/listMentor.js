@@ -1,6 +1,5 @@
 "use client"
 
-import { div, filter } from "framer-motion/client";
 import { Search, SquarePen } from "lucide-react"
 import { useEffect, useState } from "react"
 import axios from "axios"
@@ -10,10 +9,10 @@ export default function ListMentors() {
     const [dataMentor, setDataMentor] = useState([]);
 
     useEffect(() => {
-        featchData();
+        fetchData();
     }, [])
 
-    const featchData = async () => {
+    const fetchData = async () => {
         try {
             const res = await axios.get("/api/mentor");
             console.log(res.data.rows)

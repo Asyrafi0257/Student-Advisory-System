@@ -133,6 +133,38 @@ function MenteeDropZone({ mentor, assignedStudents }) {
     );
 }
 
+//convert data before fetch to API
+const formatAssignments = () => {
+    const result = [];
+
+    Object.keys(assignments).forEach((mentorId) => {
+        assignments[mentorId].forEach((student) => {
+            result.push({
+                mentor_id: mentorId,
+                stud_matric: student.stud_matric,
+            });
+        });
+    });
+
+    return result;
+};
+
+//handle button save
+const handleSave = async () => {
+    try {
+        const formattedData = formatAssignments();
+
+        await axios.post("/api/assign", {
+            assignments: formattedData,
+        });
+
+        alert("Data successfully saved");
+    } catch (err) {
+        console.log(err);
+        setError("Data failed to saved!");
+    }
+}
+
 
 export default function Assigns() {
     const [dataMentor, setDataMentor] = useState([]);
@@ -292,7 +324,7 @@ export default function Assigns() {
                         />
                     </div>
                     <div className="mt-3 flex justify-end w-full pr-5">
-                        <button className="w-32 h-[30px] bg-[#02577A] rounded-xl text-white cursor-pointer">Save</button>
+                        <button className="w-32 h-[30px] bg-[#02577A] rounded-xl text-white cursor-pointer" onClick={handleSave}>Save</button>
                     </div>
 
                 </div>

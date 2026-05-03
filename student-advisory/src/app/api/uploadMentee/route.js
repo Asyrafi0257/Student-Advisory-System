@@ -1,42 +1,42 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import pool from "@/lib/db";
-import {writeFile} from "fs/promises";
+import { writeFile } from "fs/promises";
 import path from "path";
 import * as XLSX from "xlsx";
- 
+
 //config => paksa nextjs untuk guna node.js runtime
 export const runtime = "nodejs";
 
 // api endpoint untuk handle request
-export async function POST(req){
-    try{
+export async function POST(req) {
+    try {
         //nak ambil data dari request(form)
         const formData = await req.formData();
-        
+
         //file yang user upload
         const file = formData.get("file");
 
         //check if ada user upload file ke tak
-        if(!file) {
+        if (!file) {
             return NextResponse.json(
-                {error : "No file Uploaded"},
-                {status : 400}
+                { error: "No file Uploaded" },
+                { status: 400 }
             );
         }
         //validate type
         if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
-        return NextResponse.json(
-            { error: "Only .xlsx and .xls files allowed" },
-            { status: 400 }
-        );
+            return NextResponse.json(
+                { error: "Only .xlsx and .xls files allowed" },
+                { status: 400 }
+            );
         }
 
         //validate size 
         if (file.size > 10 * 1024 * 1024) {
-        return NextResponse.json(
-            { error: "File too large (max 10MB)" },
-            { status: 400 }
-        );
+            return NextResponse.json(
+                { error: "File too large (max 10MB)" },
+                { status: 400 }
+            );
         }
 
         //nak daptkan size fail
@@ -45,11 +45,11 @@ export async function POST(req){
         //nak convert file guna buffer => so buffer boleh simpan file dan juga boleh process(excel later)
         const bytes = await file.arrayBuffer();
         //Buffer => format Nodejs
-        const buffer = Buffer.from(bytes); 
+        const buffer = Buffer.from(bytes);
 
         //baca data from excel
         //workbook => object yang wakil seluruh file excel
-        const workbook = XLSX.read(buffer, {type: "buffer"}); 
+        const workbook = XLSX.read(buffer, { type: "buffer" });
 
         //kita ambil sheet pertama
         const sheetName = workbook.SheetNames[0];
@@ -61,8 +61,9 @@ export async function POST(req){
 
         //buat clean data dulu
         const cleanData = data.map(row => ({
-            mentee_id: parseInt(row["Staff Id"]),
-            mentee_name: row["Staff Name"] || null,
+            mentor_id: parseInt(row["Staff Id"]),
+            mentor_name: row["Staff Name"] || null,
+            mentor_active: row["Staff Active"] || null
         }));
 
         //generate unik name
@@ -84,31 +85,31 @@ export async function POST(req){
         )
 
         //simpan dalam database
-        for(const row of cleanData){
-            if (!row.mentee_id) {
+        for (const row of cleanData) {
+            if (!row.mentor_id) {
                 console.warn("Skipping row without Matric:", row);
                 continue; // skip row
             }
-            try{
+            try {
 
                 await pool.execute(
-                    "INSERT INTO tbl_mentee(mentee_id, mentee_name) VALUES(?, ?)",
-                    [row.mentee_id, row.mentee_name]
+                    "INSERT INTO tbl_mentor(mentor_id, mentor_name, mentor_active) VALUES(?, ?, ?)",
+                    [row.mentor_id, row.mentor_name, row.mentor_active]
                 )
-        }catch(err){
-            console.error("Failed to insert row:", row, err.message);
-        }
+            } catch (err) {
+                console.error("Failed to insert row:", row, err.message);
+            }
         }
 
         return NextResponse.json({
-            message : "File uploaded & saved to DB",
-            file : dbPath
+            message: "File uploaded & saved to DB",
+            file: dbPath
         })
-    }catch(error){
+    } catch (error) {
         console.error(error);
         return NextResponse.json(
-            {error : "Upload failed"},
-            {status : 500}
+            { error: "Upload failed" },
+            { status: 500 }
         )
     }
 }
