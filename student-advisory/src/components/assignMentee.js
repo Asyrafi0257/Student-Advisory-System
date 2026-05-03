@@ -185,13 +185,20 @@ export default function Assigns() {
         }
 
         // Drag student → mentor drop zone
-        if (dragged.type === "student" && dropped.type === "mentor") {
+        if (dragged.type === "student" && dropped?.type === "mentor") {
             const student = dragged.student;
             const mentor = dropped.mentor;
 
+            const currentStudents = assignments[mentor.mentor_id] || [];
+
+            if (currentStudents.length >= 5) {
+                setError("Mentee only can assigned 5 mentee");
+                setTimeout(() => setError(""), 3000);
+                return;
+            }
+
             setAssignments((prev) => {
-                const prevStudents = prev[mentor.mentor_id] || [];
-                return { ...prev, [mentor.mentor_id]: [...prevStudents, student] };
+                return { ...prev, [mentor.mentor_id]: [...currentStudents, student] };
             });
 
             setDataStudent((prev) => prev.filter((s) => s.stud_matric !== student.stud_matric));
@@ -207,11 +214,6 @@ export default function Assigns() {
                         <h3 className="text-[20px] font-semibold">Assign Mentee</h3>
                     </div>
                 </div>
-                {error && (
-                    <div className="bg-red-500 text-white p-2 rounded mb-3">
-                        {error}
-                    </div>
-                )}
 
                 <div className="flex flex-cols mt-5 w-full items-center gaps-2">
                     {/* mentee table */}
@@ -271,15 +273,26 @@ export default function Assigns() {
 
                 <div className="border-b-2 border-gray-300 mt-10"></div>
 
-                <div className="w-full mt-10">
+
+                {error && (
+                    <div className="bg-red-500 text-white p-2 rounded mb-3 mt-5">
+                        {error}
+                    </div>
+                )}
+
+                <div className="w-full mt-5">
                     <div className="w-full flex justify-center text-white bg-[#02577A] p-2">
                         <h3>Mentee to Mentor</h3>
                     </div>
+
                     <div className="w-full flex flex-row justify-between mt-3">
                         <MentorDropZone
                             assignedMentors={assignedMentors}
                             assignments={assignments}
                         />
+                    </div>
+                    <div className="mt-3 flex justify-end w-full pr-5">
+                        <button className="w-32 h-[30px] bg-[#02577A] rounded-xl text-white cursor-pointer">Save</button>
                     </div>
 
                 </div>
