@@ -137,6 +137,7 @@ function MenteeDropZone({ mentor, assignedStudents }) {
 export default function Assigns() {
     const [dataMentor, setDataMentor] = useState([]);
     const [dataStudent, setDataStudent] = useState([]);
+    const [error, setError] = useState("");
 
     // simpan assign: mentor_id → [students]
     const [assignments, setAssignments] = useState({});
@@ -168,6 +169,12 @@ export default function Assigns() {
         const dragged = active.data.current;
         const dropped = over.data.current;
 
+        //show error if student drag to table mentor
+        if (dragged.type === "student" && over.id === "mentor-drop-zone") {
+            setError("Student cannot drop at  Mentor Table!");
+            setTimeout(() => setError(""), 3000);
+            return;
+        }
         // Drag mentor → mentor table
         if (dragged.type === "mentor" && over.id === "mentor-drop-zone") {
             const mentor = dragged.mentor;
@@ -200,6 +207,11 @@ export default function Assigns() {
                         <h3 className="text-[20px] font-semibold">Assign Mentee</h3>
                     </div>
                 </div>
+                {error && (
+                    <div className="bg-red-500 text-white p-2 rounded mb-3">
+                        {error}
+                    </div>
+                )}
 
                 <div className="flex flex-cols mt-5 w-full items-center gaps-2">
                     {/* mentee table */}
