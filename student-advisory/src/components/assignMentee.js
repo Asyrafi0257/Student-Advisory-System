@@ -1,6 +1,7 @@
 "use client"
 
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -8,7 +9,7 @@ import axios from "axios";
 function DraggableStudent({ student }) {
     const { attributes, listeners, setNodeRef, transform } =
         useDraggable({
-            id: `student-${student.stud_matric}`,
+            id: `student-${student.stud_id}`,
             data: {
                 type: "student",
                 student,
@@ -43,7 +44,7 @@ function DraggableMentor({ mentor }) {
     //transform => position semasa drag(x, y) => digunakan untuk gerakkan element secara visual
     const { attributes, listeners, setNodeRef, transform } =
         useDraggable({
-            id: `mentor-${mentor.mentor_id}`,
+            id: `mentor-${mentor.id}`,
             data: {
                 type: "mentor",
                 mentor,
@@ -72,7 +73,7 @@ function DraggableMentor({ mentor }) {
     );
 }
 //kawasan drop mentor
-function MentorDropZone({ assignedMentors, assignments }) {
+function MentorDropZone({ assignedMentors, assignments, handleRemoveStudent }) {
     //useDroppable => hook daripada dnd-kit untuk dijadikan kawasan ni boleh drop
     //isOver => detect bila item tengah hover drag ke drop zone
     const { setNodeRef, isOver } = useDroppable({ id: "mentor-drop-zone" });
@@ -82,7 +83,7 @@ function MentorDropZone({ assignedMentors, assignments }) {
             <h3 className="font-semibold mb-2">Mentor Table</h3>
             {assignedMentors.length === 0 && <p className="text-gray-500">Drag mentors here</p>}
             {assignedMentors.map((mentor) => (
-                <div key={mentor.mentor_id} className="border-t-1 border-gray-300 p-2 mb-2 bg-gray-100 rounded flex flex-row ">
+                <div key={mentor.id} className="border-t-1 border-gray-300 p-2 mb-2 bg-gray-100 rounded flex flex-row ">
                     <div className="border-r-2 border-gray-300 w-full flex items-center justify-center">
                         <strong>{mentor.mentor_name}</strong>
                     </div>
@@ -90,7 +91,8 @@ function MentorDropZone({ assignedMentors, assignments }) {
                     <div className="flex justify-center w-full mx-3">
                         <MenteeDropZone
                             mentor={mentor}
-                            assignedStudents={assignments[mentor.mentor_id] || []}
+                            assignedStudents={assignments[mentor.id] || []}
+                            handleRemoveStudent={handleRemoveStudent}
                         />
                     </div>
                 </div>
@@ -101,9 +103,9 @@ function MentorDropZone({ assignedMentors, assignments }) {
 }
 
 /* ================= DROPPABLE STUDENT PER MENTOR ================= */
-function MenteeDropZone({ mentor, assignedStudents }) {
+function MenteeDropZone({ mentor, assignedStudents, handleRemoveStudent }) {
     const { setNodeRef, isOver } = useDroppable({
-        id: `mentee-zone-${mentor.mentor_id}`,
+        id: `mentee-zone-${mentor.id}`,
         data: { type: "mentor", mentor },
     });
 
@@ -118,10 +120,19 @@ function MenteeDropZone({ mentor, assignedStudents }) {
                 <table className="table-auto w-full">
                     <tbody>
                         {assignedStudents.map((student) => (
-                            <tr key={student.stud_matric} className="border-b-1 border-gray-300">
+                            <tr key={student.stud_id} className="border-b-1 border-gray-300">
                                 <td className="pl-2 py-1">
                                     <ul className="list-disc px-3">
-                                        <li>{student.stud_name}</li>
+                                        <li className="flex justify-between items-center ">
+                                            {student.stud_name}
+
+                                            <button
+                                                onClick={() => handleRemoveStudent(mentor.id, student)}
+                                                className="text-white bg-[#ff0000] rounded-lg font-bold ml-2 mt-1 cursor-pointer"
+                                            >
+                                                <X />
+                                            </button>
+                                        </li>
                                     </ul>
                                 </td>
                             </tr>
@@ -132,39 +143,6 @@ function MenteeDropZone({ mentor, assignedStudents }) {
         </div>
     );
 }
-
-//convert data before fetch to API
-const formatAssignments = () => {
-    const result = [];
-
-    Object.keys(assignments).forEach((mentorId) => {
-        assignments[mentorId].forEach((student) => {
-            result.push({
-                mentor_id: mentorId,
-                stud_matric: student.stud_matric,
-            });
-        });
-    });
-
-    return result;
-};
-
-//handle button save
-const handleSave = async () => {
-    try {
-        const formattedData = formatAssignments();
-
-        await axios.post("/api/assign", {
-            assignments: formattedData,
-        });
-
-        alert("Data successfully saved");
-    } catch (err) {
-        console.log(err);
-        setError("Data failed to saved!");
-    }
-}
-
 
 export default function Assigns() {
     const [dataMentor, setDataMentor] = useState([]);
@@ -210,9 +188,13 @@ export default function Assigns() {
         // Drag mentor → mentor table
         if (dragged.type === "mentor" && over.id === "mentor-drop-zone") {
             const mentor = dragged.mentor;
-            if (!assignedMentors.find((m) => m.mentor_id === mentor.mentor_id)) {
+
+            if (!assignedMentors.find((m) => m.id === mentor.id)) {
                 setAssignedMentors((prev) => [...prev, mentor]);
-                setDataMentor((prev) => prev.filter((m) => m.mentor_id !== mentor.mentor_id));
+
+                setDataMentor((prev) =>
+                    prev.filter((m) => m.id !== mentor.id)
+                );
             }
         }
 
@@ -221,22 +203,77 @@ export default function Assigns() {
             const student = dragged.student;
             const mentor = dropped.mentor;
 
-            const currentStudents = assignments[mentor.mentor_id] || [];
+            const currentStudents = assignments[mentor.id] || [];
 
-            if (currentStudents.length >= 5) {
-                setError("Mentee only can assigned 5 mentee");
+            // limit 10 mentee
+            if (currentStudents.length >= 10) {
+                setError("Mentee only can be assigned 10 mentee");
                 setTimeout(() => setError(""), 3000);
                 return;
             }
 
             setAssignments((prev) => {
-                return { ...prev, [mentor.mentor_id]: [...currentStudents, student] };
+                return {
+                    ...prev,
+                    [mentor.id]: [...currentStudents, student],
+                };
             });
 
-            setDataStudent((prev) => prev.filter((s) => s.stud_matric !== student.stud_matric));
+            setDataStudent((prev) =>
+                prev.filter((s) => s.stud_id !== student.stud_id)
+            );
         }
     };
 
+    //convert data before fetch to API
+    const formatAssignments = () => {
+        const result = [];
+
+        Object.keys(assignments).forEach((mentorId) => {
+            assignments[mentorId].forEach((student) => {
+                result.push({
+                    mentor_id: Number(mentorId),
+                    stud_id: student.stud_id,
+                });
+            });
+        });
+
+        return result;
+    };
+
+    //handle button save
+    const handleSave = async () => {
+        try {
+            const formattedData = formatAssignments();
+
+            await axios.post("/api/assign", {
+                assignments: formattedData,
+            });
+
+            alert("Data successfully saved");
+        } catch (err) {
+            console.log(err);
+            setError("Data failed to saved!");
+        }
+    }
+    const handleRemoveStudent = (mentorId, student) => {
+        setAssignments((prev) => {
+            const updated = { ...prev };
+
+            updated[mentorId] = updated[mentorId].filter(
+                (s) => s.stud_id !== student.stud_id
+            );
+
+            if (updated[mentorId].length === 0) {
+                delete updated[mentorId];
+            }
+
+            return updated;
+        });
+
+        // masukkan balik ke list student
+        setDataStudent((prev) => [...prev, student]);
+    };
 
     return (
         <DndContext onDragEnd={handleDragEnd}>
@@ -263,7 +300,7 @@ export default function Assigns() {
 
                                     {dataStudent.map((student) => (
                                         <DraggableStudent
-                                            key={student.stud_matric}
+                                            key={student.stud_id}
                                             student={student}
                                         />
                                     ))}
@@ -289,7 +326,7 @@ export default function Assigns() {
 
                                     {dataMentor.map((mentor) => (
                                         <DraggableMentor
-                                            key={mentor.mentor_id}
+                                            key={mentor.id}
                                             mentor={mentor}
                                         />
                                     ))}
@@ -321,6 +358,7 @@ export default function Assigns() {
                         <MentorDropZone
                             assignedMentors={assignedMentors}
                             assignments={assignments}
+                            handleRemoveStudent={handleRemoveStudent}
                         />
                     </div>
                     <div className="mt-3 flex justify-end w-full pr-5">

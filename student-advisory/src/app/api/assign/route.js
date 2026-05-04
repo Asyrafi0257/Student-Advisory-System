@@ -1,45 +1,61 @@
-import { db } from "@/lib/db";
+import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
-        const res = await req.json();
+        const { assignments } = await req.json();
 
-        const { assignments } = res;
+        if (!assignments || !Array.isArray(assignments)) {
+            return NextResponse.json(
+                { error: "Invalid payload" },
+                { status: 400 }
+            );
+        }
 
         for (const item of assignments) {
+            const { mentor_id, stud_id } = item;
 
-            const [rows] = await db.query(
-                "SELECT COUNT(*) as total FROM tbl_mentee_mentor WHERE mentor_id = ?",
-                [item.mentor_id]
-            );
-
-            if (rows[0].total >= 5) {
-                return NextResponse.json(
-                    { error: `Mentor ${item.mentor_id} can only 5 mentee` },
-                    { status: 400 }
-                );
+            if (!mentor_id || !stud_id) {
+                continue; // skip invalid data
             }
 
-            //check duplicate student
-            const [existing] = await db.query(
-                "SELECT * FROM tbl_mentee_mentor WHERE stud_matric = ?",
-                [item.stud_matric]
+            // 1. Check total mentee for mentor (limit 10)
+            const [countRows] = await pool.query(
+                "SELECT COUNT(*) as total FROM tbl_mentor_mentee WHERE mentor_id = ?",
+                [mentor_id]
+            );
+
+            if (countRows[0].total >= 10) {
+                continue; // skip kalau dah full
+            }
+
+            // 2. Check duplicate student assignment
+            const [existing] = await pool.query(
+                "SELECT * FROM tbl_mentor_mentee WHERE stud_id = ?",
+                [stud_id]
             );
 
             if (existing.length > 0) {
-                return NextResponse.json(
-                    { error: `Student ${item.stud_matric} already have mentor` },
-                    { status: 400 }
-                );
+                continue; // skip kalau student dah ada mentor
             }
 
-            await db.query(
-                "INSERT INTO tbl_mentor_mentee (mentor_id, stud_matric) VALUES (?, ?)"[item.mentor_id, item.stud_matric]
+            // 3. Insert assignment
+            await pool.execute(
+                "INSERT INTO tbl_mentor_mentee (mentor_id, stud_id) VALUES (?, ?)",
+                [mentor_id, stud_id]
             );
         }
-        return NextResponse.json({ message: "Success" })
+
+        return NextResponse.json({
+            message: "Assignments saved successfully"
+        });
+
     } catch (err) {
-        return NextResponse.json({ message: "Error Saving!" }, { status: 500 });
+        //console.error("POST /assign error:", err);
+
+        return NextResponse.json(
+            { error: "Server error while saving assignments" },
+            { status: 500 }
+        );
     }
 }
