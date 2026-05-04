@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { FileSpreadsheet, Search, Trash2 } from "lucide-react";
 
 
-export default function FileUpload({ url }) {
+export default function FileUpload({ url, type, delUrl }) {
     const [files, setFiles] = useState([]);
     const [searchFiles, setSearchFiles] = useState("");
 
@@ -35,12 +35,15 @@ export default function FileUpload({ url }) {
         if (!confirm("Are you sure to delete this file?")) return;
 
         try {
-            const res = await axios.delete(`/api/delete?id=${id}`);
-            //refresh file
-            fetchFile()
-            console.log(res.data);
+            if (type === "mentor") {
+                await axios.delete(`${delUrl}?id=${id}`);
+                fetchFile();
+            } else if (type === "student") {
+                await axios.delete(`${delUrl}?id=${id}`);
+                fetchFile();
+            }
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 
@@ -57,12 +60,12 @@ export default function FileUpload({ url }) {
                 </div>
             </div>
 
-            <div className="w-full">
+            <div className="w-full overflow-auto h-[200px] mt-3">
                 {!filterFiles || filterFiles.length === 0 ? (
                     <p>No Files found</p>
                 ) : (
-                    <table className="w-full mt-3">
-                        <thead className="bg-[#02577A] w-full text-white">
+                    <table className="w-full table-auto">
+                        <thead className="bg-[#02577A] w-full text-white sticky top-0 z-10">
                             <tr className="w-full justify-around">
                                 <th className="text-lg">File Name</th>
                                 <th className="text-lg">Size</th>
@@ -82,7 +85,7 @@ export default function FileUpload({ url }) {
                                     <td className="text-base py-2">{formatFileSize(file.file_size)}</td>
                                     <td className="text-base py-2">{file.created_at}</td>
                                     <td className="text-base py-2 flex justify-center cursor-pointer" onClick={() => handleDelete(file.uploads_id)}>
-                                        <Trash2 className="text-red-400" />
+                                        <Trash2 className="text-white bg-[#ff0000] p-1 rounded-sm" />
                                     </td>
                                 </tr>
                             ))}

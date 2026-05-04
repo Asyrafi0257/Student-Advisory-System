@@ -71,17 +71,17 @@ export async function POST(req) {
 
         //path dalam server
         //process.cwd() => root project
-        const filePath = path.join(process.cwd(), "public/uploads/fileMentee", fileName);
+        const filePath = path.join(process.cwd(), "public/uploads/fileMentor", fileName);
 
         //simpan file dalam folder
         await writeFile(filePath, buffer);
 
         //letak path ke dalam database
-        const dbPath = "/uploads/fileMentee/" + fileName;
+        const dbPath = "/uploads/fileMentor/" + fileName;
 
         //simpan ke database
         await pool.execute(
-            "INSERT INTO tbl_uploadmentee(file_name, file_size, file_path) VALUES(?, ?, ?)", [fileName, fileSize, filePath]
+            "INSERT INTO tbl_uploadmentor(file_name, file_size, file_path) VALUES(?, ?, ?)", [fileName, fileSize, filePath]
         )
 
         //simpan dalam database

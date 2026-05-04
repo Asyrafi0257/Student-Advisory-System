@@ -14,7 +14,7 @@ export default function UploadMentor() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
                 >
-                    <UploadFile url="/api/uploadMentee" role="mentor" />
+                    <UploadFile url="/api/uploadMentor" role="mentor" />
                 </motion.div>
 
                 <motion.div
@@ -23,7 +23,7 @@ export default function UploadMentor() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
                 >
-                    <AttachFile url="/api/fileMentee" />
+                    <AttachFile url="/api/fileMentor" type="mentor" delUrl="/api/delFileMentor" />
                 </motion.div>
             </main>
         </div>

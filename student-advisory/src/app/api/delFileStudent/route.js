@@ -4,15 +4,15 @@ import path from "path";
 import fs from "fs";
 
 export async function DELETE(req) {
-    try{
-        const {searchParams} = new URL(req.url);
+    try {
+        const { searchParams } = new URL(req.url);
         const id = searchParams.get("id");
-        
+
         //check id valid ke tak
-        if(!id){
+        if (!id) {
             return NextResponse.json(
-                { message: "User id not found"},
-                {status: 400}
+                { message: "User id not found" },
+                { status: 400 }
             )
         }
         //ambil file dari database
@@ -21,10 +21,10 @@ export async function DELETE(req) {
         )
 
         //check jika takde file dalam database
-        if(rows.length === 0){
+        if (rows.length === 0) {
             return NextResponse.json(
-                {message: "Id file not found"},
-                {status: 404}
+                { message: "Id file not found" },
+                { status: 404 }
             )
         }
 
@@ -44,14 +44,14 @@ export async function DELETE(req) {
         );
 
         return NextResponse.json(
-            {message: "File deleted successfully"}
+            { message: "File deleted successfully" }
         )
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
         return NextResponse.json(
-            { message: "fail failed deleted!"},
-            {status: 500}
+            { message: "fail failed deleted!" },
+            { status: 500 }
         )
     }
 }
