@@ -16,7 +16,7 @@ export const sidebarAdmin = [
   },
   {
     name: "All Students",
-    href:"/admin/listStudent",
+    href: "/admin/listStudent",
     icon: UserRoundCheck
   },
 
@@ -32,18 +32,18 @@ export const sidebarAdmin = [
     icon: Users,
   },
 
-  {section:"Assignments"},
+  { section: "Assignments" },
   {
     name: "Assigned Mentees",
-    href : "/admin/assignMentees",
-    icon : Users
+    href: "/admin/assignMentees",
+    icon: Users
   },
   {
-    name : "View Assignment",
-    href : "/admin/viewAssignment",
-    icon : View
+    name: "View Assignment",
+    href: "/admin/viewAssignment",
+    icon: View
   },
-  
+
   {
     name: "Logout",
     href: "/admin/logout",

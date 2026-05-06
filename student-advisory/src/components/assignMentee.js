@@ -162,7 +162,7 @@ export default function Assigns() {
     const fetchAssign = async () => {
         try {
             const resMentor = await axios.get("/api/mentor");
-            const resStudent = await axios.get("/api/student");
+            const resStudent = await axios.get("/api/student?available=true");
             setDataMentor(resMentor.data.rows);
             setDataStudent(resStudent.data.rows);
         } catch (err) {
@@ -251,6 +251,12 @@ export default function Assigns() {
             });
 
             alert("Data successfully saved");
+            //clear UI
+            setAssignments({});
+            setAssignedMentors([]);
+
+            //refresh balik data
+            fetchAssign();
         } catch (err) {
             console.log(err);
             setError("Data failed to saved!");
