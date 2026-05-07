@@ -46,7 +46,7 @@ export const sidebarAdmin = [
 
   {
     name: "Logout",
-    href: "/admin/logout",
+    action: "logout",
     icon: LogOut,
   },
 ];

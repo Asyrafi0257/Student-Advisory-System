@@ -6,6 +6,7 @@ import axios from "axios";
 
 export default function viewAssign() {
     const [dataAssign, setDataAssign] = useState([]);
+    const [search, setSearch] = useState("");
 
     //kita nak group kan mentee yang sama mentor
     const groupData = (data) => {
@@ -34,7 +35,11 @@ export default function viewAssign() {
         fetchData();
     }, []);
 
-    const grouped = groupData(dataAssign);
+    const filterAssign = dataAssign.filter((data) => (data.mentor?.toLowerCase().includes(search.toLowerCase())
+    ));
+
+    const grouped = groupData(filterAssign);
+
     return (
         <div className="bg-[#ffffff] shadow-lg rounded-xl p-4 mt-5">
             <div className="w-full border-b border-gray-300 flex flex-row">
@@ -47,7 +52,7 @@ export default function viewAssign() {
                     <input
                         type="text"
                         placeholder="Search mentor..."
-                        className="outline outline-gray-300 rounded-sm h-[30px] p-2 mb-2"
+                        className="outline outline-gray-300 rounded-sm h-[30px] p-2 mb-2" onChange={(e) => { setSearch(e.target.value) }} values={search}
                     />
                     <Search className="absolute text-gray-400 top-1/2 -translate-y-1/2 right-2" />
                 </div>
@@ -65,7 +70,7 @@ export default function viewAssign() {
 
             {/* DATA */}
             <div className="w-full mt-2">
-                {dataAssign.length === 0 ? (
+                {!filterAssign || filterAssign.length === 0 ? (
                     <p className="text-center">No data mentor mentee</p>
                 ) : (
                     Object.keys(grouped).map((mentor, index) => (
