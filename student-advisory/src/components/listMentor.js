@@ -42,7 +42,7 @@ export default function ListMentors() {
     ))
 
     return (
-        <div className="bg-[#ffffff] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 md:mx-0 h-auto mt-5">
+        <div className="bg-[#ffffff] shadow-lg rounded-xl p-4 md:p-6 mt-5">
             <div className="flex flex-row w-full border-b-1 border-gray-300 justify-between py-2">
                 <div className="mb-2 w-full">
                     <h3 className="text-[20px] font-semibold">List Mentor</h3>
@@ -83,9 +83,10 @@ export default function ListMentors() {
                     </div>
                 )}
             </div>
+
             {open && selectedMentor && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-                    <div className="bg-white p-5 rounded-lg w-[400px]">
+                <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center">
+                    <div className="bg-white p-5 rounded-lg w-[400px] relative z-50">
 
                         <h2 className="text-lg font-semibold mb-3">
                             Edit Mentor

@@ -196,7 +196,7 @@ export default function AdminProfile() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-2.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-150"
+                            className="w-full py-2.5 text-sm font-medium bg-[#02577A] text-white rounded-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-150"
                         >
                             {loading ? "Saving…" : "Save Changes"}
                         </button>

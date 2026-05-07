@@ -20,6 +20,7 @@ export async function POST(req) {
         }
 
         const isMatch = await bcrypt.compare(password, rows[0].admin_password);
+        console.log(password);
         if (!isMatch) {
             return NextResponse.json({ success: false });
         }
