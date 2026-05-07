@@ -20,7 +20,7 @@ export default function AdminProfile() {
     useEffect(() => {
         axios.get("/api/profile").then((res) => {
             setForm(res.data);
-            setPreview(res.data.profile_path);
+            setPreview(res.data.admin_imagePath);
         });
     }, []);
 
