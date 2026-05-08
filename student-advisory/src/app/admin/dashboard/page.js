@@ -1,7 +1,7 @@
 "use client";
 
 import StatCard from "@/components/statCard";
-import ListMentor from "@/components/listMentorTbl";
+import Chart from "@/components/chart";
 import { Activity, ShieldMinus, User } from "lucide-react";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -36,7 +36,7 @@ export default function Dashboard() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
                 >
-                    <ListMentor />
+                    <Chart />
                 </motion.div>
             </main>
         </div>
