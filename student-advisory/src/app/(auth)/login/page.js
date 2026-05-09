@@ -12,7 +12,7 @@ export default function Login() {
     const [selectRole, setSelectRole] = useState("Options");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRoles] = useState(["Admin", "Student", "Lecture"]);
+    const roleOptions = ["Admin", "Student", "Lecturer"];
     const [alertData, setAlertData] = useState(null);
 
 
@@ -42,7 +42,7 @@ export default function Login() {
         e.preventDefault();
 
         // check error handling
-        if (email === "" && password === "" && selectRole !== role[0]) {
+        if (!email || !password || selectRole === "Options") {
             showAlert({
                 type: "error",
                 message: "Required Fields",
@@ -61,7 +61,7 @@ export default function Login() {
             });
             const data = await res.json(); //wait response from server
 
-            if (data.success && selectRole === role[0]) {
+            if (data.success && data.role === "admin" && selectRole === roleOptions[0]) {
                 setAlertData({
                     type: "success",
                     message: "Success!",
@@ -71,6 +71,24 @@ export default function Login() {
                     router.replace("/admin")
                 }, 2000);
 
+            } else if (data.success && data.role === "student" && selectRole === roleOptions[1]) {
+                setAlertData({
+                    type: "success",
+                    message: "Success!",
+                    describe: "You have successfully signed into Student account."
+                })
+                setTimeout(() => {
+                    router.replace("/student")
+                }, 2000);
+            } else if (data.success && data.role === "mentor" && selectRole === roleOptions[2]) {
+                setAlertData({
+                    type: "success",
+                    message: "Success!",
+                    describe: "You have successfully signed into Lecturer account."
+                })
+                setTimeout(() => {
+                    router.replace("/lecturer")
+                }, 2000);
             } else {
                 showAlert({
                     type: "error",
@@ -127,7 +145,7 @@ export default function Login() {
                                 </button>
                                 {open && (
                                     <div className="absolute w-32 border mt-1 rounded-md bg-white mt-10">
-                                        {role.map((item) => (
+                                        {roleOptions.map((item) => (
                                             <div
                                                 key={item}
                                                 onClick={() => {
