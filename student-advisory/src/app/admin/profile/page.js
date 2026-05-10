@@ -79,7 +79,7 @@ export default function AdminProfile() {
                     {/* Avatar */}
                     <div className="relative w-24 h-24 mx-auto mb-1.5">
                         <img
-                            src={preview || "/images/default.png"}
+                            src={preview || "/images/logo-profile.png"}
                             alt="Profile photo"
                             className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 block"
                         />
