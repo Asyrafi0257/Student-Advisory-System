@@ -1,13 +1,12 @@
 "use client"
 
-import { sidebarAdmin } from "@/lib//sidebar/adminSidebar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+import * as Icons from "lucide-react";
 
-export default function SidebarAdmin() {
+export default function Sidebar({ sidebarData, bgColor }) {
     const pathname = usePathname();
     const router = useRouter();
 
@@ -25,7 +24,7 @@ export default function SidebarAdmin() {
 
     return (
         <div className="relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 w-64">
-            <div className="h-full bg-[#02577A] backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f]">
+            <div className={`h-full ${bgColor} backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f]`}>
 
                 <div className="flex flex-row h-[100px] w-full">
                     <div className="flex items-center transition-all duration-300">
@@ -48,7 +47,7 @@ export default function SidebarAdmin() {
 
                 <nav className="mt-5 flex flex-col justify-between h-full">
                     <div>
-                        {sidebarAdmin.filter((item) => item.name !== "Logout").map((item, index) => {
+                        {sidebarData.filter((item) => item.name !== "Logout").map((item, index) => {
                             //title section
                             if (item.section) {
                                 return (
@@ -60,7 +59,7 @@ export default function SidebarAdmin() {
                                     </p>
                                 );
                             }
-                            const Icon = item.icon
+                            const Icon = Icons[item.icon]
                             return (
                                 <Link
                                     key={index}
@@ -78,18 +77,23 @@ export default function SidebarAdmin() {
                         })}
                     </div>
                     <div>
-                        {sidebarAdmin
+                        {sidebarData
                             .filter((item) => item.name === "Logout")
-                            .map((item, index) => (
-                                <button
-                                    key={index}
-                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-600 transition-all text-white"
-                                    onClick={handleLogout}
-                                >
-                                    <item.icon size={18} />
-                                    <span>{item.name}</span>
-                                </button>
-                            ))}
+                            .map((item, index) => {
+                                const Icon = Icons[item.icon];
+                                return (
+
+
+                                    <button
+                                        key={index}
+                                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-600 transition-all text-white"
+                                        onClick={handleLogout}
+                                    >
+                                        <Icon size={18} />
+                                        <span>{item.name}</span>
+                                    </button>
+                                );
+                            })}
                     </div>
                 </nav>
 

@@ -5,19 +5,19 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-export default function Header() {
-    const [admin, setAdmin] = useState(null);
+export default function Header({ profileUrl }) {
+    const [profile, setProfile] = useState(null);
     const [open, setOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
         axios.get("/api/profile")
-            .then(res => setAdmin(res.data))
+            .then(res => setProfile(res.data))
             .catch(err => console.log(err));
     }, []);
 
     const handleEditProfile = () => {
-        router.push("/admin/profile");
+        router.push(profileUrl);
         setOpen(false);
     }
 
@@ -37,7 +37,7 @@ export default function Header() {
                         className="flex items-center gap-3 cursor-pointer hover:bg-gray-100 px-3 py-2 rounded-lg transition"
                     >
                         <Image
-                            src={admin?.admin_imagePath || "/images/logo-profile.png"}
+                            src={profile?.image || "/images/logo-profile.png"}
                             alt="profile"
                             width={40}
                             height={40}
@@ -46,10 +46,10 @@ export default function Header() {
 
                         <div className="flex flex-col">
                             <span className="text-sm font-semibold text-black">
-                                {admin?.admin_name || "Admin"}
+                                {profile?.name || "User"}
                             </span>
                             <span className="text-xs text-gray-500">
-                                {admin?.admin_email || "admin@email.com"}
+                                {profile?.email || "user@email.com"}
                             </span>
                         </div>
                     </div>

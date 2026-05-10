@@ -123,7 +123,7 @@ export async function POST(req) {
             }
 
             const token = generateToken({
-                id: mentor.mentor_id,
+                id: mentor.id,
                 role: "mentor",
                 staffNo: mentor.mentor_id
             });

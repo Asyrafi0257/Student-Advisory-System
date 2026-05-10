@@ -5,48 +5,48 @@ export const sidebarAdmin = [
   {
     name: "Dashboard",
     href: "/admin/dashboard",
-    icon: LayoutDashboard,
+    icon: "LayoutDashboard",
   },
 
   { section: "Students" },
   {
     name: "Upload Students",
     href: "/admin/uploadFiles",
-    icon: Upload,
+    icon: "Upload",
   },
   {
     name: "All Students",
     href: "/admin/listStudent",
-    icon: UserRoundCheck
+    icon: "UserRoundCheck"
   },
 
   { section: "Mentors" },
   {
     name: "Upload Mentors",
     href: "/admin/uploadMentor",
-    icon: Upload
+    icon: "Upload"
   },
   {
     name: "All Mentors",
     href: "/admin/listMentor",
-    icon: Users,
+    icon: "Users",
   },
 
   { section: "Assignments" },
   {
     name: "Assigned Mentees",
     href: "/admin/assignMentees",
-    icon: Users
+    icon: "Users"
   },
   {
     name: "View Assignment",
     href: "/admin/viewAssignment",
-    icon: View
+    icon: "View"
   },
 
   {
     name: "Logout",
     action: "logout",
-    icon: LogOut,
+    icon: "LogOut",
   },
 ];

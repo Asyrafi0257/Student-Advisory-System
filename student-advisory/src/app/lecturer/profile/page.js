@@ -3,11 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-export default function AdminProfile() {
+export default function Lecturerprofile() {
     const [form, setForm] = useState({
         name: "",
         email: "",
-        password: "",
     });
 
     const [file, setFile] = useState(null);
@@ -39,9 +38,9 @@ export default function AdminProfile() {
         setLoading(true);
 
         const data = new FormData();
-        data.append("admin_name", form.name);
-        data.append("admin_email", form.email);
-        data.append("admin_password", form.password);
+        data.append("mentor_id", form.id);
+        data.append("mentor_name", form.name);
+        data.append("mentor_email", form.email);
         if (file) data.append("profile", file);
 
         await axios.put("/api/profile", data);
@@ -115,17 +114,18 @@ export default function AdminProfile() {
                         {/* Name + Username */}
                         <div className="grid grid-cols-1">
                             <div>
-                                <label className={labelClass}>Full Name</label>
+                                <label className={labelClass}>User ID</label>
                                 <div className="relative">
                                     <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                         <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 3H8" />
                                     </svg>
                                     <input
-                                        name="admin_name"
-                                        value={form.name || ""}
+                                        name="mentor_id"
+                                        value={form.id || ""}
                                         onChange={handleChange}
-                                        placeholder="Your name"
+                                        placeholder="Your ID"
                                         className={inputClass}
+                                        readOnly
                                     />
                                 </div>
                             </div>
@@ -149,17 +149,17 @@ export default function AdminProfile() {
 
                         {/* Email */}
                         <div>
-                            <label className={labelClass}>Email</label>
+                            <label className={labelClass}>Full Name</label>
                             <div className="relative">
                                 <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
                                 </svg>
                                 <input
-                                    type="email"
-                                    name="email"
-                                    value={form.email || ""}
+                                    type="text"
+                                    name="name"
+                                    value={form.name || ""}
                                     onChange={handleChange}
-                                    placeholder="you@example.com"
+                                    placeholder="Your Name"
                                     className={inputClass}
                                 />
                             </div>
@@ -171,21 +171,19 @@ export default function AdminProfile() {
                         {/* Password */}
                         <div>
                             <label className={labelClass}>
-                                New Password{" "}
-                                <span className="text-[10px] normal-case tracking-normal font-normal text-gray-300 ml-1">
-                                    — optional
-                                </span>
+                                Email
+
                             </label>
                             <div className="relative">
                                 <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                 </svg>
                                 <input
-                                    type="password"
-                                    name="password"
-                                    value={form.password || ""}
+                                    type="email"
+                                    name="email"
+                                    value={form.email || ""}
                                     onChange={handleChange}
-                                    placeholder="Leave blank to keep current"
+                                    placeholder="you@example.com"
                                     className={inputClass}
                                 />
                             </div>
