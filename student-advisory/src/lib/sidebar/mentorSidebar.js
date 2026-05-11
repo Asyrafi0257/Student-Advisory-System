@@ -18,8 +18,13 @@ export const sidebarMentor = [
   { section: "Session" },
   {
     name: "Create Session",
-    href: "/lecturer/createSession",
+    href: "/lecturer/session",
     icon: "CalendarPlus",
+  },
+  {
+    name: "Submit session",
+    href: "/lecturer/submitSession",
+    icon: "Send"
   },
   {
     name: "View Session",

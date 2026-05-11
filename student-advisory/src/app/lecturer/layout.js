@@ -2,11 +2,6 @@ import Sidebar from "@/components/sidebar";
 import Header from "@/components/header";
 import { sidebarMentor } from "@/lib/sidebar/mentorSidebar";
 
-export const metadata = {
-    title: "Mentor",
-    describe: "This page for lecturer to know their mentee and also create session for them"
-}
-
 export default function Lecturer({ children }) {
     return (
         <div className="flex h-screen overflow-hidden bg-[#EAF2F6]">
