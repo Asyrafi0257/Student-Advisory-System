@@ -73,3 +73,43 @@ export async function DELETE(req) {
         );
     }
 }
+
+export async function GET(req, { params }) {
+    try {
+        const { id } = await params;
+
+        const [rows] = await pool.query(
+            `SELECT * FROM tbl_session WHERE session_id = ?`,
+            [id]
+        );
+        console.log(rows)
+
+        return NextResponse.json(rows[0]);
+    } catch (err) {
+        return NextResponse.json(
+            { message: "Error fetching mentor", error: err.message },
+            { status: 500 }
+        );
+    }
+}
+
+export async function PUT(req, { params }) {
+    try {
+        const { id } = await params;
+        const body = await req.json();
+
+        const { session_title, session_description, session_date, session_start_time, session_end_time, session_location, session_type } = body;
+
+        await pool.query(`
+            UPDATE tbl_session
+            SET session_title=?, session_description=?, session_date=?, session_start_time=?, session_end_time=?, session_location=?, session_type=? WHERE session_id = ?`, [session_title, session_description, session_date, session_start_time, session_end_time, session_location, session_type, id]
+        );
+
+        return NextResponse.json({ message: "Session updated successfully" });
+    } catch (err) {
+        return NextResponse.json(
+            { message: "Error updating mentor", error: err.message },
+            { status: 500 }
+        );
+    }
+}

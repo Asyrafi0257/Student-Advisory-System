@@ -64,7 +64,6 @@ export async function POST(req) {
         }
 
         //insert data session dalam db
-
         const [result] = await pool.query(
             `
             INSERT INTO tbl_session (
@@ -96,7 +95,7 @@ export async function POST(req) {
             {
                 success: true,
                 message: "Session created successfully",
-                session_id: result.insertId,
+                session_id: result.session_id,
             },
             { status: 201 }
         );

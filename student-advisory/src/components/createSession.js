@@ -6,6 +6,8 @@ import { Pencil, Trash2 } from "lucide-react";
 
 export default function CreateSessionPage() {
     const [data, setData] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedSession, setSelectedSession] = useState(null);
 
     const [form, setForm] = useState({
         session_title: "",
@@ -41,6 +43,8 @@ export default function CreateSessionPage() {
             console.log(response.data);
 
             alert("Session created successfully");
+            // refresh UI
+            window.location.reload();
 
             //bila data dh masuk dlm db then kita set balik kepada empty field
             setForm({
@@ -67,7 +71,7 @@ export default function CreateSessionPage() {
         try {
 
             const response = await axios.delete(
-                `/api/session?session_id=${session_id}`
+                `/api/session/[id]?session_id=${session_id}`
             );
 
             console.log(response.data);
@@ -85,8 +89,19 @@ export default function CreateSessionPage() {
         }
     }
 
-    const handleEdit = () => {
+    const handleEdit = async (session_id) => {
+        try {
+            const res = await axios.get(`/api/session/${session_id}`);
+            console.log(res.data);
+            console.log(selectedSession)
+            setSelectedSession({
+                ...res.data,
+                session_date: res.data.session_date?.split("T")[0]
+            });
+            setOpen(true);
+        } catch (err) {
 
+        }
     }
     return (
 
@@ -265,7 +280,7 @@ export default function CreateSessionPage() {
                                         </h4>
                                         <div className="flex flex-row justify-between w-[50px] mb-2">
                                             <Trash2 className="text-white bg-red-600 p-1 rounded-sm cursor-pointer" onClick={() => { handleDelete(item.session_id) }} />
-                                            <Pencil className="text-white bg-blue-600 p-1 rounded-sm cursor-pointer" onClick={handleEdit} />
+                                            <Pencil className="text-white bg-blue-600 p-1 rounded-sm cursor-pointer" onClick={() => { handleEdit(item.session_id) }} />
                                         </div>
                                     </div>
 
@@ -298,6 +313,199 @@ export default function CreateSessionPage() {
 
 
             </div>
+
+            {/* popup for edit session */}
+            {open && selectedSession && (
+                <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center" onClick={() => setOpen(false)}>
+                    <div className="bg-white p-5 rounded-lg relative z-50 w-[500px]" onClick={(e) => e.stopPropagation()}>
+                        <h3 className="text-center font-bold tracking-[2] text-[20px]">Edit Session</h3>
+                        {/* Session Title */}
+                        <div className="mt-3 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Session Title
+                            </label>
+
+                            <input
+                                type="text"
+                                name="session_title"
+                                value={selectedSession.session_title}
+                                onChange={(e) =>
+                                    setSelectedSession({
+                                        ...selectedSession,
+                                        session_title: e.target.value
+                                    })
+                                }
+                                placeholder="Enter session title"
+                                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
+                                required
+                            />
+                        </div>
+
+                        {/* Description */}
+                        <div className="mb-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Description
+                            </label>
+
+                            <textarea
+                                name="session_description"
+                                value={selectedSession.session_description}
+                                onChange={(e) =>
+                                    setSelectedSession({
+                                        ...selectedSession,
+                                        session_description: e.target.value
+                                    })
+                                }
+                                placeholder="Enter session description"
+                                rows={5}
+                                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300 resize-none"
+                                required
+                            />
+                        </div>
+
+                        {/* Date + Capacity */}
+                        <div className="grid grid-cols-1 gap-5 mb-2">
+
+                            {/* Date */}
+                            <div className="mb-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Session Date
+                                </label>
+
+                                <input
+                                    type="date"
+                                    name="session_date"
+                                    value={selectedSession.session_date}
+                                    onChange={(e) =>
+                                        setSelectedSession({
+                                            ...selectedSession,
+                                            session_date: e.target.value
+                                        })
+                                    }
+                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
+                                    required
+                                />
+                            </div>
+
+                        </div>
+
+                        {/* Time */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-2">
+
+                            {/* Start Time */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Start Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="session_start_time"
+                                    value={selectedSession.session_start_time}
+                                    onChange={(e) =>
+                                        setSelectedSession({
+                                            ...selectedSession,
+                                            session_start_time: e.target.value
+                                        })
+                                    }
+                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
+                                    required
+                                />
+                            </div>
+
+                            {/* End Time */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    End Time
+                                </label>
+
+                                <input
+                                    type="time"
+                                    name="session_end_time"
+                                    value={selectedSession.session_end_time}
+                                    onChange={(e) =>
+                                        setSelectedSession({
+                                            ...selectedSession,
+                                            session_end_time: e.target.value
+                                        })
+                                    }
+                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        {/* Location */}
+                        <div className="mb-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Location / Meeting Link
+                            </label>
+
+                            <input
+                                type="text"
+                                name="session_location"
+                                value={selectedSession.session_location}
+                                onChange={(e) =>
+                                    setSelectedSession({
+                                        ...selectedSession,
+                                        session_location: e.target.value
+                                    })
+                                }
+                                placeholder="Enter location or Google Meet link"
+                                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
+                                required
+                            />
+                        </div>
+
+                        {/* Session Type */}
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Session Type
+                            </label>
+
+                            <select
+                                name="session_type"
+                                value={selectedSession.session_type}
+                                onChange={(e) =>
+                                    setSelectedSession({
+                                        ...selectedSession,
+                                        session_type: e.target.value
+                                    })
+                                }
+                                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
+                            >
+                                <option value="online">
+                                    Online
+                                </option>
+
+                                <option value="physical">
+                                    Physical
+                                </option>
+                            </select>
+                        </div>
+
+                        {/* Submit Button */}
+                        <button
+                            onClick={async () => {
+                                try {
+                                    await axios.put(`/api/session/${selectedSession.session_id}`, selectedSession);
+
+                                    setOpen(false);
+                                    alert("Edit Session successful");
+
+                                } catch (err) {
+                                    console.log(err);
+                                    alert("Session not successful edit!")
+                                }
+                            }}
+                            type="submit"
+                            className="w-full bg-[#008000] active:scale-[0.98] transition text-white py-3 rounded-xl font-semibold text-sm sm:text-base">
+                            Edit session
+                        </button>
+
+                    </div>
+                </div>
+            )}
 
         </div>
 
