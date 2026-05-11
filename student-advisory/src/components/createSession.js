@@ -60,6 +60,34 @@ export default function CreateSessionPage() {
         }
     };
 
+    const handleDelete = async (session_id) => {
+        //confirmation before delete session
+        if (!confirm("Are you sure to delete this session?")) return;
+
+        try {
+
+            const response = await axios.delete(
+                `/api/session?session_id=${session_id}`
+            );
+
+            console.log(response.data);
+
+            alert("Deleted successfully");
+
+            // refresh UI
+            window.location.reload();
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert("Failed to delete");
+        }
+    }
+
+    const handleEdit = () => {
+
+    }
     return (
 
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-2 mb-8 px-4 sm:px-6 lg:px-8">
@@ -131,22 +159,6 @@ export default function CreateSessionPage() {
                             />
                         </div>
 
-                        {/* Capacity */}
-                        {/* <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Session Capacity
-                            </label>
-
-                            <input
-                                type="number"
-                                name="session_capacity"
-                                value={form.session_capacity}
-                                onChange={handleChange}
-                                placeholder="Max mentee"
-                                className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm sm:text-base outline-none focus:ring-2 focus:ring-gray-300"
-                                required
-                            />
-                        </div> */}
                     </div>
 
                     {/* Time */}
@@ -252,8 +264,8 @@ export default function CreateSessionPage() {
                                             {item.session_title}
                                         </h4>
                                         <div className="flex flex-row justify-between w-[50px] mb-2">
-                                            <Trash2 className="text-white bg-red-600 p-1 rounded-sm cursor-pointer" />
-                                            <Pencil className="text-white bg-blue-600 p-1 rounded-sm cursor-pointer" />
+                                            <Trash2 className="text-white bg-red-600 p-1 rounded-sm cursor-pointer" onClick={() => { handleDelete(item.session_id) }} />
+                                            <Pencil className="text-white bg-blue-600 p-1 rounded-sm cursor-pointer" onClick={handleEdit} />
                                         </div>
                                     </div>
 
