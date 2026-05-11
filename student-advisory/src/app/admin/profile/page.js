@@ -121,7 +121,7 @@ export default function AdminProfile() {
                                         <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 3H8" />
                                     </svg>
                                     <input
-                                        name="admin_name"
+                                        name="name"
                                         value={form.name || ""}
                                         onChange={handleChange}
                                         placeholder="Your name"
@@ -169,7 +169,7 @@ export default function AdminProfile() {
                         <hr className="border-t border-gray-100" />
 
                         {/* Password */}
-                        <div>
+                        {/* <div>
                             <label className={labelClass}>
                                 New Password{" "}
                                 <span className="text-[10px] normal-case tracking-normal font-normal text-gray-300 ml-1">
@@ -189,7 +189,7 @@ export default function AdminProfile() {
                                     className={inputClass}
                                 />
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Submit */}
                         <button

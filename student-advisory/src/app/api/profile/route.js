@@ -98,7 +98,7 @@ export async function PUT(req) {
 
             const admin_name = formData.get("admin_name");
             const email = formData.get("admin_email");
-            const password = formData.get("admin_password");
+            //const password = formData.get("admin_password");
 
             let query = `
                 UPDATE tbl_admin
@@ -107,10 +107,10 @@ export async function PUT(req) {
 
             let values = [admin_name, email];
 
-            if (password) {
-                query += ", admin_password = ?";
-                values.push(password);
-            }
+            // if (password) {
+            //     query += ", admin_password = ?";
+            //     values.push(password);
+            // }
 
             if (profilePath) {
                 query += ", admin_imagePath = ?";
