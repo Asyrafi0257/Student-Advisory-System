@@ -23,7 +23,7 @@ export const sidebarMentor = [
   },
   {
     name: "Submit session",
-    href: "/lecturer/submitSession",
+    href: "/lecturer/submitsession",
     icon: "Send"
   },
   {
