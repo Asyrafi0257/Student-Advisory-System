@@ -48,6 +48,7 @@ export default function StudentList() {
                             <tr className="text-center text-white">
                                 <th className="px-2 py-2 text-sm">Matric</th>
                                 <th className="px-2 py-2 text-sm">Name</th>
+                                <th className="px-2 py-2 text-sm">Program</th>
                                 <th className="px-2 py-2 text-sm">Gender</th>
                                 <th className="px-2 py-2 text-sm">Code UUM</th>
                                 <th className="px-2 py-2 text-sm">Academic Qualifications</th>
@@ -69,6 +70,7 @@ export default function StudentList() {
                                 <tr key={data.stud_matric} className="text-center border-b-1 border-gray-300 hover:bg-gray-100">
                                     <td className="text-sm px-2">{data.stud_matric}</td>
                                     <td className="text-sm max-w-[200px] truncate hover:whitespace-normal hover:overflow-visible px-2">{data.stud_name}</td>
+                                    <td className="text-sm max-w-[200px] truncate hover:whitespace-normal hover:overflow-visible px-2">{data.program}</td>
                                     <td className="text-sm px-2">{data.gender}</td>
                                     <td className="text-sm px-2">{data.code_uum}</td>
                                     <td className="text-sm max-w-[150px] truncate px-2" title={data.academic_qualifications}>{data.academic_qualifications}</td>

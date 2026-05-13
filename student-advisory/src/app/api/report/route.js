@@ -68,7 +68,7 @@ export async function POST(req) {
             VALUES (?, ?, ?, ?, ?)`,
             [
                 mentor_id,
-                `/uploads/${fileName}`,
+                `/uploads/report/${fileName}`,
                 title,
                 date,
                 location
@@ -91,5 +91,45 @@ export async function POST(req) {
         }, {
             status: 500
         });
+    }
+}
+
+export async function GET(req) {
+    try {
+
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        if (!token) {
+            return NextResponse.json({
+                success: false,
+                message: "Unauthorized"
+            }, { status: 401 });
+        }
+
+        const decoded = verifyToken(token);
+
+        const mentor_id = decoded.id;
+
+        const [rows] = await pool.query(
+            `SELECT * FROM tbl_report
+             WHERE mentor_id = ?
+             ORDER BY created_at DESC`,
+            [mentor_id]
+        );
+
+        return NextResponse.json({
+            success: true,
+            rows
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        return NextResponse.json({
+            success: false,
+            message: "Server Error"
+        }, { status: 500 });
     }
 }
