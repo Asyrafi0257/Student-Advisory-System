@@ -69,7 +69,9 @@ export default function SessionView() {
                             {/* Meta */}
                             <div className="text-right flex-shrink-0">
                                 <span className="text-[12px] text-gray-400">
-                                    {item.created_at}
+                                    {new Date(item.created_at).toLocaleString("en-MY", {
+                                        timeZone: "Asia/Kuala_Lumpur",
+                                    })}
                                 </span>
                             </div>
                         </div>
