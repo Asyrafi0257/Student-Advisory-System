@@ -29,9 +29,29 @@ export async function GET(req) {
             `, [mentor_id]
         );
 
+        const [totalMentee] = await pool.query(
+            `SELECT COUNT(*) AS total
+             FROM tbl_mentor_mentee
+             WHERE mentor_id = ?`,
+            [mentor_id]
+        );
+        const [totalStudCs] = await pool.query(
+            `SELECT 
+                SUM(CASE WHEN s.program = 'Bachelor of Science Computer' THEN 1 ELSE 0 END) AS studCs,
+                SUM(CASE WHEN s.program = 'Bachelor of Information Technology' THEN 1 ELSE 0 END) AS studIt
+            FROM tbl_students s
+            INNER JOIN tbl_mentor_mentee mm ON s.stud_id = mm.stud_id
+            WHERE mm.mentor_id = ?
+            `, [mentor_id]
+        )
+
         return NextResponse.json({
             success: true,
-            rows
+            rows,
+            totalMentee: totalMentee[0].total,
+            totalCs: totalStudCs[0].studCs,
+            totalIt: totalStudCs[0].studIt
+
         });
 
     } catch (err) {
