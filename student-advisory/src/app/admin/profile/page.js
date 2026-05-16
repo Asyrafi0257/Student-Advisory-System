@@ -18,7 +18,7 @@ export default function AdminProfile() {
 
     useEffect(() => {
         axios.get("/api/profile").then((res) => {
-            setForm(res.data);
+            setForm(res?.data);
             setPreview(res.data.image);
         });
     }, []);

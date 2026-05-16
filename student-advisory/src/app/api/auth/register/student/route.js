@@ -6,7 +6,7 @@ export async function POST(req) {
     try {
         const { stud_email, stud_matric, stud_password, stud_confirmPassword } = await req.json();
 
-        // 1. check password match
+        //check password match
         if (stud_password !== stud_confirmPassword) {
             return NextResponse.json({
                 success: false,
@@ -14,23 +14,23 @@ export async function POST(req) {
             });
         }
 
-        // 2. check email + matric MATCH
+        //check matric number student
         const [rows] = await pool.query(
             `SELECT * FROM tbl_students 
-             WHERE email_alternatif = ? AND stud_matric = ?`,
-            [stud_email, stud_matric]
+             WHERE stud_matric = ?`,
+            [stud_matric]
         );
 
         if (rows.length === 0) {
             return NextResponse.json({
                 success: false,
-                message: "Email or Matric not found in system"
+                message: "Matric not found in system"
             });
         }
 
         const user = rows[0];
 
-        // 3. check already activated
+        //check already activated
         if (user.stud_password) {
             return NextResponse.json({
                 success: false,
@@ -44,8 +44,8 @@ export async function POST(req) {
         // 5. update student
         await pool.query(
             `UPDATE tbl_students 
-             SET stud_password = ?
-             WHERE email_alternatif = ? AND stud_matric = ?`,
+             SET stud_password = ?, email_alternatif = ?
+             WHERE stud_matric = ?`,
             [hashedPassword, stud_email, stud_matric]
         );
 

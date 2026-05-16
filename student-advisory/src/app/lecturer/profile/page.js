@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-export default function Lecturerprofile() {
+export default function LecturerProfile() {
     const [form, setForm] = useState({
         name: "",
         email: "",

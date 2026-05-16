@@ -2,6 +2,7 @@
 
 import StatCard from "@/components/statCard";
 import Calendar from "@/components/calendar";
+import ListMentees from "@/components/listMentees";
 import { motion } from "framer-motion";
 import { User, ClipboardMinus } from "lucide-react";
 import Progress from "@/components/progress";
@@ -54,6 +55,7 @@ export default function DashboardPage() {
                 >
                     <Progress mentees={totalMentee} CS={totalStudCs} IT={totalStudIt} />
                     <Calendar />
+                    <ListMentees />
                 </motion.div>
 
             </main>

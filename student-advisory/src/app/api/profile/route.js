@@ -46,6 +46,36 @@ export async function GET(req) {
             });
         }
 
+        //student
+        if (decoded.role === "student") {
+            const [rows] = await pool.query(
+                "SELECT * FROM tbl_students WHERE stud_id = ?", [decoded.id]
+            )
+            const student = rows[0]
+
+            return NextResponse.json({
+                role: "student",
+                id: student.stud_matric,
+                name: student.stud_name,
+                email: student.email_alternatif,
+                program: student.program,
+                gender: student.gender,
+                code_uum: student.code_uum,
+                academic_qualifications: student.academic_qualifications,
+                pmk_masuk: student.pmk_masuk,
+                band_muet: student.band_muet,
+                status_oku: student.status_oku,
+                inasis: student.inasis,
+                no_phone: student.no_phone,
+                email_uum: student.email_uum,
+                stud_address: student.stud_address,
+                state: student.state,
+                parent_income: student.parent_income,
+                disability: student.disability_description,
+                image: student.stud_imagePath
+            });
+        }
+
         return NextResponse.json(
             { message: "Invalid role" },
             { status: 403 }
@@ -129,8 +159,6 @@ export async function PUT(req) {
 
         // ================= MENTOR =================
         if (decoded.role === "mentor") {
-
-
             const mentor_name = formData.get("mentor_name");
             const email = formData.get("mentor_email");
             // const password = formData.get("mentor_password");
@@ -159,6 +187,80 @@ export async function PUT(req) {
 
             return NextResponse.json({
                 message: "Mentor updated successfully"
+            });
+        }
+
+        // ================= STUDENT UPDATE =================
+        if (decoded.role === "student") {
+
+            const name = formData.get("stud_name");
+            const email = formData.get("stud_email");
+            const program = formData.get("program");
+            const gender = formData.get("gender");
+            const code = formData.get("code_uum");
+            const academic = formData.get("academic_qualifications");
+            const pmk = Number(formData.get("pmk_masuk")) || 0;
+            const band_muet = Number(formData.get("band_muet")) || 0;
+            const status_oku = formData.get("status_oku");
+            const inasis = formData.get("inasis");
+            const phone = formData.get("no_phone");
+            const email_uum = formData.get("email_uum");
+            const address = formData.get("student_address");
+            const state = formData.get("state");
+            const parent_income = formData.get("parent_income");
+            const disability = formData.get("disability");
+
+            let query = `
+                UPDATE tbl_students SET
+                    stud_name = ?,
+                    email_alternatif = ?,
+                    program = ?,
+                    gender = ?,
+                    code_uum = ?,
+                    academic_qualifications = ?,
+                    pmk_masuk = ?,
+                    band_muet = ?,
+                    status_oku = ?,
+                    inasis = ?,
+                    no_phone = ?,
+                    email_uum = ?,
+                    stud_address = ?,
+                    state = ?,
+                    parent_income = ?,
+                    disability_description = ?
+            `;
+
+            let values = [
+                name,
+                email,
+                program,
+                gender,
+                code,
+                academic,
+                pmk,
+                band_muet,
+                status_oku,
+                inasis,
+                phone,
+                email_uum,
+                address,
+                state,
+                parent_income,
+                disability
+            ];
+
+            if (profilePath) {
+                query += ", stud_imagePath = ?";
+                values.push(profilePath);
+            }
+
+            query += " WHERE stud_id = ?";
+            values.push(decoded.id);
+
+            await pool.query(query, values);
+
+            return NextResponse.json({
+                message: "Student updated successfully"
             });
         }
 

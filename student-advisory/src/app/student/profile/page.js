@@ -1,0 +1,470 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+
+export default function StudentProfile() {
+    const [form, setForm] = useState({
+        id: "",
+        name: "",
+        email: "",
+        program: "",
+        gender: "",
+        code_uum: "",
+        academic_qualifications: "",
+        pmk_masuk: "",
+        band_muet: "",
+        status_oku: "",
+        disability: "",
+        inasis: "",
+        no_phone: "",
+        email_uum: "",
+        stud_address: "",
+        state: "",
+        parent_income: ""
+    });
+
+    const [file, setFile] = useState(null);
+    const [preview, setPreview] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [toast, setToast] = useState(false);
+    const fileRef = useRef(null);
+    const programs = ["Bachelor of Science Computer", "Bachelor of Science IT"];
+
+    useEffect(() => {
+        try {
+            axios.get("/api/profile").then((res) => {
+                setForm(res.data);
+                setPreview(res.data.image);
+                console.log(form)
+                console.log("successfully")
+            });
+        } catch (err) {
+            console.log(err);
+        }
+
+    }, []);
+
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleFile = (e) => {
+        const img = e.target.files[0];
+        if (!img) return;
+        setFile(img);
+        setPreview(URL.createObjectURL(img));
+    };
+
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            setLoading(true);
+
+            const data = new FormData();
+            data.append("stud_name", form.name);
+            data.append("stud_email", form.email);
+            data.append("program", form.program);
+            data.append("gender", form.gender);
+            data.append("code_uum", form.code_uum);
+            data.append("academic_qualifications", form.academic_qualifications);
+            data.append("pmk_masuk", form.pmk_masuk);
+            data.append("band_muet", form.band_muet);
+            data.append("status_oku", form.status_oku);
+            data.append("inasis", form.inasis);
+            data.append("no_phone", form.no_phone);
+            data.append("email_uum", form.email_uum);
+            data.append("student_address", form.stud_address);
+            data.append("state", form.state);
+            data.append("parent_income", form.parent_income);
+            data.append("disability", form.disability);
+
+            if (file) data.append("profile", file);
+
+            await axios.put("/api/profile", data);
+
+            setLoading(false);
+            setToast(true);
+            setTimeout(() => setToast(false), 2500)
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const inputClass =
+        "w-full pl-9 pr-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-800 placeholder-gray-300 outline-none focus:border-gray-400 focus:bg-white transition-colors duration-150";
+
+    const labelClass =
+        "block text-[11px] font-medium tracking-widest uppercase text-gray-400 mb-1.5";
+
+    return (
+        <>
+            {/* Toast */}
+            <div
+                className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-sm px-5 py-2.5 rounded-full whitespace-nowrap pointer-events-none transition-all duration-200 ${toast ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+                    }`}
+            >
+                ✓ Profile updated
+            </div>
+
+            <div className="max-w-6xl mx-auto mt-10 px-4">
+                <div className="bg-white border border-gray-200 rounded-2xl px-8 pt-8 pb-6 shadow-sm">
+
+                    {/* Title */}
+                    <p className="text-xs font-medium tracking-widest uppercase text-gray-400 text-center mb-6">
+                        Edit Profile
+                    </p>
+
+                    {/* Avatar */}
+                    <div className="relative w-24 h-24 mx-auto mb-1.5">
+                        <img
+                            src={preview || "/images/logo-profile.png"}
+                            alt="Profile photo"
+                            className="w-24 h-24 rounded-full object-cover border-2 border-gray-200 block"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileRef.current?.click()}
+                            title="Change photo"
+                            className="absolute bottom-0.5 right-0.5 w-7 h-7 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors duration-150"
+                        >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                                <circle cx="12" cy="13" r="4" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <span
+                        onClick={() => fileRef.current?.click()}
+                        className="block text-xs text-gray-400 text-center mb-7 cursor-pointer hover:text-gray-500 transition-colors"
+                    >
+                        change photo
+                    </span>
+
+                    <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFile}
+                        className="hidden"
+                    />
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+
+                        {/* username and matric */}
+                        <div className="grid grid-cols-5 gap-3">
+                            <div>
+                                <label className={labelClass}>User ID</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 3H8" />
+                                    </svg>
+                                    <input
+                                        name="stud_id"
+                                        value={form.id || ""}
+                                        //onChange={handleChange}
+                                        placeholder="Your ID"
+                                        className={inputClass}
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-span-2">
+                                <label className={labelClass}>Full Name</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={form.name || ""}
+                                        onChange={handleChange}
+                                        placeholder="Your Name"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col-span-2">
+                                <label className={labelClass}>
+                                    Email
+
+                                </label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={form.email || ""}
+                                        onChange={handleChange}
+                                        placeholder="you@example.com"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* program, gender, code_uum, academic qualification */}
+                        <div className="grid grid-cols-5 gap-3">
+                            <div className="col-span-2">
+                                <label className={labelClass}>Program</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <select name="program" value={form.program} onChange={handleChange} className={inputClass}>
+                                        <option value="">Select</option>
+
+                                        {programs.map((p, i) => (
+                                            <option key={i} value={p}>
+                                                {p}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={labelClass}>Gender</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="gender"
+                                        value={form.gender || ""}
+                                        onChange={handleChange}
+                                        placeholder="Gender"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>Code UUM</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="code_uum"
+                                        value={form.code_uum || ""}
+                                        onChange={handleChange}
+                                        placeholder="Code UUM"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>Academic Qualifications</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="academic_qualifications"
+                                        value={form.academic_qualifications || ""}
+                                        onChange={handleChange}
+                                        placeholder="Qualifications"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/*pmk masuk, band_muet, status oku, inasis  */}
+                        <div className="grid grid-cols-5 gap-3">
+                            <div>
+                                <label className={labelClass}>Pmk Masuk</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="pmk_masuk"
+                                        value={form.pmk_masuk || ""}
+                                        onChange={handleChange}
+                                        placeholder="Pmk"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={labelClass}>Band Muet</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="band_muet"
+                                        value={form.band_muet || ""}
+                                        onChange={handleChange}
+                                        placeholder="Band Muet"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>Status OKU</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="status_oku"
+                                        value={form.status_oku || ""}
+                                        onChange={handleChange}
+                                        placeholder="Status OKU"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>Inasis</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="inasis"
+                                        value={form.inasis || ""}
+                                        onChange={handleChange}
+                                        placeholder="Inasis"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>No. Phone</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="no_phone"
+                                        value={form.no_phone || ""}
+                                        onChange={handleChange}
+                                        placeholder="Phone Number"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {/* email_uum, stud_address, state, parent income */}
+                        <div className="grid grid-cols-4 gap-3">
+                            <div>
+                                <label className={labelClass}>Email UUM</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="email_uum"
+                                        value={form.email_uum || ""}
+                                        onChange={handleChange}
+                                        placeholder="Email UUM"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={labelClass}>Address</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="stud_address"
+                                        value={form.stud_address || ""}
+                                        onChange={handleChange}
+                                        placeholder="Address"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>State</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="state"
+                                        value={form.state || ""}
+                                        onChange={handleChange}
+                                        placeholder="State"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className={labelClass}>Parent Income</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <input
+                                        type="text"
+                                        name="parent_income"
+                                        value={form.parent_income || ""}
+                                        onChange={handleChange}
+                                        placeholder="Parent Income"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* disability description */}
+                        <div>
+                            <div>
+                                <label className={labelClass}>Disability</label>
+                                <div className="relative">
+                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                    <textarea
+                                        name="disability"
+                                        value={form.disability || ""}
+                                        onChange={handleChange}
+                                        placeholder="Disability Description"
+                                        className={inputClass}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-2.5 text-sm font-medium bg-[#008000] text-white rounded-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-150"
+                        >
+                            {loading ? "Saving…" : "Save Changes"}
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+        </>
+    );
+}
