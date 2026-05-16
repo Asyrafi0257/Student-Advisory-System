@@ -2,6 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import {
+    Hash,
+    User,
+    Mail,
+    BookOpen,
+    Users,
+    Code,
+    GraduationCap,
+    CalendarDays,
+    Languages,
+    Accessibility,
+    Home,
+    Phone,
+    AtSign,
+    MapPin,
+    Map,
+    Banknote,
+    HeartHandshake,
+    Camera,
+} from "lucide-react";
 
 export default function StudentProfile() {
     const [form, setForm] = useState({
@@ -97,6 +117,8 @@ export default function StudentProfile() {
     const labelClass =
         "block text-[11px] font-medium tracking-widest uppercase text-gray-400 mb-1.5";
 
+    const iconClass = "absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none";
+
     return (
         <>
             {/* Toast */}
@@ -128,10 +150,7 @@ export default function StudentProfile() {
                             title="Change photo"
                             className="absolute bottom-0.5 right-0.5 w-7 h-7 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors duration-150"
                         >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                                <circle cx="12" cy="13" r="4" />
-                            </svg>
+                            <Camera size={14} />
                         </button>
                     </div>
 
@@ -157,13 +176,10 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>User ID</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 3H8" />
-                                    </svg>
+                                    <Hash size={15} className={iconClass} />
                                     <input
                                         name="stud_id"
                                         value={form.id || ""}
-                                        //onChange={handleChange}
                                         placeholder="Your ID"
                                         className={inputClass}
                                         readOnly
@@ -173,9 +189,7 @@ export default function StudentProfile() {
                             <div className="col-span-2">
                                 <label className={labelClass}>Full Name</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <User size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="name"
@@ -188,14 +202,9 @@ export default function StudentProfile() {
                             </div>
 
                             <div className="col-span-2">
-                                <label className={labelClass}>
-                                    Email
-
-                                </label>
+                                <label className={labelClass}>Email</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                                    </svg>
+                                    <Mail size={15} className={iconClass} />
                                     <input
                                         type="email"
                                         name="email"
@@ -213,12 +222,9 @@ export default function StudentProfile() {
                             <div className="col-span-2">
                                 <label className={labelClass}>Program</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <BookOpen size={15} className={iconClass} />
                                     <select name="program" value={form.program} onChange={handleChange} className={inputClass}>
                                         <option value="">Select</option>
-
                                         {programs.map((p, i) => (
                                             <option key={i} value={p}>
                                                 {p}
@@ -231,9 +237,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Gender</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Users size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="gender"
@@ -247,9 +251,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Code UUM</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Code size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="code_uum"
@@ -263,9 +265,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Academic Qualifications</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <GraduationCap size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="academic_qualifications"
@@ -278,14 +278,12 @@ export default function StudentProfile() {
                             </div>
                         </div>
 
-                        {/*pmk masuk, band_muet, status oku, inasis  */}
+                        {/* pmk masuk, band_muet, status oku, inasis */}
                         <div className="grid grid-cols-5 gap-3">
                             <div>
                                 <label className={labelClass}>Pmk Masuk</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <CalendarDays size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="pmk_masuk"
@@ -300,9 +298,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Band Muet</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Languages size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="band_muet"
@@ -316,9 +312,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Status OKU</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Accessibility size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="status_oku"
@@ -332,9 +326,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Inasis</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Home size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="inasis"
@@ -348,9 +340,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>No. Phone</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Phone size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="no_phone"
@@ -363,15 +353,12 @@ export default function StudentProfile() {
                             </div>
                         </div>
 
-
                         {/* email_uum, stud_address, state, parent income */}
                         <div className="grid grid-cols-4 gap-3">
                             <div>
                                 <label className={labelClass}>Email UUM</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <AtSign size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="email_uum"
@@ -386,9 +373,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Address</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <MapPin size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="stud_address"
@@ -402,9 +387,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>State</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Map size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="state"
@@ -418,9 +401,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Parent Income</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <Banknote size={15} className={iconClass} />
                                     <input
                                         type="text"
                                         name="parent_income"
@@ -438,9 +419,7 @@ export default function StudentProfile() {
                             <div>
                                 <label className={labelClass}>Disability</label>
                                 <div className="relative">
-                                    <svg className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" />
-                                    </svg>
+                                    <HeartHandshake size={15} className={iconClass} />
                                     <textarea
                                         name="disability"
                                         value={form.disability || ""}
@@ -451,7 +430,6 @@ export default function StudentProfile() {
                                 </div>
                             </div>
                         </div>
-
 
                         {/* Submit */}
                         <button
