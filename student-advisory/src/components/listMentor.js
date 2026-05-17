@@ -16,7 +16,7 @@ export default function ListMentors() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/mentor");
+            const res = await axios.get("/api/admin/mentor");
             console.log(res.data.rows)
             setDataMentor(res.data.rows)
         } catch (err) {

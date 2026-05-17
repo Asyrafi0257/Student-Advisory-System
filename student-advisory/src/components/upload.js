@@ -81,7 +81,7 @@ export default function Upload({ url, role }) {
     const handleSubmit = async () => {
 
         try {
-            await axios.post("/api/addMentor", {
+            await axios.post("/api/admin/addMentor", {
                 mentor_id: mentorId,
                 mentor_name: mentorName,
                 mentor_active: mentorActive

@@ -28,7 +28,7 @@ export default function Chart() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/dashboard");
+            const res = await axios.get("/api/admin/dashboard");
 
             setSummaryData([
                 { name: "Students", total: res.data.students },

@@ -49,7 +49,7 @@ export default function SubmitSessionPage() {
             }
 
             const res = await axios.post(
-                "/api/report",
+                "/api/mentor/report",
                 formData
             );
 

@@ -14,7 +14,7 @@ export default function UploadFile() {
                     transition={{ duration: 1 }}
                     className="mb-5"
                 >
-                    <Upload url="/api/uploadStudent" />
+                    <Upload url="/api/admin/uploadStudent" />
                 </motion.div>
 
                 <motion.div
@@ -23,7 +23,7 @@ export default function UploadFile() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
                 >
-                    <AttachFiles url="/api/files" type="student" delUrl="/api/delFileStudent" />
+                    <AttachFiles url="/api/admin/files" type="student" delUrl="/api/admin/delFileStudent" />
                 </motion.div>
             </main>
 

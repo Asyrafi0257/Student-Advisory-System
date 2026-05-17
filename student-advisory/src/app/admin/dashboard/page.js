@@ -11,7 +11,7 @@ export default function Dashboard() {
     const [countData, setCountData] = useState(0);
 
     useEffect(() => {
-        axios.get("/api/dashboard").then(res => { setCountData(res.data) });
+        axios.get("/api/admin/dashboard").then(res => { setCountData(res.data) });
 
     }, []);
 

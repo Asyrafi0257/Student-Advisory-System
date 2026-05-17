@@ -18,7 +18,7 @@ export default function MyCalendar() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/session");
+            const res = await axios.get("/api/mentor/session");
             setSessions(res.data.rows);
         } catch (err) {
             console.log(err);

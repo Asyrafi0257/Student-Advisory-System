@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Dashboard() {
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState([]);
     const getGreeting = () => {
         const hour = new Date().getHours();
 
@@ -39,7 +39,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex-1 overflow-auto relative z-10 mt-2">
-            <div className="relative overflow-hidden bg-gradient-to-r from-[#000075] via-[#0a0090] to-[#1a00a0] shadow-lg rounded-2xl flex flex-row justify-start max-w-6xl mx-8 h-[180px] mt-5">
+            <div className="relative overflow-hidden bg-gradient-to-r from-[#000075] via-[#0a0090] to-[#1a00a0] shadow-lg rounded-2xl flex flex-row justify-start max-w-7xl mx-8 h-[180px] mt-5">
 
                 {/* Decorative blurred circles */}
                 <div className="absolute top-[-30px] left-[-30px] w-40 h-40 bg-white opacity-5 rounded-full blur-2xl pointer-events-none" />

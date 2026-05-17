@@ -24,7 +24,7 @@ export default function viewAssign() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/viewAssign");
+            const res = await axios.get("/api/admin/viewAssign");
             setDataAssign(res.data);
         } catch (err) {
             console.log(err);

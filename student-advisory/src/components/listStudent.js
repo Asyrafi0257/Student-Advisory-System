@@ -12,7 +12,7 @@ export default function StudentList() {
 
     const fetchDataStudent = async () => {
         try {
-            const res = await axios.get("/api/student");
+            const res = await axios.get("/api/admin/student");
             console.log(res.data);
             setDataStudent(res.data.rows);
         } catch (err) {

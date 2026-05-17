@@ -161,8 +161,8 @@ export default function Assigns() {
 
     const fetchAssign = async () => {
         try {
-            const resMentor = await axios.get("/api/mentor");
-            const resStudent = await axios.get("/api/student?available=true");
+            const resMentor = await axios.get("/api/admin/mentor");
+            const resStudent = await axios.get("/api/admin/student?available=true");
             setDataMentor(resMentor.data.rows);
             setDataStudent(resStudent.data.rows);
         } catch (err) {
@@ -246,7 +246,7 @@ export default function Assigns() {
         try {
             const formattedData = formatAssignments();
 
-            await axios.post("/api/assign", {
+            await axios.post("/api/admin/assign", {
                 assignments: formattedData,
             });
 

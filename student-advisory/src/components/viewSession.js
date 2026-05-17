@@ -13,7 +13,7 @@ export default function SessionView() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/report");
+            const res = await axios.get("/api/mentor/report");
             setReport(res.data.rows);
             console.log(res.data.rows);
         } catch (err) {

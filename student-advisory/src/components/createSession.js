@@ -24,13 +24,13 @@ export default function CreateSessionPage() {
     };
 
     useEffect(() => {
-        axios.get("/api/session").then(res => setData(res.data.rows)).catch(err => console.log(err));
+        axios.get("/api/mentor/session").then(res => setData(res.data.rows)).catch(err => console.log(err));
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("/api/session", form);
+            const response = await axios.post("/api/mentor/session", form);
             console.log(response.data);
             alert("Session created successfully");
             window.location.reload();
@@ -52,7 +52,7 @@ export default function CreateSessionPage() {
     const handleDelete = async (session_id) => {
         if (!confirm("Are you sure to delete this session?")) return;
         try {
-            const response = await axios.delete(`/api/session/[id]?session_id=${session_id}`);
+            const response = await axios.delete(`/api/mentor/session/[id]?session_id=${session_id}`);
             console.log(response.data);
             alert("Deleted successfully");
             window.location.reload();
@@ -64,7 +64,7 @@ export default function CreateSessionPage() {
 
     const handleEdit = async (session_id) => {
         try {
-            const res = await axios.get(`/api/session/${session_id}`);
+            const res = await axios.get(`/api/mentor/session/${session_id}`);
             console.log(res.data);
             console.log(selectedSession);
             setSelectedSession({
@@ -406,7 +406,7 @@ export default function CreateSessionPage() {
                             <button
                                 onClick={async () => {
                                     try {
-                                        await axios.put(`/api/session/${selectedSession.session_id}`, selectedSession);
+                                        await axios.put(`/api/mentor/session/${selectedSession.session_id}`, selectedSession);
                                         setOpen(false);
                                         alert("Edit Session successful");
                                     } catch (err) {

@@ -13,7 +13,7 @@ export default function ListMentees() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/viewMentee");
+            const res = await axios.get("/api/mentor/viewMentee");
             setDataMentees(res.data.rows);
             console.log(res.data.rows);
         } catch (err) {

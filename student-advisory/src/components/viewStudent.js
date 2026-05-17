@@ -16,7 +16,7 @@ export default function StudentView() {
 
     const featchData = async () => {
         try {
-            const res = await axios.get("/api/viewMentee");
+            const res = await axios.get("/api/mentor/viewMentee");
             setStudInfo(res.data.rows);
             console.log(res.data);
         } catch (err) {

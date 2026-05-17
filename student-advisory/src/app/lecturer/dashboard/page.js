@@ -21,7 +21,7 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/viewMentee");
+            const res = await axios.get("/api/mentor/viewMentee");
             setData(res.data);
             setTotalMentee(res.data.totalMentee);
             setTotalStudCs(res.data.totalCs);
