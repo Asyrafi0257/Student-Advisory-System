@@ -1,5 +1,5 @@
 export const metadata = {
-    title: "Dashboard Student",
+    title: "Dashboard",
     describe: "This page is for student who know their information about mentor or information that mentor send"
 }
 

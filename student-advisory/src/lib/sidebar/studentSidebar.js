@@ -8,13 +8,6 @@ export const sidebarStudent = [
         icon: "LayoutDashboard",
     },
 
-    { section: "Mentor" },
-    {
-        name: "View Mentor",
-        href: "/student/viewMentor",
-        icon: "UserRoundCheck"
-    },
-
     { section: "Session" },
     {
         name: "View Session",
