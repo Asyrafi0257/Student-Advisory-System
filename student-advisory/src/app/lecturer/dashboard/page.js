@@ -33,25 +33,29 @@ export default function DashboardPage() {
         }
 
     }
+
     return (
         <div className="flex-1 overflow-auto relative z-10">
-            <main className="max-w-7xl mx-auto py-4 lg:px-8">
+            <main className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+
                 <motion.div
                     className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8"
-                    initial={{ opacity: 0, y: 20 }} //start dari bawah
-                    animate={{ opacity: 1, y: 0 }} //animasi ke posisi awal
-                    transition={{ duration: 1 }} //tempoh animasi
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1 }}
                 >
                     <StatCard name="Total Mentee" icon={User} value={totalMentee} />
                     <StatCard name="Total B.Comp.Sc. (Hons.)" icon={User} value={totalStudCs} />
                     <StatCard name="Total BSc.(IT)" icon={User} value={totalStudIt} />
                 </motion.div>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }} //start dari bawah
-                    animate={{ opacity: 1, y: 0 }} //animasi ke posisi awal
-                    transition={{ duration: 1 }} //tempoh animasi
-                    className="grid grid-cols-4 gap-4"
 
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1 }}
+
+                    /* ONLY CHANGE HERE (responsive) */
+                    className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3"
                 >
                     <Progress mentees={totalMentee} CS={totalStudCs} IT={totalStudIt} />
                     <Calendar />

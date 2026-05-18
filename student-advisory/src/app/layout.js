@@ -23,15 +23,17 @@ export const metadata = {
       { url: "/favicon.ico" }, // fallback classic favicon
 
       { url: "/images/logo-uum-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/logo-uum-64x64.png", sizes: "64x64", type: "image/png" },
+      { url: "/images/logo-uum-128x128.png", sizes: "128x128", type: "image/png" },
+      { url: "/images/logo-uum-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/images/logo-uum-512x512.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: ["/favicon.ico"]
+    shortcut: ["/favicon.ico"],
+    apple: [
+      { url: "/images/logo-uum-180x180.png", sizes: "180x180", type: "image/png" }, // Apple touch icon
+    ],
   },
-  title: {
-    default: "Student Advisory",
-    template: "%s | Student Advisory"
-  },
-
-};
+}
 
 export default function RootLayout({ children }) {
   return (

@@ -62,7 +62,6 @@ export default function StudentProfile() {
         } catch (err) {
             console.log(err);
         }
-
     }, []);
 
     const handleChange = (e) => {
@@ -129,8 +128,8 @@ export default function StudentProfile() {
                 ✓ Profile updated
             </div>
 
-            <div className="max-w-6xl mx-auto mt-10 px-4">
-                <div className="bg-white border border-gray-200 rounded-2xl px-8 pt-8 pb-6 shadow-sm">
+            <div className="max-w-6xl mx-auto mt-6 sm:mt-10 px-4 sm:px-6 lg:px-4 pb-10">
+                <div className="bg-white border border-gray-200 rounded-2xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-6 shadow-sm">
 
                     {/* Title */}
                     <p className="text-xs font-medium tracking-widest uppercase text-gray-400 text-center mb-6">
@@ -171,9 +170,9 @@ export default function StudentProfile() {
 
                     <form onSubmit={handleSubmit} className="space-y-4">
 
-                        {/* username and matric */}
-                        <div className="grid grid-cols-5 gap-3">
-                            <div>
+                        {/* User ID, Full Name, Email */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                            <div className="sm:col-span-1 lg:col-span-1">
                                 <label className={labelClass}>User ID</label>
                                 <div className="relative">
                                     <Hash size={15} className={iconClass} />
@@ -186,7 +185,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                             </div>
-                            <div className="col-span-2">
+                            <div className="sm:col-span-1 lg:col-span-2">
                                 <label className={labelClass}>Full Name</label>
                                 <div className="relative">
                                     <User size={15} className={iconClass} />
@@ -200,8 +199,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                             </div>
-
-                            <div className="col-span-2">
+                            <div className="sm:col-span-2 lg:col-span-2">
                                 <label className={labelClass}>Email</label>
                                 <div className="relative">
                                     <Mail size={15} className={iconClass} />
@@ -217,9 +215,9 @@ export default function StudentProfile() {
                             </div>
                         </div>
 
-                        {/* program, gender, code_uum, academic qualification */}
-                        <div className="grid grid-cols-5 gap-3">
-                            <div className="col-span-2">
+                        {/* Program, Gender, Code UUM, Academic Qualifications */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                            <div className="sm:col-span-2 lg:col-span-2">
                                 <label className={labelClass}>Program</label>
                                 <div className="relative">
                                     <BookOpen size={15} className={iconClass} />
@@ -233,8 +231,7 @@ export default function StudentProfile() {
                                     </select>
                                 </div>
                             </div>
-
-                            <div>
+                            <div className="sm:col-span-1 lg:col-span-1">
                                 <label className={labelClass}>Gender</label>
                                 <div className="relative">
                                     <Users size={15} className={iconClass} />
@@ -248,7 +245,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                             </div>
-                            <div>
+                            <div className="sm:col-span-1 lg:col-span-1">
                                 <label className={labelClass}>Code UUM</label>
                                 <div className="relative">
                                     <Code size={15} className={iconClass} />
@@ -262,7 +259,7 @@ export default function StudentProfile() {
                                     />
                                 </div>
                             </div>
-                            <div>
+                            <div className="sm:col-span-2 lg:col-span-1">
                                 <label className={labelClass}>Academic Qualifications</label>
                                 <div className="relative">
                                     <GraduationCap size={15} className={iconClass} />
@@ -278,8 +275,8 @@ export default function StudentProfile() {
                             </div>
                         </div>
 
-                        {/* pmk masuk, band_muet, status oku, inasis */}
-                        <div className="grid grid-cols-5 gap-3">
+                        {/* PMK, Band MUET, Status OKU, Inasis, Phone */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                             <div>
                                 <label className={labelClass}>Pmk Masuk</label>
                                 <div className="relative">
@@ -294,7 +291,6 @@ export default function StudentProfile() {
                                     />
                                 </div>
                             </div>
-
                             <div>
                                 <label className={labelClass}>Band Muet</label>
                                 <div className="relative">
@@ -353,8 +349,8 @@ export default function StudentProfile() {
                             </div>
                         </div>
 
-                        {/* email_uum, stud_address, state, parent income */}
-                        <div className="grid grid-cols-4 gap-3">
+                        {/* Email UUM, Address, State, Parent Income */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                             <div>
                                 <label className={labelClass}>Email UUM</label>
                                 <div className="relative">
@@ -369,7 +365,6 @@ export default function StudentProfile() {
                                     />
                                 </div>
                             </div>
-
                             <div>
                                 <label className={labelClass}>Address</label>
                                 <div className="relative">
@@ -414,20 +409,18 @@ export default function StudentProfile() {
                             </div>
                         </div>
 
-                        {/* disability description */}
+                        {/* Disability */}
                         <div>
-                            <div>
-                                <label className={labelClass}>Disability</label>
-                                <div className="relative">
-                                    <HeartHandshake size={15} className={iconClass} />
-                                    <textarea
-                                        name="disability"
-                                        value={form.disability || ""}
-                                        onChange={handleChange}
-                                        placeholder="Disability Description"
-                                        className={inputClass}
-                                    />
-                                </div>
+                            <label className={labelClass}>Disability</label>
+                            <div className="relative">
+                                <HeartHandshake size={15} className={iconClass} />
+                                <textarea
+                                    name="disability"
+                                    value={form.disability || ""}
+                                    onChange={handleChange}
+                                    placeholder="Disability Description"
+                                    className={inputClass}
+                                />
                             </div>
                         </div>
 
@@ -435,7 +428,7 @@ export default function StudentProfile() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-2.5 text-sm font-medium bg-[#008000] text-white rounded-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-150"
+                            className="w-full py-2.5 text-sm font-medium bg-[#000075] text-white rounded-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity duration-150"
                         >
                             {loading ? "Saving…" : "Save Changes"}
                         </button>

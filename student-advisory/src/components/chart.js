@@ -47,11 +47,11 @@ export default function Chart() {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 sm:p-6">
 
             {/* BAR CHART */}
-            <div className="bg-white rounded-2xl shadow p-5">
-                <h2 className="text-xl font-bold mb-4">
+            <div className="bg-white rounded-2xl shadow p-4 sm:p-5 overflow-hidden">
+                <h2 className="text-lg sm:text-xl font-bold mb-4">
                     Total Students & Mentors
                 </h2>
 
@@ -66,8 +66,8 @@ export default function Chart() {
             </div>
 
             {/* PIE CHART */}
-            <div className="bg-white rounded-2xl shadow p-5">
-                <h2 className="text-xl font-bold mb-4">
+            <div className="bg-white rounded-2xl shadow p-4 sm:p-5 overflow-hidden">
+                <h2 className="text-lg sm:text-xl font-bold mb-4">
                     Mentor Status
                 </h2>
 
