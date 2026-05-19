@@ -4,32 +4,32 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { FileSpreadsheet, Search, Trash2 } from "lucide-react";
 
-
 export default function FileUpload({ url, type, delUrl }) {
     const [files, setFiles] = useState([]);
     const [searchFiles, setSearchFiles] = useState("");
 
     useEffect(() => {
         fetchFile();
-    }, [])
+    }, []);
 
     //format untuk convert bytes to mb
     const formatFileSize = (bytes) => {
         if (bytes < 1024) return bytes + " B";
         if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + " KB";
         return (bytes / (1024 * 1024)).toFixed(2) + " MB";
-    }
+    };
 
     const fetchFile = async () => {
         try {
             const res = await axios.get(url);
-            console.log(res.data.rows)
+            console.log(res.data.rows);
             setFiles(res.data.rows);
         } catch (err) {
             console.error(err);
-            alert(err.message)
+            alert(err.message);
         }
-    }
+    };
+
     const handleDelete = async (id) => {
         //confirmation before delete file
         if (!confirm("Are you sure to delete this file?")) return;
@@ -45,47 +45,108 @@ export default function FileUpload({ url, type, delUrl }) {
         } catch (err) {
             console.error(err);
         }
-    }
+    };
 
-    const filterFiles = files.filter((file) => file.file_name?.toLowerCase().includes(searchFiles.toLowerCase())
+    const filterFiles = files.filter((file) =>
+        file.file_name?.toLowerCase().includes(searchFiles.toLowerCase())
     );
-    return (
-        <div className="bg-[#ffffff] shadow-md rounded-xl h-[300px] p-4 md:p-6">
-            <div className="flex flex-row border-b border-gray-300 pb-3 justify-between">
-                <h3 className="font-bold text-[24px]">Attached Files</h3>
 
-                <div className="relative w-sm">
-                    <input type="text" placeholder="search..." className="w-full h-[40px] shadow-sm rounded-lg border-1 border-gray-200 px-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" value={searchFiles} onChange={(e) => { setSearchFiles(e.target.value) }} />
-                    <Search className="absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-gray-400" />
+    return (
+        <div className="bg-[#ffffff] shadow-md rounded-xl p-4 mx-4 md:p-6">
+
+            {/* HEADER */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between border-b border-gray-300 pb-4 gap-3">
+
+                <h3 className="font-bold text-[20px] sm:text-[22px] md:text-[24px]">
+                    Attached Files
+                </h3>
+
+                <div className="relative w-full lg:w-[320px]">
+                    <input
+                        type="text"
+                        placeholder="search..."
+                        className="w-full h-[42px] shadow-sm rounded-lg border border-gray-200 px-3 pr-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
+                        value={searchFiles}
+                        onChange={(e) => {
+                            setSearchFiles(e.target.value);
+                        }}
+                    />
+
+                    <Search className="absolute top-1/2 -translate-y-1/2 right-3 cursor-pointer text-gray-400 w-5 h-5" />
                 </div>
             </div>
 
-            <div className="w-full overflow-auto h-[200px] mt-3">
+            {/* TABLE */}
+            <div className="w-full overflow-x-auto overflow-y-auto max-h-[400px] mt-4 rounded-lg">
+
                 {!filterFiles || filterFiles.length === 0 ? (
-                    <p>No Files found</p>
+                    <div className="py-10 text-center text-gray-500">
+                        No Files found
+                    </div>
                 ) : (
-                    <table className="w-full table-auto">
-                        <thead className="bg-[#02577A] w-full text-white sticky top-0 z-10">
-                            <tr className="w-full justify-around">
-                                <th className="text-lg">File Name</th>
-                                <th className="text-lg">Size</th>
-                                <th className="text-lg">Date</th>
-                                <th className="text-lg">Action</th>
+                    <table className="w-full min-w-[700px] table-auto">
+
+                        <thead className="bg-[#02577A] text-white sticky top-0 z-10">
+                            <tr>
+                                <th className="text-sm md:text-base lg:text-lg py-3 px-3">
+                                    File Name
+                                </th>
+
+                                <th className="text-sm md:text-base lg:text-lg py-3 px-3">
+                                    Size
+                                </th>
+
+                                <th className="text-sm md:text-base lg:text-lg py-3 px-3">
+                                    Date
+                                </th>
+
+                                <th className="text-sm md:text-base lg:text-lg py-3 px-3">
+                                    Action
+                                </th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {filterFiles.map((file) => (
-                                <tr key={file.uploads_id} className="text-center border-b-1 border-gray-200 hover:bg-gray-100">
-                                    <td className="text-base py-2 flex flex-row">
-                                        <FileSpreadsheet className="text-green-400 ml-2" />
-                                        <div className="pl-2 w-full flex justify-start">
-                                            {file.file_name}
+                                <tr
+                                    key={file.uploads_id}
+                                    className="text-center border-b border-gray-200 hover:bg-gray-100 transition"
+                                >
+                                    {/* FILE NAME */}
+                                    <td className="text-sm md:text-base py-3 px-3">
+                                        <div className="flex items-center gap-2 min-w-0">
+
+                                            <FileSpreadsheet className="text-green-400 shrink-0 w-5 h-5" />
+
+                                            <div className="truncate text-left">
+                                                {file.file_name}
+                                            </div>
+
                                         </div>
                                     </td>
-                                    <td className="text-base py-2">{formatFileSize(file.file_size)}</td>
-                                    <td className="text-base py-2">{file.created_at}</td>
-                                    <td className="text-base py-2 flex justify-center cursor-pointer" onClick={() => handleDelete(file.uploads_id)}>
-                                        <Trash2 className="text-white bg-[#ff0000] p-1 rounded-sm" />
+
+                                    {/* SIZE */}
+                                    <td className="text-sm md:text-base py-3 px-3 whitespace-nowrap">
+                                        {formatFileSize(file.file_size)}
+                                    </td>
+
+                                    {/* DATE */}
+                                    <td className="text-sm md:text-base py-3 px-3 whitespace-nowrap">
+                                        {file.created_at}
+                                    </td>
+
+                                    {/* ACTION */}
+                                    <td className="py-3 px-3">
+                                        <div className="flex justify-center">
+                                            <button
+                                                onClick={() =>
+                                                    handleDelete(file.uploads_id)
+                                                }
+                                                className="bg-[#ff0000] hover:bg-red-700 transition p-2 rounded-md cursor-pointer"
+                                            >
+                                                <Trash2 className="text-white w-4 h-4 sm:w-5 sm:h-5" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -96,5 +157,5 @@ export default function FileUpload({ url, type, delUrl }) {
             </div>
 
         </div>
-    )
+    );
 }

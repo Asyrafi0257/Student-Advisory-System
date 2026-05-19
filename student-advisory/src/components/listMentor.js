@@ -1,6 +1,6 @@
 "use client"
 
-import { Search, SquarePen } from "lucide-react"
+import { Search, SquarePen, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import axios from "axios"
 
@@ -26,14 +26,12 @@ export default function ListMentors() {
 
     const handleEdit = async (id) => {
         try {
-            const res = await axios.get(`/api/mentor/${id}`);
+            const res = await axios.get(`/api/admin/mentor/${id}`);
             setSelectedMentor(res.data);
             setOpen(true);
 
         } catch (err) {
             console.log(err);
-            //alert("Error fetching mentor data");
-
         }
     }
 
@@ -42,39 +40,76 @@ export default function ListMentors() {
     ))
 
     return (
-        <div className="bg-[#ffffff] shadow-lg rounded-xl p-4 md:p-6 mt-5">
-            <div className="flex flex-row w-full border-b-1 border-gray-300 justify-between py-2">
-                <div className="mb-2 w-full">
-                    <h3 className="text-[20px] font-semibold">List Mentor</h3>
-                </div>
-                <div className="relative w-full flex justify-end">
-                    <input type="text" placeholder="search..." className="shadow-sm border-1 border-gray-300 rounded-md outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:ouline-offset-2 focus-within:outline-black-300 w-[350px] h-[35px] py-2 pl-2" value={search} onChange={(e) => { setSearch(e.target.value) }} />
-                    <Search className="absolute text-gray-400 top-1/2 -translate-y-1/2 right-3 cursor-pointer" />
+        <div className="bg-white shadow-md hover:shadow-lg transition-shadow rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6 mt-5 mx-4">
+            {/* HEADER & SEARCH */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 border-b border-gray-200 pb-4 sm:pb-5 mb-4 sm:mb-5">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900">List Mentor</h3>
+
+                <div className="relative w-full sm:w-auto">
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        className="w-full sm:w-[300px] lg:w-[350px] px-3 sm:px-4 py-2.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                        value={search}
+                        onChange={(e) => { setSearch(e.target.value) }}
+                    />
+                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
                 </div>
             </div>
 
-            <div className="mt-3">
+            {/* TABLE SECTION */}
+            <div className="mt-4 sm:mt-5 overflow-x-auto">
                 {!filterMentee || filterMentee.length === 0 ? (
-                    <p>Not data mentor founded</p>
+                    <div className="flex justify-center items-center py-8 sm:py-12">
+                        <p className="text-gray-500 text-sm sm:text-base">No mentor data found</p>
+                    </div>
                 ) : (
-                    <div className="w-full mt-3">
-                        <table className="w-full table-auto mb-2">
-                            <thead className="bg-[#02577A]">
-                                <tr className="text-white">
-                                    <th className="p-1 text-[15px]">Mentor Id</th>
-                                    <th className="p-1 text-[15px]">Mentor Name</th>
-                                    <th className="p-1 text-[15px]">Active</th>
-                                    <th className="p-1 text-[15px]">Action</th>
+                    <div className="w-full">
+                        <table className="w-full table-auto border-collapse">
+                            <thead>
+                                <tr className="bg-[#02577A] text-white">
+                                    <th className="px-3 sm:px-4 py-3 sm:py-4 text-left text-xs sm:text-sm lg:text-base font-semibold">
+                                        Mentor ID
+                                    </th>
+                                    <th className="px-3 sm:px-4 py-3 sm:py-4 text-left text-xs sm:text-sm lg:text-base font-semibold">
+                                        Mentor Name
+                                    </th>
+                                    <th className="px-3 sm:px-4 py-3 sm:py-4 text-center text-xs sm:text-sm lg:text-base font-semibold">
+                                        Status
+                                    </th>
+                                    <th className="px-3 sm:px-4 py-3 sm:py-4 text-center text-xs sm:text-sm lg:text-base font-semibold">
+                                        Action
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filterMentee.map((data) => (
-                                    <tr key={data.id} className="text-center border-b-1 border-gray-300 hover:bg-gray-100">
-                                        <td>{data.mentor_id}</td>
-                                        <td>{data.mentor_name}</td>
-                                        <td>{data.mentor_active}</td>
-                                        <td className="flex justify-center">
-                                            <SquarePen className="text-blue-500 cursor-pointer" onClick={() => handleEdit(data.id)} />
+                                    <tr
+                                        key={data.id}
+                                        className="border-b border-gray-200 hover:bg-blue-50 transition-colors"
+                                    >
+                                        <td className="px-3 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm lg:text-base text-gray-900">
+                                            {data.mentor_id}
+                                        </td>
+                                        <td className="px-3 sm:px-4 py-3 sm:py-4 text-xs sm:text-sm lg:text-base text-gray-900">
+                                            {data.mentor_name}
+                                        </td>
+                                        <td className="px-3 sm:px-4 py-3 sm:py-4 text-center">
+                                            <span className={`inline-block px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium ${data.mentor_active?.toLowerCase() === 'active'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-red-100 text-red-800'
+                                                }`}>
+                                                {data.mentor_active}
+                                            </span>
+                                        </td>
+                                        <td className="px-3 sm:px-4 py-3 sm:py-4 text-center">
+                                            <button
+                                                onClick={() => handleEdit(data.id)}
+                                                className="inline-flex items-center justify-center p-2 hover:bg-blue-100 rounded-lg transition-colors"
+                                                title="Edit mentor"
+                                            >
+                                                <SquarePen className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 hover:text-blue-700 cursor-pointer" />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -84,65 +119,95 @@ export default function ListMentors() {
                 )}
             </div>
 
+            {/* EDIT MODAL */}
             {open && selectedMentor && (
-                <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center">
-                    <div className="bg-white p-5 rounded-lg w-[400px] relative z-50">
+                <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-center p-4 sm:p-0">
+                    <div className="bg-white rounded-lg sm:rounded-xl w-full sm:w-[420px] shadow-xl relative">
 
-                        <h2 className="text-lg font-semibold mb-3">
-                            Edit Mentor
-                        </h2>
+                        {/* CLOSE BUTTON */}
+                        <button
+                            onClick={() => setOpen(false)}
+                            className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                            <X className="w-5 h-5 text-gray-500" />
+                        </button>
 
-                        <div className="flex flex-col gap-2">
-                            <input
-                                className="border p-2 rounded"
-                                value={selectedMentor.mentor_id}
-                                onChange={(e) =>
-                                    setSelectedMentor({
-                                        ...selectedMentor,
-                                        mentor_id: e.target.value
-                                    })
-                                }
-                            />
-                            <input
-                                className="border p-2 rounded"
-                                value={selectedMentor.mentor_name}
-                                onChange={(e) =>
-                                    setSelectedMentor({
-                                        ...selectedMentor,
-                                        mentor_name: e.target.value
-                                    })
-                                }
-                            />
-
-                            <select
-                                className="border p-2 rounded"
-                                value={selectedMentor.mentor_active}
-                                onChange={(e) =>
-                                    setSelectedMentor({
-                                        ...selectedMentor,
-                                        mentor_active: e.target.value
-                                    })
-                                }
-                            >
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
+                        {/* HEADER */}
+                        <div className="p-4 sm:p-6 border-b border-gray-200">
+                            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
+                                Edit Mentor
+                            </h2>
                         </div>
 
-                        <div className="flex justify-end gap-2 mt-4">
+                        {/* FORM CONTENT */}
+                        <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Mentor ID
+                                </label>
+                                <input
+                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                                    value={selectedMentor.mentor_id}
+                                    onChange={(e) =>
+                                        setSelectedMentor({
+                                            ...selectedMentor,
+                                            mentor_id: e.target.value
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Mentor Name
+                                </label>
+                                <input
+                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                                    value={selectedMentor.mentor_name}
+                                    onChange={(e) =>
+                                        setSelectedMentor({
+                                            ...selectedMentor,
+                                            mentor_name: e.target.value
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Status
+                                </label>
+                                <select
+                                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors bg-white"
+                                    value={selectedMentor.mentor_active}
+                                    onChange={(e) =>
+                                        setSelectedMentor({
+                                            ...selectedMentor,
+                                            mentor_active: e.target.value
+                                        })
+                                    }
+                                >
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* BUTTONS */}
+                        <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 justify-end p-4 sm:p-6 border-t border-gray-200">
                             <button
-                                className="px-3 py-1 bg-gray-300 rounded"
+                                className="w-full sm:w-auto px-4 py-2.5 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
                                 onClick={() => setOpen(false)}
                             >
                                 Cancel
                             </button>
 
                             <button
-                                className="px-3 py-1 bg-blue-500 text-white rounded"
+                                className="w-full sm:w-auto px-4 py-2.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
                                 onClick={async () => {
                                     try {
                                         await axios.put(
-                                            `/api/mentor/${selectedMentor.id}`,
+                                            `/api/admin/mentor/${selectedMentor.id}`,
                                             selectedMentor
                                         );
                                         setOpen(false);
@@ -152,7 +217,7 @@ export default function ListMentors() {
                                     }
                                 }}
                             >
-                                Save
+                                Save Changes
                             </button>
                         </div>
 

@@ -72,12 +72,15 @@ export default function Upload({ url, role }) {
             uploadFile(e.target.files[0]);
         }
     }
+
     const handleClick = () => {
         fileInputRef.current.click();
     }
+
     const handleForm = () => {
         setShowForm(true)
     }
+
     const handleSubmit = async () => {
 
         try {
@@ -86,85 +89,138 @@ export default function Upload({ url, role }) {
                 mentor_name: mentorName,
                 mentor_active: mentorActive
             });
+
             setShowForm(false);
             alert("Mentor successfully add!");
+
         } catch (err) {
             alert("Mentor failed to upload!");
         }
     }
+
     return (
-        <div>
-            <div className="bg-[#ffffff] rounded-xl shadow-md p-4 md:p-6">
-                <div className="flex border-b border-gray-300 mb-5 w-full flex justify-between">
-                    <div className="w-full ">
-                        <h2 className="font-semibold text-[24px]">Upload Files</h2>
+        <div className=" mx-4">
+            <div className="bg-[#ffffff] rounded-xl shadow-md p-4 sm:p-5 md:p-6 w-full">
+
+                {/* HEADER */}
+                <div className="flex flex-row sm:items-center sm:justify-between border-b border-gray-300 mb-5 gap-3 pb-3">
+
+                    <div className="w-full">
+                        <h2 className="font-semibold text-[20px] sm:text-[22px] md:text-[24px]">
+                            Upload Files
+                        </h2>
                     </div>
 
                     {role === "mentor" &&
-                        <div className="w-[250px] flex justify-end mr-5 mb-2">
-                            <button className="text-[15px] bg-[#02577A] p-2 text-white rounded-lg font-bold cursor-pointer" onClick={handleForm}> + Add Mentor</button>
+                        <div className=" sm:w-auto flex justifu-end sm:justify-end">
+                            <button
+                                className="w-[100px] md:w-[120px] sm:w-auto text-[11px] md:text-[15px] bg-[#02577A] p-2 text-white rounded-lg font-bold cursor-pointer"
+                                onClick={handleForm}
+                            >
+                                + Add Mentor
+                            </button>
                         </div>
                     }
                 </div>
+
+                {/* DROP ZONE */}
                 <div
                     onClick={handleClick}
                     onDrop={handleDrop}
                     onDragOver={(e) => { e.preventDefault() }}
-                    className="flex flex-col justify-center items-center h-[200px] border-3 border-dashed border-blue-300 rounded-xl cursor-pointer">
-                    <input type="file" onChange={handleFile} ref={fileInputRef} accept=".xlsx, .xls" className="hidden" id="fileInput" />
+                    className="flex flex-col justify-center items-center min-h-[220px] sm:min-h-[250px] border-2 md:border-3 border-dashed border-blue-300 rounded-xl cursor-pointer px-4 text-center"
+                >
+                    <input
+                        type="file"
+                        onChange={handleFile}
+                        ref={fileInputRef}
+                        accept=".xlsx, .xls"
+                        className="hidden"
+                        id="fileInput"
+                    />
+
                     <Image
                         src="/images/upload-file.png"
                         alt="upload-file.png"
-                        width={100}
-                        height={100}
+                        width={90}
+                        height={90}
                         priority
+                        className="w-[70px] sm:w-[90px] md:w-[100px] h-auto"
                     />
-                    <p className="mt-3"> <span className="text-blue-600">Click here</span> to upload your file or drag.</p>
-                    <p className="text-gray-400 mt-3">Supported Format : xlsx, xls (10 mb each)</p>
+
+                    <p className="mt-4 text-sm sm:text-base break-words">
+                        <span className="text-blue-600 font-medium">
+                            Click here
+                        </span>{" "}
+                        to upload your file or drag.
+                    </p>
+
+                    <p className="text-gray-400 mt-3 text-xs sm:text-sm text-center">
+                        Supported Format : xlsx, xls (10 mb each)
+                    </p>
                 </div>
 
             </div>
+
+            {/* PROGRESS */}
             {isUploading && (
-                <div className="w-full h-[80px] bg-[#ffffff] rounded-xl mt-4 mb-4 px-3 pt-1">
-                    <div className="w-full flex justify-between">
-                        <div className="ml-10">{file?.name}</div>
-                        <span>{progress}%</span>
+                <div className="w-full bg-[#ffffff] rounded-xl mt-4 mb-4 px-3 sm:px-4 py-3 shadow-sm">
+
+                    <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3">
+                        <div className="text-sm sm:text-base break-all">
+                            {file?.name}
+                        </div>
+
+                        <span className="text-sm font-medium">
+                            {progress}%
+                        </span>
                     </div>
 
-                    <div className="flex items-center">
-                        <FileSpreadsheet className="w-8 h-8 text-green-500 mr-2" />
-                        <progress className="w-full" value={progress} max="100" />
-                    </div>
+                    <div className="flex items-center gap-2">
+                        <FileSpreadsheet className="w-7 h-7 sm:w-8 sm:h-8 text-green-500 shrink-0" />
 
+                        <progress
+                            className="w-full h-3"
+                            value={progress}
+                            max="100"
+                        />
+                    </div>
 
                 </div>
             )}
-            {file && !isUploading && (
-                <p className="mt-2 text-green-600">Selected: {file.name}</p>
-            )}
 
+            {/* FILE SELECTED */}
+            {file && !isUploading && (
+                <p className="mt-2 text-sm sm:text-base text-green-600 break-all">
+                    Selected: {file.name}
+                </p>
+            )}
 
             {/* tempat admin nak add mentor manual */}
             {showForm && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-xl w-[400px] relative">
-                        <h2 className="text-xl font-semibold mb-4">
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center p-4 z-50">
+
+                    <div className="bg-white p-5 sm:p-6 rounded-xl w-full max-w-[400px] relative">
+
+                        <h2 className="text-lg sm:text-xl font-semibold mb-4">
                             Add Mentor
                         </h2>
+
                         {/* FORM */}
                         <input
                             value={mentorId}
                             onChange={(e) => { setMentorId(e.target.value) }}
                             type="text"
                             placeholder="Mentor Id"
-                            className="w-full p-2 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300"
+                            className="w-full p-2.5 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
                         />
+
                         <input
                             value={mentorName}
                             onChange={(e) => { setMentorName(e.target.value) }}
                             type="text"
                             placeholder="Mentor Name"
-                            className="w-full p-2 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300"
+                            className="w-full p-2.5 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
                         />
 
                         <input
@@ -172,24 +228,26 @@ export default function Upload({ url, role }) {
                             onChange={(e) => { setMentorActive(e.target.value) }}
                             type="email"
                             placeholder="Status"
-                            className="w-full p-2 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300"
+                            className="w-full p-2.5 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
                         />
 
                         {/* BUTTON ACTION */}
-                        <div className="flex justify-end gap-2">
+                        <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
+
                             <button
                                 onClick={() => setShowForm(false)}
-                                className="px-3 py-1 border rounded"
+                                className="w-full sm:w-auto px-4 py-2 border rounded"
                             >
                                 Cancel
                             </button>
 
                             <button
-                                className="px-3 py-1 bg-[#02577A] text-white rounded"
+                                className="w-full sm:w-auto px-4 py-2 bg-[#02577A] text-white rounded"
                                 onClick={handleSubmit}
                             >
                                 Submit
                             </button>
+
                         </div>
 
                     </div>

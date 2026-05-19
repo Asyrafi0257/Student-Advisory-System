@@ -28,20 +28,17 @@ function DraggableStudent({ student }) {
             {...listeners}
             {...attributes}
             style={style}
-            className="cursor-grab border-b"
+            className="cursor-grab active:cursor-grabbing hover:bg-blue-50 transition-colors border-b"
         >
-            <td className="pl-2 py-2">{student.stud_name}</td>
+            <td className="px-2 sm:px-3 py-2 sm:py-3 text-xs sm:text-sm text-gray-900">
+                {student.stud_name}
+            </td>
         </tr>
     );
 }
 
 //mentor boleh dragged
 function DraggableMentor({ mentor }) {
-    //useDraggable => hook dari dnd-kit untuk jadikan element boleh drag
-    //attributes => props khas untuk accesibility(nk kasi faham screen reader bahawa element tu untuk drag)
-    //listeners => event handler untuk drag(mouse, touch) -> cth : onMouseDown, onTouchStart
-    //setNodeRef => function untuk "register" element DOM ke sistem drag(dnd kit)
-    //transform => position semasa drag(x, y) => digunakan untuk gerakkan element secara visual
     const { attributes, listeners, setNodeRef, transform } =
         useDraggable({
             id: `mentor-${mentor.id}`,
@@ -51,7 +48,6 @@ function DraggableMentor({ mentor }) {
             },
         });
 
-    // nak buat item tu boleh gerak(movement)
     const style = {
         transform: transform
             ? `translate(${transform.x}px, ${transform.y}px)`
@@ -59,44 +55,59 @@ function DraggableMentor({ mentor }) {
     };
 
     return (
-        // ref digunakan untuk akses element DOM secara direct
-        // spread operator(...) => maksudnya ambil semua isi dalam object
         <tr
             ref={setNodeRef}
             {...listeners}
             {...attributes}
             style={style}
-            className="cursor-grab border-b"
+            className="cursor-grab active:cursor-grabbing hover:bg-blue-50 transition-colors border-b"
         >
-            <td className="pl-2 py-2">{mentor.mentor_name}</td>
+            <td className="px-2 sm:px-3 py-2 sm:py-3 text-xs sm:text-sm text-gray-900">
+                {mentor.mentor_name}
+            </td>
         </tr>
     );
 }
+
 //kawasan drop mentor
 function MentorDropZone({ assignedMentors, assignments, handleRemoveStudent }) {
-    //useDroppable => hook daripada dnd-kit untuk dijadikan kawasan ni boleh drop
-    //isOver => detect bila item tengah hover drag ke drop zone
     const { setNodeRef, isOver } = useDroppable({ id: "mentor-drop-zone" });
 
     return (
-        <div ref={setNodeRef} className={`border border-gray-300 p-2 w-full ${isOver ? "bg-green-100" : ""}`}>
-            <h3 className="font-semibold mb-2">Mentor Table</h3>
-            {assignedMentors.length === 0 && <p className="text-gray-500">Drag mentors here</p>}
+        <div
+            ref={setNodeRef}
+            className={`border-2 border-dashed rounded-lg p-3 sm:p-4 w-full transition-colors ${isOver ? "bg-green-50 border-green-400" : "bg-white border-gray-300"
+                }`}
+        >
+            <h3 className="font-semibold text-sm sm:text-base mb-3 text-gray-900">
+                Mentor Table
+            </h3>
+            {assignedMentors.length === 0 && (
+                <p className="text-gray-400 text-xs sm:text-sm italic">
+                    Drag mentors here
+                </p>
+            )}
             {assignedMentors.map((mentor) => (
-                <div key={mentor.id} className="border-t-1 border-gray-300 p-2 mb-2 bg-gray-100 rounded flex flex-row ">
-                    <div className="border-r-2 border-gray-300 w-full flex items-center justify-center">
-                        <strong>{mentor.mentor_name}</strong>
-                    </div>
+                <div
+                    key={mentor.id}
+                    className="border border-gray-200 p-3 sm:p-4 mb-3 bg-gradient-to-r from-gray-50 to-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                >
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-0">
+                        <div className="sm:border-r-2 border-gray-200 sm:pr-3 sm:w-40 flex items-center">
+                            <strong className="text-xs sm:text-sm text-gray-900">
+                                {mentor.mentor_name}
+                            </strong>
+                        </div>
 
-                    <div className="flex justify-center w-full mx-3">
-                        <MenteeDropZone
-                            mentor={mentor}
-                            assignedStudents={assignments[mentor.id] || []}
-                            handleRemoveStudent={handleRemoveStudent}
-                        />
+                        <div className="flex-1 sm:pl-3">
+                            <MenteeDropZone
+                                mentor={mentor}
+                                assignedStudents={assignments[mentor.id] || []}
+                                handleRemoveStudent={handleRemoveStudent}
+                            />
+                        </div>
                     </div>
                 </div>
-
             ))}
         </div>
     );
@@ -112,33 +123,34 @@ function MenteeDropZone({ mentor, assignedStudents, handleRemoveStudent }) {
     return (
         <div
             ref={setNodeRef}
-            className={`w-full mt-2 p-2 rounded ${isOver ? "bg-blue-100" : "bg-white"}`}
+            className={`w-full p-2 sm:p-3 rounded-lg transition-colors ${isOver ? "bg-blue-100 border-2 border-blue-400" : "bg-gray-50 border border-gray-200"
+                }`}
         >
             {assignedStudents.length === 0 ? (
-                <p className="text-gray-500">Drop students here</p>
+                <p className="text-gray-400 text-xs sm:text-sm italic">
+                    Drop students here
+                </p>
             ) : (
-                <table className="table-auto w-full">
-                    <tbody>
-                        {assignedStudents.map((student) => (
-                            <tr key={student.stud_id} className="border-b-1 border-gray-300">
-                                <td className="pl-2 py-1">
-                                    <ul className="list-disc px-3">
-                                        <li className="flex justify-between items-center ">
-                                            {student.stud_name}
+                <div className="space-y-2">
+                    {assignedStudents.map((student) => (
+                        <div
+                            key={student.stud_id}
+                            className="flex items-center justify-between bg-white p-2 sm:p-2.5 rounded border border-gray-200 hover:border-gray-300 transition-colors"
+                        >
+                            <span className="text-xs sm:text-sm text-gray-900 flex-1">
+                                • {student.stud_name}
+                            </span>
 
-                                            <button
-                                                onClick={() => handleRemoveStudent(mentor.id, student)}
-                                                className="text-white bg-[#ff0000] rounded-lg font-bold ml-2 mt-1 cursor-pointer"
-                                            >
-                                                <X />
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                            <button
+                                onClick={() => handleRemoveStudent(mentor.id, student)}
+                                className="ml-2 p-1 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-lg transition-colors flex-shrink-0"
+                                title="Remove student"
+                            >
+                                <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </button>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );
@@ -149,11 +161,8 @@ export default function Assigns() {
     const [dataStudent, setDataStudent] = useState([]);
     const [error, setError] = useState("");
 
-    // simpan assign: mentor_id → [students]
     const [assignments, setAssignments] = useState({});
     const [assignedMentors, setAssignedMentors] = useState([]);
-
-
 
     useEffect(() => {
         fetchAssign();
@@ -170,7 +179,6 @@ export default function Assigns() {
         }
     }
 
-
     /* ================= HANDLE DRAG END ================= */
     const handleDragEnd = (event) => {
         const { active, over } = event;
@@ -181,10 +189,11 @@ export default function Assigns() {
 
         //show error if student drag to table mentor
         if (dragged.type === "student" && over.id === "mentor-drop-zone") {
-            setError("Student cannot drop at  Mentor Table!");
+            setError("Student cannot drop at Mentor Table!");
             setTimeout(() => setError(""), 3000);
             return;
         }
+
         // Drag mentor → mentor table
         if (dragged.type === "mentor" && over.id === "mentor-drop-zone") {
             const mentor = dragged.mentor;
@@ -207,7 +216,7 @@ export default function Assigns() {
 
             // limit 10 mentee
             if (currentStudents.length >= 10) {
-                setError("Mentee only can be assigned 10 mentee");
+                setError("Mentor can only be assigned 10 mentees");
                 setTimeout(() => setError(""), 3000);
                 return;
             }
@@ -251,17 +260,15 @@ export default function Assigns() {
             });
 
             alert("Data successfully saved");
-            //clear UI
             setAssignments({});
             setAssignedMentors([]);
-
-            //refresh balik data
             fetchAssign();
         } catch (err) {
             console.log(err);
-            setError("Data failed to saved!");
+            setError("Data failed to save!");
         }
     }
+
     const handleRemoveStudent = (mentorId, student) => {
         setAssignments((prev) => {
             const updated = { ...prev };
@@ -277,100 +284,102 @@ export default function Assigns() {
             return updated;
         });
 
-        // masukkan balik ke list student
         setDataStudent((prev) => [...prev, student]);
     };
 
     return (
         <DndContext onDragEnd={handleDragEnd}>
-            <div className="bg-[#ffffff] backdrop-blur-md shadow-lg rounded-xl p-4 md:p-6 md:mx-0 h-auto mt-3">
-                <div className="flex flex-row w-full border-b-1 border-gray-300 justify-between py-2">
-                    <div className="mb-2 w-full">
-                        <h3 className="text-[20px] font-semibold">Assign Mentee</h3>
+            <div className="bg-white shadow-md hover:shadow-lg transition-shadow rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6 mx-4">
+                {/* HEADER */}
+                <div className="border-b border-gray-200 pb-4 sm:pb-5 mb-5">
+                    <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                        Assign Mentee
+                    </h3>
+                </div>
+
+                {/* DRAG TABLES */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-6">
+                    {/* STUDENT TABLE */}
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-[#02577A] text-white p-3 sm:p-4 sticky top-0 z-10">
+                            <h4 className="text-xs sm:text-sm font-semibold">Available Mentees</h4>
+                        </div>
+                        <div className="h-64 sm:h-80 overflow-y-auto">
+                            {dataStudent.length === 0 ? (
+                                <div className="flex items-center justify-center h-full">
+                                    <p className="text-gray-400 text-sm">No students available</p>
+                                </div>
+                            ) : (
+                                <table className="w-full">
+                                    <tbody>
+                                        {dataStudent.map((student) => (
+                                            <DraggableStudent
+                                                key={student.stud_id}
+                                                student={student}
+                                            />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* MENTOR TABLE */}
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        <div className="bg-[#02577A] text-white p-3 sm:p-4 sticky top-0 z-10">
+                            <h4 className="text-xs sm:text-sm font-semibold">Available Mentors</h4>
+                        </div>
+                        <div className="h-64 sm:h-80 overflow-y-auto">
+                            {dataMentor.length === 0 ? (
+                                <div className="flex items-center justify-center h-full">
+                                    <p className="text-gray-400 text-sm">No mentors available</p>
+                                </div>
+                            ) : (
+                                <table className="w-full">
+                                    <tbody>
+                                        {dataMentor.map((mentor) => (
+                                            <DraggableMentor
+                                                key={mentor.id}
+                                                mentor={mentor}
+                                            />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex flex-cols mt-5 w-full items-center gaps-2">
-                    {/* mentee table */}
-                    <div className="w-full h-[300px] overflow-auto flex justify-center">
-                        {dataStudent.length === 0 ? (
-                            <p>No student available</p>
-                        ) : (
-                            <table className="table-auto h-[280px] w-full">
-                                <thead className="bg-[#02577A] sticky top-0 z-10 shadow-md">
-                                    <tr>
-                                        <th className="text-white">Student</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    {dataStudent.map((student) => (
-                                        <DraggableStudent
-                                            key={student.stud_id}
-                                            student={student}
-                                        />
-                                    ))}
-
-
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-
-                    {/* mentor */}
-                    <div className="w-full h-[300px] overflow-auto flex justify-center">
-                        {dataMentor.length === 0 ? (
-                            <p>No mentor available</p>
-                        ) : (
-                            <table className="table-auto h-[280px] w-full">
-                                <thead className="bg-[#02577A] sticky top-0 z-10 shadow-md">
-                                    <tr>
-                                        <th className="text-white">Mentor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    {dataMentor.map((mentor) => (
-                                        <DraggableMentor
-                                            key={mentor.id}
-                                            mentor={mentor}
-                                        />
-                                    ))}
-
-
-
-
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                </div>
-
-                <div className="border-b-2 border-gray-300 mt-10"></div>
-
-
+                {/* ERROR MESSAGE */}
                 {error && (
-                    <div className="bg-red-500 text-white p-2 rounded mb-3 mt-5">
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-5 text-sm">
                         {error}
                     </div>
                 )}
 
-                <div className="w-full mt-5">
-                    <div className="w-full flex justify-center text-white bg-[#02577A] p-2">
-                        <h3>Mentee to Mentor</h3>
+                {/* ASSIGNMENT SECTION */}
+                <div className="border-t-2 border-gray-200 pt-6">
+                    <div className="bg-[#02577A] text-white p-4 sm:p-5 rounded-t-lg mb-4">
+                        <h3 className="text-sm sm:text-base font-semibold">Mentee to Mentor Assignments</h3>
                     </div>
 
-                    <div className="w-full flex flex-row justify-between mt-3">
+                    <div className="mb-5">
                         <MentorDropZone
                             assignedMentors={assignedMentors}
                             assignments={assignments}
                             handleRemoveStudent={handleRemoveStudent}
                         />
                     </div>
-                    <div className="mt-3 flex justify-end w-full pr-5">
-                        <button className="w-32 h-[30px] bg-[#02577A] rounded-xl text-white cursor-pointer" onClick={handleSave}>Save</button>
-                    </div>
 
+                    {/* SAVE BUTTON */}
+                    <div className="flex justify-end">
+                        <button
+                            onClick={handleSave}
+                            className="sm:w-40 p-2 sm:py-2.5 bg-[#02577A] hover:bg-[#024562] active:bg-[#023a4a] text-white font-semibold rounded-lg transition-colors text-[13px] sm:text-base"
+                        >
+                            Save Assignments
+                        </button>
+                    </div>
                 </div>
             </div>
         </DndContext>

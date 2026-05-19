@@ -1,9 +1,6 @@
-import Dashboard from "./dashboard/page";
+// import Dashboard from "./dashboard/page";
+import { redirect } from "next/navigation";
 
 export default function Admin() {
-    return (
-        <div>
-            <Dashboard/>
-        </div>
-    )
+    redirect("/admin/dashboard");
 }

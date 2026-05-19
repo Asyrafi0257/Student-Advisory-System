@@ -1,9 +1,6 @@
-import Dashboard from "../lecturer/dashboard/page";
+// import Dashboard from "../lecturer/dashboard/page";
+import { redirect } from "next/navigation"
 
 export default function LecturePage() {
-    return (
-        <div>
-            <Dashboard />
-        </div>
-    )
+    redirect("/lecturer/dashboard");
 }

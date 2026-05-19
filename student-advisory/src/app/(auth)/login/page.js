@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { User, Lock, ChevronDown, Mail } from "lucide-react";
+import { Lock, ChevronDown, Mail, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Alert from "@/components/alert";
@@ -12,22 +12,22 @@ export default function Login() {
     const [selectRole, setSelectRole] = useState("Options");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const roleOptions = ["Admin", "Student", "Lecturer"];
     const [alertData, setAlertData] = useState(null);
-
-
 
     const handleForgot = () => {
         router.push("/forgot-password")
     }
+
     const handleSignUp = () => {
         router.push("/register");
     }
+
     const handleSelected = () => {
-        setOpen(true);
+        setOpen(!open);
     }
 
-    //cara handle setTimeout
     const showAlert = (data, duration = 2000) => {
         setAlertData(data);
 
@@ -41,7 +41,6 @@ export default function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // check error handling
         if (!email || !password || selectRole === "Options") {
             showAlert({
                 type: "error",
@@ -59,7 +58,7 @@ export default function Login() {
                 },
                 body: JSON.stringify({ email, password }),
             });
-            const data = await res.json(); //wait response from server
+            const data = await res.json();
 
             if (data.success && data.role === "admin" && selectRole === roleOptions[0]) {
                 setAlertData({
@@ -102,12 +101,12 @@ export default function Login() {
                 message: "Server Error",
                 describe: "Something went wrong on our end. Please try again later."
             })
-
         }
     }
 
     return (
-        <div className="relative flex flex-row h-screen">
+        <div className="relative flex flex-col sm:flex-row min-h-screen w-full">
+            {/* BACKGROUND IMAGE */}
             <Image
                 src="/images/bg-login.jpg"
                 alt="bg-login.jpg"
@@ -116,64 +115,146 @@ export default function Login() {
                 priority
             />
 
-            <div className="relative scroll-smooth flex flex-col w-screen sm:flex-row h-screen justify-center sm:items-center">
-                <div className="flex flex-col justify-center items-center w-full sm:w-1/2 text-center sm:text-center lg:text-start">
-                    <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-5xl/14  mt-3 font-bold tracking-[2px] text-white w-[350px] sm:w-[300px] md:w-[400px] lg:w-[500px]">WELCOME TO THE STUDENT ADVISORY SYSTEM</h1>
-                    <h3 className="text-lg sm:text-[23px] text-white w-[350px] sm:w-[500px] mt-2 mb-5">SCHOOL OF COMPUTING</h3>
+            {/* MAIN CONTAINER */}
+            <div className="relative w-full min-h-screen flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-0 p-4 sm:p-0">
+
+                {/* HEADER SECTION - TEXT */}
+                <div className="w-full flex flex-col justify-center items-center sm:items-start text-center sm:text-center px-4 sm:px-8 lg:px-12">
+                    <h1 className="w-full text-2xl sm:text-2xl md:text-3xl lg:text-5xl font-bold tracking-widest text-white mb-3 sm:mb-4 leading-tight">
+                        WELCOME TO THE<br className="hidden sm:block" /> STUDENT ADVISORY<br className="hidden sm:block" /> SYSTEM
+                    </h1>
+                    <h3 className="w-full text-base sm:text-lg lg:text-xl text-gray-100 sm:text-center font-semibold tracking-widest">
+                        SCHOOL OF COMPUTING
+                    </h3>
                 </div>
 
-                <div className="flex flex-col justify-center items-center w-full sm:w-1/2 text-center md:justify-center">
-                    <div className="bg-white w-[300px] sm:w-[320px] md:w-[360px] lg:w-[480px] h-[430px] sm:h-[480px] md:h-[500px] lg:h-[540px] rounded-[15px] flex flex-col">
-                        <h1 className="flex flex-row justify-center mt-3 sm:mt-10 text-[23px] sm:text-[25px] md:text-[30px] font-bold text-shadow-lg">Login</h1>
+                {/* LOGIN FORM SECTION */}
+                <div className="w-full sm:w-1/2 flex justify-center items-center px-4 sm:px-8 lg:px-12">
+                    <div className="bg-white w-full max-w-sm sm:max-w-none sm:w-[320px] md:w-[380px] lg:w-[480px] rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
 
-                        <form onSubmit={handleLogin} className="flex flex-col items-center mt-5 sm:mt-10">
-                            <div className="relative shadow-md rounded-md">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input type="text" placeholder="Email" name="email" value={email} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 " onChange={(e) => { setEmail(e.target.value) }} />
-                            </div>
-                            <div className="relative mt-5 shadow-md rounded-md">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input type="password" placeholder="Password" name="password" value={password} className="sm:w-[270px] lg:w-[350px] h-[38px] rounded-md p-3 pl-10 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300" onChange={(e) => { setPassword(e.target.value) }} />
-                            </div>
-                            <div className="mt-3 w-[240px] sm:w-[270px] md:w-[350px] flex flex-row justify-end cursor-pointer">
-                                <h3 className="text-blue-600 text-shadow-md text-[15px]" onClick={handleForgot}>Forgot password?</h3>
+                        {/* FORM HEADER */}
+                        <div className="px-6 sm:px-8 py-6 sm:py-8">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">
+                                Login
+                            </h1>
+                        </div>
+
+                        {/* FORM CONTENT */}
+                        <form onSubmit={handleLogin} className="flex flex-col items-center px-5 sm:px-8 py-6 sm:py-8 space-y-4 sm:space-y-5">
+
+                            {/* EMAIL INPUT */}
+                            <div className="w-full">
+                                <div className="relative">
+                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                                    <input
+                                        type="email"
+                                        placeholder="name@example.com"
+                                        name="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full h-11 sm:h-12 rounded-lg pl-10 pr-3 py-2.5 text-sm sm:text-base border border-gray-300 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 outline-none transition-colors placeholder-gray-400"
+                                    />
+                                </div>
                             </div>
 
-                            <div className="relative mt-5 flex flex-row justify-start w-[240px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
-                                <button type="button" className="inline-flex justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring-1 inset-ring-gray-300 hover:bg-gray-50 shadow-md" onClick={handleSelected}>{selectRole}
-                                    <ChevronDown className="h-5 w-5" />
+                            {/* PASSWORD INPUT */}
+                            <div className="w-full">
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="Password"
+                                        name="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full h-11 sm:h-12 rounded-lg pl-10 pr-10 py-2.5 text-sm sm:text-base border border-gray-300 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 outline-none transition-colors placeholder-gray-400"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors"
+                                    >
+                                        {showPassword ?
+                                            <EyeOff className="w-5 h-5 text-gray-400" /> :
+                                            <Eye className="w-5 h-5 text-gray-400" />
+                                        }
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* FORGOT PASSWORD */}
+                            <div className="w-full text-right">
+                                <button
+                                    type="button"
+                                    onClick={handleForgot}
+                                    className="text-blue-600 hover:text-blue-700 text-xs sm:text-sm font-semibold transition-colors"
+                                >
+                                    Forgot password?
                                 </button>
+                            </div>
+
+                            {/* ROLE DROPDOWN */}
+                            <div className="relative w-full">
+                                <button
+                                    type="button"
+                                    onClick={handleSelected}
+                                    className="flex items-center justify-between px-4 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+                                >
+                                    <span>{selectRole}</span>
+                                    <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                {/* DROPDOWN MENU */}
                                 {open && (
-                                    <div className="absolute w-32 border mt-1 rounded-md bg-white mt-10">
+                                    <div className="absolute w-[110px] top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-50 overflow-hidden">
                                         {roleOptions.map((item) => (
-                                            <div
+                                            <button
                                                 key={item}
+                                                type="button"
                                                 onClick={() => {
                                                     setSelectRole(item)
                                                     setOpen(false)
                                                 }}
-                                                className="p-2 hover:bg-gray-100 cursor-pointer rounded-md"
+                                                className=" w-full text-center flex flex col px-2 py-2.5 text-sm text-left text-gray-700 hover:bg-blue-50 transition-colors border-b border-gray-300 last:border-b-0"
                                             >
                                                 {item}
-                                            </div>
+                                            </button>
                                         ))}
                                     </div>
                                 )}
                             </div>
 
-                            <div className="flex flex-row justify-end w-[240px] sm:w-[260px] md:w-[300px] lg:w-[350px]">
-                                <button type="submit" className="bg-blue-600 w-24 h-[35px] rounded-[20px] mt-8 text-white cursor-pointer shadow-md ">Login</button>
+                            {/* LOGIN BUTTON */}
+                            <div className="w-full pt-2">
+                                <button
+                                    type="submit"
+                                    className="w-full px-6 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-lg transition-colors duration-200 text-sm sm:text-base shadow-lg hover:shadow-xl"
+                                >
+                                    Login
+                                </button>
                             </div>
 
-                            <div className="mt-10 sm:mt-11 md:mt-13">
-                                <h3 className="font-bold">Don't have an account? <span className="text-blue-600 cursor-pointer" onClick={handleSignUp}>Sign Up</span></h3>
+                            {/* SIGN UP LINK */}
+                            <div className="pt-4 text-center">
+                                <p className="text-xs sm:text-sm text-gray-700">
+                                    Don't have an account? {" "}
+                                    <button
+                                        type="button"
+                                        onClick={handleSignUp}
+                                        className="text-blue-600 font-bold hover:text-blue-700 transition-colors"
+                                    >
+                                        Sign Up
+                                    </button>
+                                </p>
                             </div>
+
                         </form>
                     </div>
                 </div>
 
             </div>
-            {/* for popup message */}
+
+            {/* ALERT COMPONENT */}
             {alertData && (
                 <Alert
                     type={alertData.type}

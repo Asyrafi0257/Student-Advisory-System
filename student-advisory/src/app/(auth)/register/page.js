@@ -5,12 +5,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import {
-    User,
     Mail,
-    Phone,
     CreditCard,
     Lock,
     BadgeCheck,
+    Eye,
+    EyeOff,
 } from "lucide-react";
 
 export default function RegisterPage() {
@@ -20,6 +20,8 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [staffNo, setStaffNo] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const router = useRouter();
 
@@ -55,8 +57,6 @@ export default function RegisterPage() {
                     alert(res.data.message);
                 }
             }
-
-
         } catch (err) {
             console.log(err);
             alert("You failed to register")
@@ -64,8 +64,9 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden">
+        <div className="min-h-screen flex items-center justify-center px-3 sm:px-4 py-6 sm:py-10 relative overflow-hidden">
 
+            {/* BACKGROUND IMAGE */}
             <Image
                 src="/images/bg-login.jpg"
                 alt="Background"
@@ -74,94 +75,105 @@ export default function RegisterPage() {
                 className="object-cover"
             />
 
-            <div className="relative w-full max-w-7xl min-h-[760px] md:min-h-[680px] bg-[#02577A] rounded-[35px] overflow-hidden shadow-2xl">
+            {/* MAIN CONTAINER */}
+            <div className="relative w-full max-w-6xl min-h-[600px] sm:min-h-[680px] lg:min-h-[690px] bg-[#02577A] rounded-2xl sm:rounded-3xl lg:rounded-[35px] overflow-hidden shadow-2xl">
 
+                {/* INFO PANELS - DESKTOP ONLY */}
                 {/* STUDENT INFO */}
-                <div className={`absolute right-0 top-0 w-1/2 h-full hidden md:flex flex-col justify-center items-center px-10 transition-all duration-700
+                <div className={`absolute right-0 top-0 w-0 lg:w-1/2 h-full hidden lg:flex flex-col justify-center items-center px-6 lg:px-8 transition-all duration-700
                 ${role === "student" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                    <h1 className="text-5xl font-black text-white mb-5">
-                        Student Registration
-                    </h1>
-                    <p className="text-gray-400 text-center max-w-md leading-relaxed">
-                        Register as a student to connect with lecturers,
-                        manage mentoring sessions and monitor your academic journey.
-                    </p>
+                    <div className="">
+                        <h1 className="text-xl lg:text-3xl font-black text-white mb-4 lg:mb-5 tracking-wide">
+                            Student Registration
+                        </h1>
+                        <p className="text-sm lg:text-base text-gray-300 leading-relaxed max-w-sm">
+                            Register as a student to connect with lecturers, manage mentoring sessions and monitor your academic journey.
+                        </p>
+                        <div className="max-w-[350px] h-[60px] rounded-xl mt-5 flex items-center p-2 bg-white/30 shadow-sm">
+                            <p className="text-white/70 text-[15px]">Create your account with your university matric number</p>
+                        </div>
+                    </div>
                 </div>
 
                 {/* LECTURER INFO */}
-                <div className={`absolute left-0 top-0 w-1/2 h-full hidden md:flex flex-col justify-center items-center px-5 transition-all duration-700
+                <div className={`absolute left-0 top-0 w-0 lg:w-1/2 h-full hidden lg:flex flex-col justify-center items-center px-8 lg:px-10 transition-all duration-700
                 ${role === "lecturer" ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
-                    <h1 className="text-5xl font-black text-white mb-5">
-                        Lecturer Registration
-                    </h1>
-                    <p className="text-gray-400 text-center max-w-md leading-relaxed">
-                        Create your lecturer account to manage mentees,
-                        monitor student progress and guide students effectively.
-                    </p>
+                    <div className="">
+                        <h1 className="text-xl lg:text-3xl font-black text-white mb-4 lg:mb-5 tracking-wide">
+                            Lecturer Registration
+                        </h1>
+                        <p className="text-sm lg:text-base text-gray-300 leading-relaxed max-w-sm">
+                            Create your lecturer account to manage mentees, monitor student progress and guide students effectively.
+                        </p>
+                        <div className="max-w-[350px] h-[60px] rounded-xl mt-5 flex items-center p-2 bg-white/30 shadow-sm">
+                            <p className="text-white/70 text-[15px]">Create your account with your university staff number</p>
+                        </div>
+                    </div>
                 </div>
 
-                {/* FORM */}
-                <div className={`absolute top-0 z-20 bg-white rounded-[35px] w-full md:w-1/2 h-full transition-all duration-700
-                ${role === "student" ? "left-0" : "left-0 md:left-1/2"}`}>
+                {/* FORM CONTAINER */}
+                <div className={`absolute top-0 z-20 bg-white w-full lg:w-1/2 h-full rounded-2xl sm:rounded-3xl lg:rounded-[35px] transition-all duration-700
+                ${role === "student" ? "left-0" : "left-0 lg:left-1/2"}`}>
 
-                    <div className="h-full flex flex-col justify-center px-6 md:px-12">
+                    <div className="h-full flex flex-col justify-center px-5 sm:px-8 lg:px-12 py-8 sm:py-0">
 
-                        <div className="mb-6">
-                            <div className="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-full px-3 py-1 mb-3">
+                        {/* HEADER */}
+                        <div className="mb-6 sm:mb-8">
+                            <div className="inline-flex items-center gap-1.5 bg-gray-200/55 border border-gray-100 rounded-full px-3 py-1.5 mb-3 sm:mb-4">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                                <span className="text-[10px] font-bold tracking-[2px] uppercase text-gray-400">
+                                <span className="text-[10px] sm:text-[11px] font-bold tracking-[1.5px] sm:tracking-[2px] uppercase text-gray-400">
                                     New Account
                                 </span>
                             </div>
-                            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">
-                                Let's get<br />you started 👋
+                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 tracking-tight">
+                                Let's get<br className="hidden sm:block" /> you started 👋
                             </h2>
                         </div>
 
-                        {/* TOGGLE */}
-                        <div className="bg-gray-200 rounded-full p-1 flex mb-8">
+                        {/* ROLE TOGGLE */}
+                        <div className="bg-gray-200 rounded-full p-1 flex mb-6 sm:mb-8">
                             <button
                                 onClick={() => setRole("student")}
-                                className={`flex-1 py-3 rounded-full font-bold
-                                ${role === "student" ? "bg-indigo-600 text-white" : ""}`}
+                                className={`flex-1 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300
+                                ${role === "student" ? "bg-indigo-600 text-white shadow-lg" : "text-gray-600 hover:text-gray-900"}`}
                             >
                                 STUDENT
                             </button>
 
                             <button
                                 onClick={() => setRole("lecturer")}
-                                className={`flex-1 py-3 rounded-full font-bold
-                                ${role === "lecturer" ? "bg-indigo-600 text-white" : ""}`}
+                                className={`flex-1 py-2.5 sm:py-3 rounded-full font-bold text-xs sm:text-sm transition-all duration-300
+                                ${role === "lecturer" ? "bg-indigo-600 text-white shadow-lg" : "text-gray-600 hover:text-gray-900"}`}
                             >
                                 LECTURER
                             </button>
                         </div>
 
-                        {/* STUDENT INPUT */}
+                        {/* PERSONAL INFO SECTION */}
                         {role === "student" ? (
                             <div>
-                                <p className="text-[10px] font-bold tracking-[2px] uppercase text-gray-300 mb-3">
+                                <p className="text-[10px] font-bold tracking-[1.5px] uppercase text-gray-300 mb-3 sm:mb-4">
                                     Personal Info
                                 </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 
-                                    <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-                                        <Mail size={20} />
+                                    <div className="flex items-center gap-2 p-3 sm:p-3.5 transition-colors border-b-1 border-gray-300">
+                                        <Mail size={20} className="text-gray-500 flex-shrink-0" />
                                         <input
                                             type="text"
-                                            placeholder="Student Email"
-                                            className="w-full bg-transparent outline-none"
+                                            placeholder="name@gmail.com"
+                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
                                     </div>
 
-                                    <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-                                        <CreditCard size={20} />
+                                    <div className="flex items-center gap-2 border-b-1 border-gray-300 p-3 sm:p-3.5 transition-colors">
+                                        <CreditCard size={20} className="text-gray-500 flex-shrink-0" />
                                         <input
                                             type="text"
                                             placeholder="Matric Number"
-                                            className="w-full bg-transparent outline-none"
+                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                             value={matric}
                                             onChange={(e) => setMatric(e.target.value)}
                                         />
@@ -172,28 +184,28 @@ export default function RegisterPage() {
 
                         ) : (
                             <div>
-                                <p className="text-[10px] font-bold tracking-[2px] uppercase text-gray-300 mb-3">
+                                <p className="text-[10px] font-bold tracking-[1.5px] uppercase text-gray-300 mb-3 sm:mb-4">
                                     Personal Info
                                 </p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 
-                                    <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-                                        <Mail size={20} />
+                                    <div className="flex items-center gap-2 border-b-1 border-gray-300 p-3 sm:p-3.5 transition-colors">
+                                        <Mail size={20} className="text-gray-500 flex-shrink-0" />
                                         <input
                                             type="text"
-                                            placeholder="Lecturer Email"
-                                            className="w-full bg-transparent outline-none"
+                                            placeholder="name@gmail.com"
+                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
                                     </div>
 
-                                    <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-                                        <CreditCard size={20} />
+                                    <div className="flex items-center gap-2 border-b-1 border-gray-300 p-3 sm:p-3.5 transition-colors">
+                                        <CreditCard size={20} className="text-gray-500 flex-shrink-0" />
                                         <input
                                             type="text"
                                             placeholder="Staff Number"
-                                            className="w-full bg-transparent outline-none"
+                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                             value={staffNo}
                                             onChange={(e) => setStaffNo(e.target.value)}
                                         />
@@ -204,50 +216,62 @@ export default function RegisterPage() {
 
                         )}
 
-                        <p className="text-[10px] font-bold tracking-[2px] uppercase text-gray-300 mb-3 mt-2">
+                        {/* SECURITY SECTION */}
+                        <p className="text-[10px] font-bold tracking-[1.5px] uppercase text-gray-300 mb-3 sm:mb-4 mt-4 sm:mt-6">
                             Security
                         </p>
-                        {/* PASSWORD */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 
-                            <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-                                <Lock size={20} />
+                            <div className="flex items-center gap-2 border-b-1 border-gray-300 p-3 sm:p-3.5 transition-colors">
+                                <Lock size={20} className="text-gray-500 flex-shrink-0" />
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="Password"
-                                    className="w-full bg-transparent outline-none"
+                                    className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
+                                <button
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="p-1 hover:bg-gray-200 rounded transition-colors flex-shrink-0"
+                                >
+                                    {showPassword ? <EyeOff size={18} className="text-gray-500" /> : <Eye size={18} className="text-gray-500" />}
+                                </button>
                             </div>
 
-                            <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl">
-                                <BadgeCheck size={20} />
+                            <div className="flex items-center gap-2 border-b-1 border-gray-300 p-3 sm:p-3.5 transition-colors">
+                                <BadgeCheck size={20} className="text-gray-500 flex-shrink-0" />
                                 <input
-                                    type="password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     placeholder="Confirm Password"
-                                    className="w-full bg-transparent outline-none"
+                                    className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                 />
+                                <button
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="p-1 hover:bg-gray-200 rounded transition-colors flex-shrink-0"
+                                >
+                                    {showConfirmPassword ? <EyeOff size={18} className="text-gray-500" /> : <Eye size={18} className="text-gray-500" />}
+                                </button>
                             </div>
 
                         </div>
 
-                        {/* BUTTON */}
+                        {/* REGISTER BUTTON */}
                         <button
                             onClick={handleRegister}
-                            className="mt-10 w-full md:w-fit md:px-14 mx-auto bg-indigo-600 text-white font-bold py-3 rounded-full"
+                            className="mt-8 sm:mt-10 w-full sm:w-auto sm:px-12 lg:px-14 mx-auto bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 sm:py-3 rounded-full transition-colors duration-200 text-sm sm:text-base shadow-lg hover:shadow-xl"
                         >
                             REGISTER
                         </button>
 
-                        {/* LOGIN */}
-                        <p className="text-center mt-6 text-sm">
+                        {/* LOGIN LINK */}
+                        <p className="text-center mt-6 sm:mt-8 text-xs sm:text-sm text-gray-600">
                             Already have an account?{" "}
                             <span
                                 onClick={handleLogin}
-                                className="text-indigo-600 cursor-pointer"
+                                className="text-indigo-600 font-semibold cursor-pointer hover:text-indigo-700 transition-colors"
                             >
                                 Login
                             </span>

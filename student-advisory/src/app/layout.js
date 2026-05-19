@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono, Bebas_Neue } from "next/font/google";
 import "./globals.css";
+import Student from "./admin/listStudent/page";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,6 +19,10 @@ const bebasNeue = Bebas_Neue({
 })
 
 export const metadata = {
+  title: {
+    default: "Student Advisory",
+    template: "%s | Student Advisory"
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" }, // fallback classic favicon
