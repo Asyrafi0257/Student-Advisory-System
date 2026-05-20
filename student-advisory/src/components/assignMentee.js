@@ -1,7 +1,7 @@
 "use client"
 
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
-import { X } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -70,7 +70,7 @@ function DraggableMentor({ mentor }) {
 }
 
 //kawasan drop mentor
-function MentorDropZone({ assignedMentors, assignments, handleRemoveStudent }) {
+function MentorDropZone({ assignedMentors, assignments, handleRemoveStudent, handleRemoveMentor }) {
     const { setNodeRef, isOver } = useDroppable({ id: "mentor-drop-zone" });
 
     return (
@@ -97,6 +97,13 @@ function MentorDropZone({ assignedMentors, assignments, handleRemoveStudent }) {
                             <strong className="text-xs sm:text-sm text-gray-900">
                                 {mentor.mentor_name}
                             </strong>
+                            <button
+                                onClick={() => handleRemoveMentor(mentor)}
+                                className="ml-2 p-1 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white rounded-lg transition-colors flex-shrink-0"
+                                title="Remove student"
+                            >
+                                <X className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </button>
                         </div>
 
                         <div className="flex-1 sm:pl-3">
@@ -160,13 +167,36 @@ export default function Assigns() {
     const [dataMentor, setDataMentor] = useState([]);
     const [dataStudent, setDataStudent] = useState([]);
     const [error, setError] = useState("");
-
     const [assignments, setAssignments] = useState({});
     const [assignedMentors, setAssignedMentors] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectRole, setSelectRole] = useState("All")
+    const roleOptions = ["mentor", "mentee"]
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         fetchAssign();
     }, []);
+
+    const handleSelected = () => {
+        setOpen(!open);
+    }
+
+    // FILTER MENTOR
+    const filteredMentor = dataMentor.filter((mentor) => {
+        if (selectRole === "mentee") return true;
+
+        return (mentor.mentor_name || "").toLowerCase().includes(search.toLowerCase());
+    });
+
+    // FILTER STUDENT
+    const filteredStudent = dataStudent.filter((student) => {
+        if (selectRole === "mentor") return true;
+
+        return (student.stud_name || "")
+            .toLowerCase()
+            .includes(search.toLowerCase());
+    });
 
     const fetchAssign = async () => {
         try {
@@ -287,14 +317,74 @@ export default function Assigns() {
         setDataStudent((prev) => [...prev, student]);
     };
 
+    const handleRemoveMentor = (mentor) => {
+
+        // keluarkan semua student bawah mentor tu balik
+        const mentorStudents = assignments[mentor.id] || [];
+
+        setDataStudent((prev) => [
+            ...prev,
+            ...mentorStudents,
+        ]);
+
+        // buang mentor dari assigned mentor
+        setAssignedMentors((prev) =>
+            prev.filter((m) => m.id !== mentor.id)
+        );
+
+        // buang assignment mentor tu
+        setAssignments((prev) => {
+            const updated = { ...prev };
+            delete updated[mentor.id];
+            return updated;
+        });
+
+        // masukkan balik mentor ke available mentor table
+        setDataMentor((prev) => [...prev, mentor]);
+    };
+
     return (
         <DndContext onDragEnd={handleDragEnd}>
             <div className="bg-white shadow-md hover:shadow-lg transition-shadow rounded-lg sm:rounded-xl p-4 sm:p-5 lg:p-6 mx-4">
                 {/* HEADER */}
-                <div className="border-b border-gray-200 pb-4 sm:pb-5 mb-5">
-                    <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                <div className="border-b border-gray-200 pb-2 sm:pb-3 mb-5 flex flex-col sm:flex-row justify-between">
+                    <h3 className="text-lg sm:text-xl lg:text-2xl flex items-end font-semibold text-gray-900">
                         Assign Mentee
                     </h3>
+                    <div className="flex flex-row gap-2 items-center w-full sm:w-[300px]">
+                        <input type="text" className="w-64 h-[30px] outline-none border-1 border-gray-300 rounded-lg p-2 focus:ring-1 focus:ring-gray-300 outline-none text-[10px] sm:text-[13px] " placeholder="search mentors or mentees" value={search} onChange={(e) => setSearch(e.target.value)} />
+
+                        {/* dropdown mentor and mentee searching */}
+                        <div className="relative">
+                            <button
+                                type="button"
+                                onClick={handleSelected}
+                                className="flex items-center justify-between w-20 h-8 px-1.5 sm:py-2 text-sm sm:text-[15px] font-semibold text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+                            >
+                                <span>{selectRole}</span>
+                                <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {/* DROPDOWN MENU */}
+                            {open && (
+                                <div className="absolute w-[80px] top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-50 overflow-hidden ">
+                                    {roleOptions.map((item, index) => (
+                                        <button
+                                            key={`${item}-${index}`}
+                                            type="button"
+                                            onClick={() => {
+                                                setSelectRole(item)
+                                                setOpen(false)
+                                            }}
+                                            className=" w-full text-center flex flex col px-2 py-2.5 text-sm text-left text-gray-700 hover:bg-blue-50 transition-colors border-b border-gray-300 last:border-b-0"
+                                        >
+                                            {item}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 {/* DRAG TABLES */}
@@ -312,7 +402,7 @@ export default function Assigns() {
                             ) : (
                                 <table className="w-full">
                                     <tbody>
-                                        {dataStudent.map((student) => (
+                                        {filteredStudent.map((student) => (
                                             <DraggableStudent
                                                 key={student.stud_id}
                                                 student={student}
@@ -337,7 +427,7 @@ export default function Assigns() {
                             ) : (
                                 <table className="w-full">
                                     <tbody>
-                                        {dataMentor.map((mentor) => (
+                                        {filteredMentor.map((mentor) => (
                                             <DraggableMentor
                                                 key={mentor.id}
                                                 mentor={mentor}
@@ -368,6 +458,7 @@ export default function Assigns() {
                             assignedMentors={assignedMentors}
                             assignments={assignments}
                             handleRemoveStudent={handleRemoveStudent}
+                            handleRemoveMentor={handleRemoveMentor}
                         />
                     </div>
 
