@@ -37,7 +37,7 @@ export default function Sidebar({ sidebarData, bgColor, sidebarOpen, setSidebarO
             ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
             lg:translate-x-0
         `}>
-                <div className={`h-full ${bgColor} backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f]`}>
+                <div className={`h-full ${bgColor} backdrop-blur-md p-4 flex flex-col border-r border-[#2f2f2f] overflow-y-auto`}>
 
                     <div className="flex flex-row h-[100px] w-full">
                         <div className="flex items-center transition-all duration-300">
