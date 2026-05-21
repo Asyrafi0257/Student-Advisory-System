@@ -185,18 +185,21 @@ export default function Assigns() {
     // FILTER MENTOR
     const filteredMentor = dataMentor.filter((mentor) => {
         if (selectRole === "mentee") return true;
-
+        if (selectRole === "All") return dataMentor;
         return (mentor.mentor_name || "").toLowerCase().includes(search.toLowerCase());
+
     });
 
     // FILTER STUDENT
     const filteredStudent = dataStudent.filter((student) => {
         if (selectRole === "mentor") return true;
-
+        if (selectRole === "All") return dataStudent;
         return (student.stud_name || "")
             .toLowerCase()
             .includes(search.toLowerCase());
     });
+
+
 
     const fetchAssign = async () => {
         try {
@@ -229,7 +232,7 @@ export default function Assigns() {
             const mentor = dragged.mentor;
 
             if (!assignedMentors.find((m) => m.id === mentor.id)) {
-                setAssignedMentors((prev) => [...prev, mentor]);
+                setAssignedMentors((prev) => [mentor, ...prev]);
 
                 setDataMentor((prev) =>
                     prev.filter((m) => m.id !== mentor.id)
