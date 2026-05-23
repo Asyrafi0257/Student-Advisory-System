@@ -99,7 +99,7 @@ export default function Chart() {
                 <div className="bg-white rounded-2xl shadow-md p-5">
 
                     <h2 className="text-2xl font-bold mb-5 text-gray-800">
-                        Bilangan Pelajar Mengikut Mentor
+                        Number of Students by Mentor
                     </h2>
 
                     <ResponsiveContainer width="100%" height={350}>
@@ -109,13 +109,22 @@ export default function Chart() {
                             <XAxis dataKey="totalStudents" />
                             <YAxis />
                             <Tooltip
-                                formatter={(value, name, props) => [
-                                    `${value} students`,
-                                    props.payload.mentors
-                                ]}
-                                contentStyle={{
-                                    borderRadius: "10px",
-                                    border: "1px solid #e5e7eb",
+                                content={({ active, payload, label }) => {
+                                    if (!active || !payload?.length) return null;
+
+                                    return (
+                                        <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-md flex flex-col gap-1">
+                                            <p className="font-semibold text-gray-800">{label}</p>
+
+                                            <p className="text-blue-600">
+                                                {payload[0].value} students
+                                            </p>
+
+                                            <p className="text-gray-600">
+                                                Mentor: {payload[0].payload.mentors}
+                                            </p>
+                                        </div>
+                                    );
                                 }}
                             />
 
@@ -237,7 +246,7 @@ export default function Chart() {
                                                             {student.stud_name}
                                                         </h4>
                                                         <p className="text-sm text-gray-500">
-                                                            Mentee
+                                                            {student.stud_matric}
                                                         </p>
                                                     </div>
 

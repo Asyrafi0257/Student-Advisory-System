@@ -40,8 +40,16 @@ export default function RegisterPage() {
                 });
                 if (res.data.success) {
                     alert(res.data.message);
+                    setEmail("");
+                    setMatric("");
+                    setConfirmPassword("");
+                    setPassword("");
                 } else {
                     alert(res.data.message);
+                    setEmail("");
+                    setMatric("");
+                    setConfirmPassword("");
+                    setPassword("");
                 }
             } else {
                 const res = await axios.post("/api/auth/register/mentor", {
@@ -53,8 +61,16 @@ export default function RegisterPage() {
 
                 if (res.data.success) {
                     alert(res.data.message);
+                    setEmail("");
+                    setStaffNo("");
+                    setConfirmPassword("");
+                    setPassword("");
                 } else {
                     alert(res.data.message);
+                    setEmail("");
+                    setStaffNo("");
+                    setConfirmPassword("");
+                    setPassword("");
                 }
             }
         } catch (err) {

@@ -1,9 +1,33 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/jwt";
 
 export async function GET() {
 
     try {
+
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        if (!token) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        let decoded;
+
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+            return NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+        }
+
         const [studentCount] = await pool.query(
             "SELECT COUNT(*) AS totalStudents FROM tbl_students"
         );
@@ -49,6 +73,7 @@ export async function GET() {
         const [mentees] = await pool.query(`
             SELECT 
                 s.stud_id,
+                s.stud_matric,
                 s.stud_imagePath,
                 s.stud_name,
                 mm.mentor_id
@@ -70,16 +95,16 @@ export async function GET() {
         });
 
     } catch (error) {
+        console.log("🔥 FULL ERROR:", error);
 
         return NextResponse.json(
             {
-                error: error.message
+                message: error.message,
+                code: error.code,
+                stack: error.stack
             },
-            {
-                status: 500
-            }
+            { status: 500 }
         );
-
     }
 
 }

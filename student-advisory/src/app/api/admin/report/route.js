@@ -8,17 +8,34 @@ export async function GET() {
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
+        // ❌ no token
         if (!token) {
             return NextResponse.json(
-                {
-                    success: false,
-                    message: "Unauthorized",
-                },
+                { message: "Unauthorized" },
                 { status: 401 }
             );
         }
 
-        verifyToken(token);
+        let decoded;
+
+        // ❌ invalid / expired token
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+
+            const response = NextResponse.json(
+                { message: "Token expired or invalid" },
+                { status: 401 }
+            );
+
+            // clear cookie properly
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
 
         const [report] = await pool.query(`
             SELECT 

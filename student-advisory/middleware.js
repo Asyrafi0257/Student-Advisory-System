@@ -7,50 +7,48 @@ export function middleware(req) {
 
     // ================= NO TOKEN =================
     if (!token) {
-        return NextResponse.redirect(
-            new URL("/login", req.url)
-        );
+        return NextResponse.redirect(new URL("/login", req.url));
     }
 
     try {
         const decoded = verifyToken(token);
 
-        // ================= ADMIN ROUTE =================
-        if (path.startsWith("/admin")) {
-            if (decoded.role !== "admin") {
-                return NextResponse.redirect(
-                    new URL("/login", req.url)
-                );
+        const roleRoutes = {
+            "/admin": "admin",
+            "/student": "student",
+            "/lecturer": "mentor",
+        };
+
+        for (const route in roleRoutes) {
+            if (path.startsWith(route)) {
+                if (decoded.role !== roleRoutes[route]) {
+                    const res = NextResponse.redirect(new URL("/login", req.url));
+
+                    res.cookies.set("token", "", {
+                        path: "/",
+                        expires: new Date(0),
+                    });
+
+                    return res;
+                }
             }
         }
 
-        // ================= STUDENT ROUTE =================
-        if (path.startsWith("/student")) {
-            if (decoded.role !== "student") {
-                return NextResponse.redirect(
-                    new URL("/login", req.url)
-                );
-            }
-        }
-
-        // ================= Mentor ROUTE =================
-        if (path.startsWith("/lecturer")) {
-            if (decoded.role !== "mentor") {
-                return NextResponse.redirect(
-                    new URL("/login", req.url)
-                );
-            }
-        }
-
-        // allow request
         return NextResponse.next();
 
     } catch (error) {
-        return NextResponse.redirect(
-            new URL("/login", req.url)
-        );
+        const res = NextResponse.redirect(new URL("/login", req.url));
+
+        // IMPORTANT: clear cookie properly
+        res.cookies.set("token", "", {
+            path: "/",
+            expires: new Date(0),
+        });
+
+        return res;
     }
 }
+
 export const config = {
     matcher: ["/admin/:path*", "/student/:path*", "/lecturer/:path*"]
 };

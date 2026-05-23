@@ -40,6 +40,7 @@ export default function ViewMentee() {
                         width={120}
                         height={120}
                         priority
+                        unoptimized
                         className="rounded-xl object-cover border-2 border-[#000075]/20 w-20 h-20 sm:w-24 sm:h-24 lg:w-[110px] lg:h-[110px] shadow-sm"
                         alt="studImage"
                     />

@@ -3,7 +3,7 @@
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import { X, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 
 //student boleh dragged
 function DraggableStudent({ student }) {
@@ -203,8 +203,8 @@ export default function Assigns() {
 
     const fetchAssign = async () => {
         try {
-            const resMentor = await axios.get("/api/admin/mentor");
-            const resStudent = await axios.get("/api/admin/student?available=true");
+            const resMentor = await api.get("/api/admin/mentor");
+            const resStudent = await api.get("/api/admin/student?available=true");
             setDataMentor(resMentor.data.rows);
             setDataStudent(resStudent.data.rows);
         } catch (err) {
@@ -288,7 +288,7 @@ export default function Assigns() {
         try {
             const formattedData = formatAssignments();
 
-            await axios.post("/api/admin/assign", {
+            await api.post("/api/admin/assign", {
                 assignments: formattedData,
             });
 

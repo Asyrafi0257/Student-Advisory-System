@@ -1,5 +1,5 @@
 import { Search } from "lucide-react";
-import axios from "axios";
+import api from "@/lib/axios"
 import { useEffect, useState } from "react";
 
 export default function StudentList() {
@@ -12,7 +12,7 @@ export default function StudentList() {
 
     const fetchDataStudent = async () => {
         try {
-            const res = await axios.get("/api/admin/student");
+            const res = await api.get("/api/admin/student");
             console.log(res.data);
             setDataStudent(res.data.rows);
         } catch (err) {

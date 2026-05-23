@@ -56,11 +56,29 @@ export async function GET(req) {
 
     } catch (err) {
 
-        console.log(err);
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
 
-        return NextResponse.json({
-            success: false,
-            message: "Server Error"
-        }, { status: 500 });
+            const response = NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // SERVER ERROR
+        return NextResponse.json(
+            { message: err.message },
+            { status: 500 }
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import api from "@/lib/axios"
 import { Pencil, Trash2, X } from "lucide-react";
 
 export default function CreateSessionPage() {
@@ -24,7 +25,7 @@ export default function CreateSessionPage() {
     };
 
     useEffect(() => {
-        axios.get("/api/mentor/session")
+        api.get("/api/mentor/session")
             .then(res => setData(res.data.rows))
             .catch(err => console.log(err));
     }, []);
@@ -32,7 +33,7 @@ export default function CreateSessionPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("/api/mentor/session", form);
+            const response = await api.post("/api/mentor/session", form);
             console.log(response.data);
             alert("Session created successfully");
             window.location.reload();
@@ -133,22 +134,33 @@ export default function CreateSessionPage() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
-                        <input
-                            type="time"
-                            name="session_start_time"
-                            value={form.session_start_time}
-                            onChange={handleChange}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
-                            required
-                        />
-                        <input
-                            type="time"
-                            name="session_end_time"
-                            value={form.session_end_time}
-                            onChange={handleChange}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
-                            required
-                        />
+                        <div>
+                            <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                Start session
+                            </label>
+                            <input
+                                type="time"
+                                name="session_start_time"
+                                value={form.session_start_time}
+                                onChange={handleChange}
+                                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                End session
+                            </label>
+                            <input
+                                type="time"
+                                name="session_end_time"
+                                value={form.session_end_time}
+                                onChange={handleChange}
+                                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                required
+                            />
+                        </div>
+
                     </div>
 
                     <div>
@@ -242,6 +254,9 @@ export default function CreateSessionPage() {
                                         📍 {item.session_location}
                                     </span>
                                     <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
+                                        🕔 {item.session_type}
+                                    </span>
+                                    <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
                                         🕐 {item.session_start_time}
                                     </span>
                                     <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
@@ -274,22 +289,112 @@ export default function CreateSessionPage() {
                         </div>
 
                         <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-4">
+                            <div>
+                                <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                    Session title
+                                </label>
+                                <input
+                                    value={selectedSession.session_title}
+                                    onChange={(e) =>
+                                        setSelectedSession({ ...selectedSession, session_title: e.target.value })
+                                    }
+                                    className="w-full bg-gray-50 border rounded-lg px-3.5 py-2.5 text-sm"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                    Session Date
+                                </label>
+                                <input
+                                    type="date"
+                                    name="session_date"
+                                    value={selectedSession.session_date}
+                                    onChange={(e) =>
+                                        setSelectedSession({ ...selectedSession, session_date: e.target.value })
+                                    }
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                    required
+                                />
+                            </div>
 
-                            <input
-                                value={selectedSession.session_title}
-                                onChange={(e) =>
-                                    setSelectedSession({ ...selectedSession, session_title: e.target.value })
-                                }
-                                className="w-full bg-gray-50 border rounded-lg px-3.5 py-2.5 text-sm"
-                            />
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                        Start session
+                                    </label>
+                                    <input
+                                        type="time"
+                                        name="session_start_time"
+                                        value={selectedSession.session_start_time}
+                                        onChange={(e) =>
+                                            setSelectedSession({ ...selectedSession, session_start_time: e.target.value })
+                                        }
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                        End session
+                                    </label>
+                                    <input
+                                        type="time"
+                                        name="session_end_time"
+                                        value={selectedSession.session_end_time}
+                                        onChange={(e) =>
+                                            setSelectedSession({ ...selectedSession, session_end_time: e.target.value })
+                                        }
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                        required
+                                    />
+                                </div>
 
-                            <textarea
-                                value={selectedSession.session_description}
-                                onChange={(e) =>
-                                    setSelectedSession({ ...selectedSession, session_description: e.target.value })
-                                }
-                                className="w-full bg-gray-50 border rounded-lg px-3.5 py-2.5 text-sm"
-                            />
+                            </div>
+                            <div>
+                                <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                    Session location
+                                </label>
+                                <input
+                                    type="text"
+                                    name="session_location"
+                                    value={selectedSession.session_location}
+                                    onChange={(e) =>
+                                        setSelectedSession({ ...selectedSession, session_location: e.target.value })
+                                    }
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                    Session Type
+                                </label>
+                                <select
+                                    name="session_type"
+                                    value={selectedSession.session_type}
+                                    onChange={(e) =>
+                                        setSelectedSession({ ...selectedSession, session_type: e.target.value })
+                                    }
+                                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm"
+                                >
+                                    <option value="online">Online</option>
+                                    <option value="physical">Physical</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-[11px] font-medium text-gray-400 uppercase tracking-widest mb-1.5">
+                                    Session Description
+                                </label>
+                                <textarea
+                                    value={selectedSession.session_description}
+                                    onChange={(e) =>
+                                        setSelectedSession({ ...selectedSession, session_description: e.target.value })
+                                    }
+                                    className="w-full bg-gray-50 border rounded-lg px-3.5 py-2.5 text-sm"
+                                />
+                            </div>
+
 
                             <button
                                 onClick={async () => {

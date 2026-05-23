@@ -46,63 +46,78 @@ export default function Login() {
                 type: "error",
                 message: "Required Fields",
                 describe: "All fields are required."
-            })
+            });
             return;
         }
 
         try {
+
+            const roleMap = {
+                Admin: "admin",
+                Student: "student",
+                Lecturer: "mentor"
+            };
+
             const res = await fetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({
+                    email,
+                    password,
+                    role: roleMap[selectRole]
+                }),
             });
+
             const data = await res.json();
 
-            if (data.success && data.role === "admin" && selectRole === roleOptions[0]) {
-                setAlertData({
+            if (data.success && data.role === "admin") {
+                showAlert({
                     type: "success",
                     message: "Success!",
-                    describe: "You have successfully signed into Admin account."
-                })
-                setTimeout(() => {
-                    router.replace("/admin")
-                }, 2000);
+                    describe: "Admin login successful"
+                });
 
-            } else if (data.success && data.role === "student" && selectRole === roleOptions[1]) {
-                setAlertData({
+                setTimeout(() => router.replace("/admin"), 2000);
+            }
+
+            else if (data.success && data.role === "student") {
+                showAlert({
                     type: "success",
                     message: "Success!",
-                    describe: "You have successfully signed into Student account."
-                })
-                setTimeout(() => {
-                    router.replace("/student")
-                }, 2000);
-            } else if (data.success && data.role === "mentor" && selectRole === roleOptions[2]) {
-                setAlertData({
+                    describe: "Student login successful"
+                });
+
+                setTimeout(() => router.replace("/student"), 2000);
+            }
+
+            else if (data.success && data.role === "mentor") {
+                showAlert({
                     type: "success",
                     message: "Success!",
-                    describe: "You have successfully signed into Lecturer account."
-                })
-                setTimeout(() => {
-                    router.replace("/lecturer")
-                }, 2000);
-            } else {
+                    describe: "Lecturer login successful"
+                });
+
+                setTimeout(() => router.replace("/lecturer"), 2000);
+            }
+
+            else {
                 showAlert({
                     type: "error",
                     message: "Failed!",
                     describe: "Email, password and role do not match"
-                })
+                });
             }
+
         } catch (error) {
             showAlert({
                 type: "error",
                 message: "Server Error",
                 describe: "Something went wrong on our end. Please try again later."
-            })
+            });
         }
-    }
+    };
 
     return (
         <div className="relative flex flex-col sm:flex-row min-h-screen w-full">
@@ -111,6 +126,7 @@ export default function Login() {
                 src="/images/bg-login.jpg"
                 alt="bg-login.jpg"
                 fill
+                unoptimized
                 className="object-cover"
                 priority
             />

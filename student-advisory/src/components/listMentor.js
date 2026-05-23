@@ -2,7 +2,7 @@
 
 import { Search, SquarePen, X } from "lucide-react"
 import { useEffect, useState } from "react"
-import axios from "axios"
+import api from "@/lib/axios";
 
 export default function ListMentors() {
     const [search, setSearch] = useState("");
@@ -16,7 +16,7 @@ export default function ListMentors() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/admin/mentor");
+            const res = await api.get("/api/admin/mentor");
             console.log(res.data.rows)
             setDataMentor(res.data.rows)
         } catch (err) {
@@ -26,7 +26,7 @@ export default function ListMentors() {
 
     const handleEdit = async (id) => {
         try {
-            const res = await axios.get(`/api/admin/mentor/${id}`);
+            const res = await api.get(`/api/admin/mentor/${id}`);
             setSelectedMentor(res.data);
             setOpen(true);
 
@@ -206,7 +206,7 @@ export default function ListMentors() {
                                 className="w-full sm:w-auto px-4 py-2.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
                                 onClick={async () => {
                                     try {
-                                        await axios.put(
+                                        await api.put(
                                             `/api/admin/mentor/${selectedMentor.id}`,
                                             selectedMentor
                                         );

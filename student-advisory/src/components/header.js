@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Menu, UserCircle } from "lucide-react";
+import api from "@/lib/axios";
 
 export default function Header({ profileUrl, setSidebarOpen }) {
     const [profile, setProfile] = useState(null);
@@ -46,11 +47,13 @@ export default function Header({ profileUrl, setSidebarOpen }) {
                         className="flex items-center gap-2 sm:gap-3 cursor-pointer hover:bg-gray-100 px-2 sm:px-3 py-2 rounded-lg transition"
                     >
                         {/* Image — responsive size */}
-                        <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 flex-shrink-0">
+                        <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-13 lg:h-13 flex-shrink-0">
                             <Image
                                 src={profile?.image || "/images/logo-profile.png"}
                                 alt="profile"
                                 fill
+                                sizes="50px"
+                                unoptimized
                                 className="rounded-full border border-gray-300 object-cover"
                             />
                         </div>

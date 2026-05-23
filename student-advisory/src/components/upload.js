@@ -1,9 +1,9 @@
 "use client"
 
 import Image from "next/image";
-import axios from "axios";
 import { useState, useRef } from "react";
 import { FileSpreadsheet } from "lucide-react";
+import api from "@/lib/axios";
 
 export default function Upload({ url, role }) {
     const [progress, setProgress] = useState(0);
@@ -27,7 +27,7 @@ export default function Upload({ url, role }) {
             setIsUploading(true);
 
             //request to server
-            const res = await axios.post(url, formData, {
+            const res = await api.post(url, formData, {
                 //nak bagitahu server bahawa data yang dihantar adalah file
                 headers: { "Content-Type": "multipart/form-data" },
                 //kita nk track progress in real time
@@ -84,7 +84,7 @@ export default function Upload({ url, role }) {
     const handleSubmit = async () => {
 
         try {
-            await axios.post("/api/admin/addMentor", {
+            await api.post("/api/admin/addMentor", {
                 mentor_id: mentorId,
                 mentor_name: mentorName,
                 mentor_active: mentorActive

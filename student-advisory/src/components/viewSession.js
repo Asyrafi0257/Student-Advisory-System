@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react"
-import axios from "axios";
+import api from "@/lib/axios";
 import Image from "next/image";
 
 export default function SessionView() {
@@ -13,7 +13,7 @@ export default function SessionView() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/mentor/report");
+            const res = await api.get("/api/mentor/report");
             setReport(res.data.rows);
             console.log(res.data.rows);
         } catch (err) {
@@ -52,6 +52,7 @@ export default function SessionView() {
                                     alt="report"
                                     width={52}
                                     height={52}
+                                    unoptimized
                                     className="object-cover w-full h-full"
                                 />
                             </div>

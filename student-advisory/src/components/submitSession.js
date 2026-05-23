@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 
 export default function SubmitSessionPage() {
     const [form, setForm] = useState({
@@ -48,7 +48,7 @@ export default function SubmitSessionPage() {
                 formData.append("image", image);
             }
 
-            const res = await axios.post(
+            const res = await api.post(
                 "/api/mentor/report",
                 formData
             );

@@ -3,27 +3,59 @@ import pool from "@/lib/db";
 import { writeFile } from "fs/promises";
 import path from "path";
 import * as XLSX from "xlsx";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/jwt";
 
-//config => paksa nextjs untuk guna node.js runtime
 export const runtime = "nodejs";
 
-// api endpoint untuk handle request
 export async function POST(req) {
     try {
-        //nak ambil data dari request(form)
-        const formData = await req.formData();
 
-        //file yang user upload
+        // ================= TOKEN CHECK =================
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        // ❌ no token
+        if (!token) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        let decoded;
+
+        // ❌ invalid / expired token
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+
+            const response = NextResponse.json(
+                { message: "Token expired or invalid" },
+                { status: 401 }
+            );
+
+            // clear cookie properly
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // ================= ORIGINAL CODE =================
+
+        const formData = await req.formData();
         const file = formData.get("file");
 
-        //check if ada user upload file ke tak
         if (!file) {
             return NextResponse.json(
                 { error: "No file Uploaded" },
                 { status: 400 }
             );
         }
-        //validate type
+
         if (!file.name.endsWith(".xlsx")) {
             return NextResponse.json(
                 { error: "Only .xlsx files allowed" },
@@ -31,7 +63,6 @@ export async function POST(req) {
             );
         }
 
-        //validate size 
         if (file.size > 10 * 1024 * 1024) {
             return NextResponse.json(
                 { error: "File too large (max 10MB)" },
@@ -39,27 +70,15 @@ export async function POST(req) {
             );
         }
 
-        //nak daptkan size fail
         const fileSize = file.size;
-
-        //nak convert file guna buffer => so buffer boleh simpan file dan juga boleh process(excel later)
         const bytes = await file.arrayBuffer();
-        //Buffer => format Nodejs
         const buffer = Buffer.from(bytes);
 
-        //baca data from excel
-        //workbook => object yang wakil seluruh file excel
         const workbook = XLSX.read(buffer, { type: "buffer" });
-
-        //kita ambil sheet pertama
         const sheetName = workbook.SheetNames[0];
-        //data dalam sheet
         const sheet = workbook.Sheets[sheetName];
-
-        //convert into json
         const data = XLSX.utils.sheet_to_json(sheet);
 
-        //buat clean data dulu
         const cleanData = data.map(row => ({
             stud_matric: parseInt(row.Matrik),
             stud_name: row.Nama || null,
@@ -79,50 +98,43 @@ export async function POST(req) {
             parent_income: row["Pendapatan Waris"] || "Tiada Pendapatan"
         }));
 
-        //generate unik name
         const fileName = Date.now() + "-" + file.name;
 
-        //path dalam server
-        //process.cwd() => root project
-        const filePath = path.join(process.cwd(), "public/uploads/fileStud", fileName);
+        const filePath = path.join(
+            process.cwd(),
+            "public/uploads/fileStud",
+            fileName
+        );
 
-        //simpan file dalam folder
         await writeFile(filePath, buffer);
 
-        //letak path ke dalam database
         const dbPath = "/uploads/fileStud/" + fileName;
 
-        //simpan ke database
         await pool.execute(
-            "INSERT INTO tbl_uploads(file_name, file_size, file_path) VALUES(?, ?, ?)", [fileName, fileSize, filePath]
-        )
+            "INSERT INTO tbl_uploads(file_name, file_size, file_path) VALUES(?, ?, ?)",
+            [fileName, fileSize, dbPath]
+        );
 
-        //simpan dalam database
-        //simpan dalam database
         for (const row of cleanData) {
 
-            if (!row.stud_matric) {
-                console.warn("Skipping row without Matric:", row);
-                continue;
-            }
+            if (!row.stud_matric) continue;
 
             try {
-
-                //check matric dah ada atau belum
                 const [existing] = await pool.execute(
                     "SELECT stud_matric FROM tbl_students WHERE stud_matric = ?",
                     [row.stud_matric]
                 );
 
-                //kalau dah ada skip
-                if (existing.length > 0) {
-                    console.warn(`Matric already exists: ${row.stud_matric}`);
-                    continue;
-                }
+                if (existing.length > 0) continue;
 
-                //insert kalau belum ada
                 await pool.execute(
-                    "INSERT INTO tbl_students(stud_matric, stud_name, gender, code_uum, academic_qualifications, pmk_masuk, band_muet, status_oku, disability_description, inasis, no_phone, email_alternatif, email_uum, stud_address, state, parent_income, stud_password) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    `INSERT INTO tbl_students(
+                        stud_matric, stud_name, gender, code_uum,
+                        academic_qualifications, pmk_masuk, band_muet,
+                        status_oku, disability_description, inasis,
+                        no_phone, email_alternatif, email_uum,
+                        stud_address, state, parent_income, stud_password
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                     [
                         row.stud_matric,
                         row.stud_name,
@@ -144,21 +156,22 @@ export async function POST(req) {
                     ]
                 );
 
-
             } catch (err) {
-                console.error("Failed to insert row:", row, err.message);
+                console.error(err);
             }
         }
 
         return NextResponse.json({
             message: "File uploaded & saved to DB",
-            file: dbPath
-        })
-    } catch (error) {
-        console.error(error);
+            file: dbPath,
+            user: decoded.id
+        });
+
+    } catch (err) {
+
         return NextResponse.json(
-            { error: "Upload failed" },
+            { message: err.message },
             { status: 500 }
-        )
+        );
     }
 }

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios"
 import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react"
 
@@ -17,7 +17,7 @@ export default function Report() {
 
     const fethData = async () => {
         try {
-            const res = await axios.get("/api/admin/report");
+            const res = await api.get("/api/admin/report");
             setDataReport(res.data);
             console.log(res.data)
         } catch (err) {
@@ -115,6 +115,7 @@ export default function Report() {
                                                                     src={items.report_imagePath}
                                                                     alt="imageReport"
                                                                     fill
+                                                                    unoptimized
                                                                     priority
                                                                     className="object-cover"
                                                                 />

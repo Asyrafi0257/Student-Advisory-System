@@ -29,6 +29,30 @@ export async function GET() {
             mentor: mentor[0]
         })
     } catch (err) {
-        return NextResponse.json({ success: false }, { message: err }, { status: 500 })
+
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
+
+            const response = NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // SERVER ERROR
+        return NextResponse.json(
+            { message: err.message },
+            { status: 500 }
+        );
     }
 }

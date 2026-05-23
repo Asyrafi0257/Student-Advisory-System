@@ -3,6 +3,8 @@ import pool from "@/lib/db";
 import { writeFile } from "fs/promises";
 import path from "path";
 import * as XLSX from "xlsx";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/jwt";
 
 //config => paksa nextjs untuk guna node.js runtime
 export const runtime = "nodejs";
@@ -10,6 +12,40 @@ export const runtime = "nodejs";
 // api endpoint untuk handle request
 export async function POST(req) {
     try {
+        // ================= TOKEN CHECK =================
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        // ❌ no token
+        if (!token) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        let decoded;
+
+        // ❌ invalid / expired token
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+
+            const response = NextResponse.json(
+                { message: "Token expired or invalid" },
+                { status: 401 }
+            );
+
+            // clear cookie properly
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+
         //nak ambil data dari request(form)
         const formData = await req.formData();
 
@@ -91,6 +127,17 @@ export async function POST(req) {
                 continue; // skip row
             }
             try {
+                //check staff no dah ada atau belum
+                const [existing] = await pool.execute(
+                    "SELECT mentor_id FROM tbl_mentor WHERE mentor_id = ?",
+                    [row.mentor_id]
+                );
+
+                //kalau dah ada skip
+                if (existing.length > 0) {
+                    console.warn(`mentor already exists: ${row.mentor_id}`);
+                    continue;
+                }
 
                 await pool.execute(
                     "INSERT INTO tbl_mentor(mentor_id, mentor_name, mentor_active) VALUES(?, ?, ?)",

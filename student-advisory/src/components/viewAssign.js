@@ -2,7 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "@/lib/axios"
 
 export default function viewAssign() {
     const [dataAssign, setDataAssign] = useState([]);
@@ -24,7 +24,7 @@ export default function viewAssign() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/admin/viewAssign");
+            const res = await api.get("/api/admin/viewAssign");
             setDataAssign(res.data);
         } catch (err) {
             console.log(err);
@@ -64,10 +64,10 @@ export default function viewAssign() {
             {/* TABLE HEADER - HIDDEN ON MOBILE */}
             <div className="hidden sm:grid sm:grid-cols-2 gap-4 bg-[#02577A] rounded-t-lg overflow-hidden">
                 <div className="p-4 sm:p-4 lg:p-5">
-                    <h3 className="text-white font-semibold text-sm sm:text-base">Mentor</h3>
+                    <h3 className="text-white font-semibold text-sm sm:text-base text-center">Mentor</h3>
                 </div>
                 <div className="p-4 sm:p-4 lg:p-5">
-                    <h3 className="text-white font-semibold text-sm sm:text-base">Mentees</h3>
+                    <h3 className="text-white font-semibold text-sm sm:text-base text-center">Mentees</h3>
                 </div>
             </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import axios from "axios";
+import api from "@/lib/axios";
 import { useState, useEffect } from "react";
 import { FileSpreadsheet, Search, Trash2 } from "lucide-react";
 
@@ -21,7 +21,7 @@ export default function FileUpload({ url, type, delUrl }) {
 
     const fetchFile = async () => {
         try {
-            const res = await axios.get(url);
+            const res = await api.get(url);
             console.log(res.data.rows);
             setFiles(res.data.rows);
         } catch (err) {
@@ -36,10 +36,10 @@ export default function FileUpload({ url, type, delUrl }) {
 
         try {
             if (type === "mentor") {
-                await axios.delete(`${delUrl}?id=${id}`);
+                await api.delete(`${delUrl}?id=${id}`);
                 fetchFile();
             } else if (type === "student") {
-                await axios.delete(`${delUrl}?id=${id}`);
+                await api.delete(`${delUrl}?id=${id}`);
                 fetchFile();
             }
         } catch (err) {

@@ -82,6 +82,27 @@ export async function GET(req) {
         );
 
     } catch (err) {
+
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
+
+            const response = NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // SERVER ERROR
         return NextResponse.json(
             { message: err.message },
             { status: 500 }
@@ -114,9 +135,33 @@ export async function PUT(req) {
             const bytes = await file.arrayBuffer();
             const buffer = Buffer.from(bytes);
 
-            const path = `/uploads/profile/${Date.now()}-${file.name}`;
+            console.log(file);
+            console.log(file.size);
+            console.log(file.name);
+            console.log(buffer.length);
+
+            let folder = "profile";
+
+            if (decoded.role === "admin") {
+                folder = "admin";
+            }
+
+            if (decoded.role === "mentor") {
+                folder = "mentor";
+            }
+
+            if (decoded.role === "student") {
+                folder = "mentee";
+            }
+
+            const path = `/uploads/profile/${folder}/${Date.now()}-${file.name}`;
 
             const fs = require("fs");
+
+            // create folder kalau belum ada
+            // fs.mkdirSync(`./public/uploads/${folder}`, {
+            //     recursive: true
+            // });
 
             fs.writeFileSync(`./public${path}`, buffer);
 
@@ -270,8 +315,29 @@ export async function PUT(req) {
         );
 
     } catch (err) {
+
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
+
+            const response = NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // SERVER ERROR
         return NextResponse.json(
-            { error: err.message },
+            { message: err.message },
             { status: 500 }
         );
     }

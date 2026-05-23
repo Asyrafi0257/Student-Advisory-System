@@ -4,14 +4,14 @@ import StatCard from "@/components/statCard";
 import Chart from "@/components/chart";
 import { Activity, ShieldMinus, User } from "lucide-react";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import api from "@/lib/axios"
 
 export default function Dashboard() {
     const [countData, setCountData] = useState(0);
 
     useEffect(() => {
-        axios.get("/api/admin/dashboard").then(res => { setCountData(res.data) });
+        api.get("/api/admin/dashboard").then(res => { setCountData(res.data) });
 
     }, []);
 

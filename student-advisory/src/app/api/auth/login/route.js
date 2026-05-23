@@ -5,27 +5,36 @@ import { generateToken } from "@/lib/jwt";
 
 export async function POST(req) {
     try {
-        console.log("LOGIN API HIT");
+        const { email, password, role } = await req.json();
 
-        const { email, password } = await req.json();
-        console.log("EMAIL RECEIVED:", email);
+        if (!email || !password || !role) {
+            return NextResponse.json({
+                success: false,
+                message: "Missing fields"
+            });
+        }
+
+        let user = null;
+        let tokenPayload = null;
 
         // ================= ADMIN =================
-        console.log("CHECK ADMIN...");
-        const [adminRows] = await pool.query(
-            "SELECT * FROM tbl_admin WHERE admin_email = ?",
-            [email]
-        );
+        if (role === "admin") {
 
-        console.log("ADMIN FOUND:", adminRows.length);
-
-        if (adminRows.length > 0) {
-            const admin = adminRows[0];
-
-            const isMatch = await bcrypt.compare(
-                password,
-                admin.admin_password
+            const [rows] = await pool.query(
+                "SELECT * FROM tbl_admin WHERE admin_email = ?",
+                [email]
             );
+
+            if (rows.length === 0) {
+                return NextResponse.json({
+                    success: false,
+                    message: "Admin not found"
+                });
+            }
+
+            user = rows[0];
+
+            const isMatch = await bcrypt.compare(password, user.admin_password);
 
             if (!isMatch) {
                 return NextResponse.json({
@@ -34,42 +43,31 @@ export async function POST(req) {
                 });
             }
 
-            const token = generateToken({
-                id: admin.admin_id,
+            tokenPayload = {
+                id: user.admin_id,
                 role: "admin",
-                name: admin.admin_name
-            });
-
-            const response = NextResponse.json({
-                success: true,
-                role: "admin"
-            });
-
-            response.cookies.set("token", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict"
-            });
-
-            return response;
+                name: user.admin_name
+            };
         }
 
         // ================= STUDENT =================
-        console.log("CHECK STUDENT...");
-        const [studentRows] = await pool.query(
-            "SELECT * FROM tbl_students WHERE email_alternatif = ?",
-            [email]
-        );
+        else if (role === "student") {
 
-        console.log("STUDENT FOUND:", studentRows.length);
-
-        if (studentRows.length > 0) {
-            const student = studentRows[0];
-
-            const isMatch = await bcrypt.compare(
-                password,
-                student.stud_password
+            const [rows] = await pool.query(
+                "SELECT * FROM tbl_students WHERE email_alternatif = ?",
+                [email]
             );
+
+            if (rows.length === 0) {
+                return NextResponse.json({
+                    success: false,
+                    message: "Student not found"
+                });
+            }
+
+            user = rows[0];
+
+            const isMatch = await bcrypt.compare(password, user.stud_password);
 
             if (!isMatch) {
                 return NextResponse.json({
@@ -78,42 +76,31 @@ export async function POST(req) {
                 });
             }
 
-            const token = generateToken({
-                id: student.stud_id,
+            tokenPayload = {
+                id: user.stud_id,
                 role: "student",
-                matric: student.stud_matric
-            });
-
-            const response = NextResponse.json({
-                success: true,
-                role: "student"
-            });
-
-            response.cookies.set("token", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict"
-            });
-
-            return response;
+                matric: user.stud_matric
+            };
         }
 
         // ================= MENTOR =================
-        console.log("CHECK MENTOR...");
-        const [mentorRows] = await pool.query(
-            "SELECT * FROM tbl_mentor WHERE mentor_email = ?",
-            [email]
-        );
+        else if (role === "mentor") {
 
-        console.log("MENTOR FOUND:", mentorRows.length);
-
-        if (mentorRows.length > 0) {
-            const mentor = mentorRows[0];
-
-            const isMatch = await bcrypt.compare(
-                password,
-                mentor.mentor_password
+            const [rows] = await pool.query(
+                "SELECT * FROM tbl_mentor WHERE mentor_email = ?",
+                [email]
             );
+
+            if (rows.length === 0) {
+                return NextResponse.json({
+                    success: false,
+                    message: "Mentor not found"
+                });
+            }
+
+            user = rows[0];
+
+            const isMatch = await bcrypt.compare(password, user.mentor_password);
 
             if (!isMatch) {
                 return NextResponse.json({
@@ -122,31 +109,37 @@ export async function POST(req) {
                 });
             }
 
-            const token = generateToken({
-                id: mentor.id,
+            tokenPayload = {
+                id: user.id,
                 role: "mentor",
-                staffNo: mentor.mentor_id
-            });
-
-            const response = NextResponse.json({
-                success: true,
-                role: "mentor"
-            });
-
-            response.cookies.set("token", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "strict"
-            });
-
-            return response;
+                staffNo: user.mentor_id
+            };
         }
 
-        // ================= NO USER =================
-        return NextResponse.json({
-            success: false,
-            message: "User not found"
+        else {
+            return NextResponse.json({
+                success: false,
+                message: "Invalid role"
+            });
+        }
+
+        // ================= GENERATE TOKEN =================
+        const token = generateToken(tokenPayload);
+
+        const response = NextResponse.json({
+            success: true,
+            role
         });
+
+        response.cookies.set("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            path: "/",
+            maxAge: 60 * 60 * 24
+        });
+
+        return response;
 
     } catch (error) {
         console.error("LOGIN ERROR:", error);

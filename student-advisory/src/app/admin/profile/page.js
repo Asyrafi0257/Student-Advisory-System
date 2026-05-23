@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import api from "@/lib/axios";
 
 export default function AdminProfile() {
     const [form, setForm] = useState({
@@ -17,7 +18,7 @@ export default function AdminProfile() {
     const fileRef = useRef(null);
 
     useEffect(() => {
-        axios.get("/api/profile").then((res) => {
+        api.get("/api/profile").then((res) => {
             setForm(res?.data);
             setPreview(res.data.image);
         });

@@ -100,15 +100,30 @@ export async function POST(req) {
             { status: 201 }
         );
 
-    } catch (error) {
+    } catch (err) {
 
-        console.log("CREATE SESSION ERROR:", error);
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
 
+            const response = NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // SERVER ERROR
         return NextResponse.json(
-            {
-                success: false,
-                message: "Internal Server Error",
-            },
+            { message: err.message },
             { status: 500 }
         );
     }
@@ -116,6 +131,27 @@ export async function POST(req) {
 
 export async function GET() {
     try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        if (!token) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        let decoded;
+
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+            return NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+        }
+
         const [rows] = await pool.query(
             "SELECT * FROM tbl_session ORDER BY updated_at"
         );
@@ -125,7 +161,16 @@ export async function GET() {
         }
 
         return NextResponse.json({ rows })
-    } catch (err) {
-        return NextResponse.json({ message: "failed" }, { status: 500 });
+    } catch (error) {
+        console.log("🔥 FULL ERROR:", error);
+
+        return NextResponse.json(
+            {
+                message: error.message,
+                code: error.code,
+                stack: error.stack
+            },
+            { status: 500 }
+        );
     }
 }

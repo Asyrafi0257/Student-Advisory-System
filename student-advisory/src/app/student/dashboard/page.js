@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import ViewMentor from "@/components/viewMentor";
 import { Sun, Coffee, Moon, Sparkles, Calendar, Clock, User, ChevronRight, Video } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import api from "@/lib/axios";
 
 export default function Dashboard() {
     const [user, setUser] = useState([]);
@@ -30,10 +29,11 @@ export default function Dashboard() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/profile");
-            const session = await axios.get("/api/mentee/viewSession");
+            const res = await api.get("/api/profile");
+            const session = await api.get("/api/mentee/viewSession");
             setUser(res.data);
             setSessionData(session.data.session)
+            console.log(sessionData)
             console.log(user)
         } catch (err) {
             console.log(err);
@@ -103,7 +103,7 @@ export default function Dashboard() {
 
                     {/* Body */}
                     <div className="px-4 sm:px-5 py-3 sm:py-4">
-                        {!sessionData || sessionData === 0 ? (
+                        {!sessionData || sessionData.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-6 text-center gap-2">
                                 <div className="bg-gray-100 p-3 rounded-full">
                                     <Video className="w-5 h-5 text-gray-400" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 
 export default function LecturerProfile() {
     const [form, setForm] = useState({
@@ -16,7 +16,7 @@ export default function LecturerProfile() {
     const fileRef = useRef(null);
 
     useEffect(() => {
-        axios.get("/api/profile").then((res) => {
+        api.get("/api/profile").then((res) => {
             setForm(res.data);
             setPreview(res.data.image);
         });
@@ -44,7 +44,7 @@ export default function LecturerProfile() {
 
         if (file) data.append("profile", file);
 
-        await axios.put("/api/profile", data);
+        await api.put("/api/profile", data);
 
         setLoading(false);
         setToast(true);
@@ -63,8 +63,8 @@ export default function LecturerProfile() {
             {/* Toast */}
             <div
                 className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-full whitespace-nowrap pointer-events-none transition-all duration-200 ${toast
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2"
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-2"
                     }`}
             >
                 ✓ Profile updated

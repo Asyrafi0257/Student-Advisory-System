@@ -60,15 +60,30 @@ export async function DELETE(req) {
             message: "Session deleted successfully",
         });
 
-    } catch (error) {
+    } catch (err) {
 
-        console.log("DELETE SESSION ERROR:", error);
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
 
+            const response = NextResponse.json(
+                { message: "Token invalid or expired" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // SERVER ERROR
         return NextResponse.json(
-            {
-                success: false,
-                message: "Internal Server Error",
-            },
+            { message: err.message },
             { status: 500 }
         );
     }

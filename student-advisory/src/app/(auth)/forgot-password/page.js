@@ -43,6 +43,7 @@ export default function ForgotPassword() {
                         alt="forgot-password.jpg"
                         width={140}
                         height={140}
+                        unoptimized
                         className="rounded-lg"
                     />
                 </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 import {
     Hash,
     User,
@@ -53,7 +53,7 @@ export default function StudentProfile() {
 
     useEffect(() => {
         try {
-            axios.get("/api/profile").then((res) => {
+            api.get("/api/profile").then((res) => {
                 setForm(res.data);
                 setPreview(res.data.image);
                 console.log(form)

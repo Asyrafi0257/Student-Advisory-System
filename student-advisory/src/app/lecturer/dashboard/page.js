@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { User, ClipboardMinus } from "lucide-react";
 import Progress from "@/components/progress";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 
 export default function DashboardPage() {
     const [data, setData] = useState([]);
@@ -21,7 +21,7 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/mentor/viewMentee");
+            const res = await api.get("/api/mentor/viewMentee");
             setData(res.data);
             setTotalMentee(res.data.totalMentee);
             setTotalStudCs(res.data.totalCs);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 import { Calendar, Clock, BookOpen, AlarmClock, ChevronRight, ChevronDown, Layers, LocateFixed, MapPin } from "lucide-react";
 
 export default function SessionPage() {
@@ -14,7 +14,7 @@ export default function SessionPage() {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get("/api/mentee/viewSession");
+            const res = await api.get("/api/mentee/viewSession");
             setSession(res.data.session);
             console.log(res.data.session);
         } catch (err) {

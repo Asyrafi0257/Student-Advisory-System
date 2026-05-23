@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "@/lib/axios";
 import { GraduationCap, Home, Phone, Mail, X } from "lucide-react";
 
 export default function StudentView() {
@@ -16,7 +16,7 @@ export default function StudentView() {
 
     const featchData = async () => {
         try {
-            const res = await axios.get("/api/mentor/viewMentee");
+            const res = await api.get("/api/mentor/viewMentee");
             setStudInfo(res.data.rows);
             console.log(res.data);
         } catch (err) {
@@ -166,6 +166,7 @@ export default function StudentView() {
                                     width={100}
                                     className="object-cover w-full h-full"
                                     alt="Student"
+                                    unoptimized
                                 />
                             </div>
 
