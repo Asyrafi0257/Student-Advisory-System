@@ -6,7 +6,6 @@ import { cookies } from "next/headers";
 export const runtime = "nodejs";
 export async function GET(req) {
     try {
-
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
@@ -159,7 +158,7 @@ export async function PUT(req) {
                 folder = "mentee";
             }
 
-            const path = `/uploads/profile/${folder}/${Date.now()}-${file.name}`;
+            const path = `/profile/${folder}/${Date.now()}-${file.name}`;
 
             const fs = require("fs");
 
