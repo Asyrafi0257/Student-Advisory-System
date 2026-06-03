@@ -133,7 +133,15 @@ export async function PUT(req) {
             fs.mkdirSync(`./public/profile/${folder}`, { recursive: true });
 
             // ================= PHONE FIX START =================
-            const ext = file.name?.split(".").pop() || "jpg";
+            const ext =
+                file?.type === "image/png"
+                    ? "png"
+                    : file?.type === "image/jpeg"
+                        ? "jpg"
+                        : file?.type === "image/heic"
+                            ? "jpg"
+                            : "jpg";
+
             const fileName = `${Date.now()}.${ext}`;
             // ================= PHONE FIX END =================
 
