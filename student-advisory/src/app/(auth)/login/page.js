@@ -13,7 +13,7 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const roleOptions = ["Admin", "Student", "Lecturer"];
+    const roleOptions = ["Admin", "Student", "Lecturer"]; // guna untuk dropdown for select role
     const [alertData, setAlertData] = useState(null);
 
     const handleForgot = () => {
