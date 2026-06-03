@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Menu, UserCircle } from "lucide-react";
 import api from "@/lib/axios";
@@ -13,7 +13,7 @@ export default function Header({ profileUrl, setSidebarOpen }) {
     const router = useRouter();
 
     useEffect(() => {
-        axios.get("/api/profile")
+        api.get("/api/profile")
             .then(res => setProfile(res.data))
             .catch(err => console.log(err));
     }, []);

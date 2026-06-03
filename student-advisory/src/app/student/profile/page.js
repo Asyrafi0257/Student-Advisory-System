@@ -100,7 +100,7 @@ export default function StudentProfile() {
 
             if (file) data.append("profile", file);
 
-            await axios.put("/api/profile", data);
+            await api.put("/api/profile", data);
 
             setLoading(false);
             setToast(true);
