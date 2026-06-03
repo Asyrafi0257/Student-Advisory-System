@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { verifyToken } from "@/lib/jwt";
+import { cookies } from "next/headers";
 
+export const runtime = "nodejs";
 export async function GET(req) {
     try {
 
-        const token = req.cookies.get("token")?.value;
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
 
         if (!token) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -113,7 +116,8 @@ export async function GET(req) {
 export async function PUT(req) {
     try {
 
-        const token = req.cookies.get("token")?.value;
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
 
         if (!token) {
             return NextResponse.json(
