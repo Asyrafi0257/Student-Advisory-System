@@ -58,7 +58,8 @@ export async function GET(req) {
 
             return NextResponse.json({
                 role: "student",
-                id: student.stud_matric,
+                id: student.stud_id,
+                matric: student.stud_matric,
                 name: student.stud_name,
                 email: student.email_alternatif,
                 program: student.program,

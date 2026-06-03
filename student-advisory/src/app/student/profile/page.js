@@ -25,7 +25,7 @@ import {
 
 export default function StudentProfile() {
     const [form, setForm] = useState({
-        id: "",
+        matric: "",
         name: "",
         email: "",
         program: "",
@@ -178,7 +178,7 @@ export default function StudentProfile() {
                                     <Hash size={15} className={iconClass} />
                                     <input
                                         name="stud_id"
-                                        value={form.id || ""}
+                                        value={form.matric || ""}
                                         placeholder="Your ID"
                                         className={inputClass}
                                         readOnly
