@@ -3,7 +3,11 @@ import { verifyToken } from "@/lib/jwt";
 
 export function middleware(req) {
 
-    console.log("🔥 MIDDLEWARE HIT:", req.nextUrl.href);
+    // ================= DEBUG =================
+    console.log("HOST:", req.headers.get("host"));
+    console.log("XFH:", req.headers.get("x-forwarded-host"));
+    console.log("PROTO:", req.headers.get("x-forwarded-proto"));
+    console.log("PATH:", req.nextUrl.pathname);
 
     const token = req.cookies.get("token")?.value;
     const path = req.nextUrl.pathname;
@@ -34,10 +38,11 @@ export function middleware(req) {
 
             if (path.startsWith(route)) {
 
-                console.log("PATH:", path);
+                console.log("CURRENT PATH:", path);
                 console.log("TOKEN ROLE:", decoded.role);
                 console.log("REQUIRED ROLE:", roleRoutes[route]);
 
+                // ================= ROLE CHECK =================
                 if (decoded.role !== roleRoutes[route]) {
 
                     const loginUrl = req.nextUrl.clone();
@@ -45,6 +50,7 @@ export function middleware(req) {
 
                     const res = NextResponse.redirect(loginUrl);
 
+                    // clear invalid token
                     res.cookies.set("token", "", {
                         path: "/",
                         expires: new Date(0),
@@ -55,15 +61,19 @@ export function middleware(req) {
             }
         }
 
+        // ================= VALID =================
         return NextResponse.next();
 
     } catch (error) {
+
+        console.log("JWT ERROR:", error.message);
 
         const loginUrl = req.nextUrl.clone();
         loginUrl.pathname = "/login";
 
         const res = NextResponse.redirect(loginUrl);
 
+        // clear broken token
         res.cookies.set("token", "", {
             path: "/",
             expires: new Date(0),
@@ -74,5 +84,9 @@ export function middleware(req) {
 }
 
 export const config = {
-    matcher: ["/admin/:path*", "/student/:path*", "/lecturer/:path*"]
+    matcher: [
+        "/admin/:path*",
+        "/student/:path*",
+        "/lecturer/:path*",
+    ],
 };
