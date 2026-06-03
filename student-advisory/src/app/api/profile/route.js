@@ -143,13 +143,11 @@ export async function PUT(req) {
                             : "jpg";
 
             const fileName = `${Date.now()}.${ext}`;
-            // ================= PHONE FIX END =================
+            const filePath = `profile/${folder}/${fileName}`;
 
-            const path = `/profile/${folder}/${fileName}`;
+            fs.writeFileSync(`./public/${filePath}`, buffer);
 
-            fs.writeFileSync(`./public${path}`, buffer);
-
-            profilePath = path;
+            profilePath = fileName;
         }
 
         // ================= ADMIN =================
