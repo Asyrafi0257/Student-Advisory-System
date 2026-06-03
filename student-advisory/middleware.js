@@ -62,6 +62,5 @@ export function middleware(req) {
 }
 
 export const config = {
-    //matcher: ["/admin/:path*", "/student/:path*", "/lecturer/:path*"]
-    matcher: ["/:path*"]
+    matcher: ["/admin/:path*", "/student/:path*", "/lecturer/:path*"]
 };
