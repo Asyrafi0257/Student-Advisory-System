@@ -5,6 +5,9 @@ export function middleware(req) {
     const token = req.cookies.get("token")?.value;
     const path = req.nextUrl.pathname;
 
+    //debug jwt secret
+    console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
     // ================= NO TOKEN =================
     if (!token) {
         return NextResponse.redirect(new URL("/login", req.url));
