@@ -2,21 +2,26 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 
 export function middleware(req) {
-    console.log("🔥 MIDDLEWARE HIT:", req.url);
+
+    console.log("🔥 MIDDLEWARE HIT:", req.nextUrl.href);
+
     const token = req.cookies.get("token")?.value;
     const path = req.nextUrl.pathname;
 
     console.log("TOKEN:", token);
-    //debug jwt secret
     console.log("JWT_SECRET:", process.env.JWT_SECRET);
-
 
     // ================= NO TOKEN =================
     if (!token) {
-        return NextResponse.redirect(new URL("/login", req.url));
+
+        const loginUrl = req.nextUrl.clone();
+        loginUrl.pathname = "/login";
+
+        return NextResponse.redirect(loginUrl);
     }
 
     try {
+
         const decoded = verifyToken(token);
 
         const roleRoutes = {
@@ -26,15 +31,19 @@ export function middleware(req) {
         };
 
         for (const route in roleRoutes) {
+
             if (path.startsWith(route)) {
 
-                //nk debug sebentar
                 console.log("PATH:", path);
                 console.log("TOKEN ROLE:", decoded.role);
                 console.log("REQUIRED ROLE:", roleRoutes[route]);
 
                 if (decoded.role !== roleRoutes[route]) {
-                    const res = NextResponse.redirect(new URL("/login", req.url));
+
+                    const loginUrl = req.nextUrl.clone();
+                    loginUrl.pathname = "/login";
+
+                    const res = NextResponse.redirect(loginUrl);
 
                     res.cookies.set("token", "", {
                         path: "/",
@@ -49,9 +58,12 @@ export function middleware(req) {
         return NextResponse.next();
 
     } catch (error) {
-        const res = NextResponse.redirect(new URL("/login", req.url));
 
-        // IMPORTANT: clear cookie properly
+        const loginUrl = req.nextUrl.clone();
+        loginUrl.pathname = "/login";
+
+        const res = NextResponse.redirect(loginUrl);
+
         res.cookies.set("token", "", {
             path: "/",
             expires: new Date(0),
