@@ -4,6 +4,7 @@ import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 
 export const runtime = "nodejs";
+
 export async function GET(req) {
     try {
         const cookieStore = await cookies();
@@ -17,7 +18,6 @@ export async function GET(req) {
 
         // ================= ADMIN =================
         if (decoded.role === "admin") {
-
             const [rows] = await pool.query(
                 "SELECT admin_name, admin_email, admin_imagePath FROM tbl_admin WHERE admin_id = ?",
                 [decoded.id]
@@ -33,7 +33,6 @@ export async function GET(req) {
 
         // ================= MENTOR =================
         if (decoded.role === "mentor") {
-
             const [rows] = await pool.query(
                 "SELECT mentor_id, mentor_name, mentor_email, mentor_imagePath FROM tbl_mentor WHERE id = ?",
                 [decoded.id]
@@ -48,12 +47,14 @@ export async function GET(req) {
             });
         }
 
-        //student
+        // ================= STUDENT =================
         if (decoded.role === "student") {
             const [rows] = await pool.query(
-                "SELECT * FROM tbl_students WHERE stud_id = ?", [decoded.id]
-            )
-            const student = rows[0]
+                "SELECT * FROM tbl_students WHERE stud_id = ?",
+                [decoded.id]
+            );
+
+            const student = rows[0];
 
             return NextResponse.json({
                 role: "student",
@@ -79,33 +80,9 @@ export async function GET(req) {
             });
         }
 
-        return NextResponse.json(
-            { message: "Invalid role" },
-            { status: 403 }
-        );
+        return NextResponse.json({ message: "Invalid role" }, { status: 403 });
 
     } catch (err) {
-
-        // JWT ERROR
-        if (
-            err.name === "TokenExpiredError" ||
-            err.name === "JsonWebTokenError"
-        ) {
-
-            const response = NextResponse.json(
-                { message: "Token invalid or expired" },
-                { status: 401 }
-            );
-
-            response.cookies.set("token", "", {
-                path: "/",
-                expires: new Date(0),
-            });
-
-            return response;
-        }
-
-        // SERVER ERROR
         return NextResponse.json(
             { message: err.message },
             { status: 500 }
@@ -115,7 +92,6 @@ export async function GET(req) {
 
 export async function PUT(req) {
     try {
-
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
@@ -134,7 +110,8 @@ export async function PUT(req) {
 
         let profilePath = null;
 
-        if (file && file.name) {
+        // ================= IMAGE UPLOAD (PHONE FIX ADDED ONLY) =================
+        if (file && file.size > 0) {
 
             const bytes = await file.arrayBuffer();
             const buffer = Buffer.from(bytes);
@@ -146,26 +123,21 @@ export async function PUT(req) {
 
             let folder = "profile";
 
-            if (decoded.role === "admin") {
-                folder = "admin";
-            }
-
-            if (decoded.role === "mentor") {
-                folder = "mentor";
-            }
-
-            if (decoded.role === "student") {
-                folder = "mentee";
-            }
-
-            const path = `/profile/${folder}/${Date.now()}-${file.name}`;
+            if (decoded.role === "admin") folder = "admin";
+            if (decoded.role === "mentor") folder = "mentor";
+            if (decoded.role === "student") folder = "mentee";
 
             const fs = require("fs");
 
-            // create folder kalau belum ada
-            // fs.mkdirSync(`./public/uploads/${folder}`, {
-            //     recursive: true
-            // });
+            // CREATE FOLDER IF NOT EXISTS
+            fs.mkdirSync(`./public/profile/${folder}`, { recursive: true });
+
+            // ================= PHONE FIX START =================
+            const ext = file.name?.split(".").pop() || "jpg";
+            const fileName = `${Date.now()}.${ext}`;
+            // ================= PHONE FIX END =================
+
+            const path = `/profile/${folder}/${fileName}`;
 
             fs.writeFileSync(`./public${path}`, buffer);
 
@@ -177,7 +149,6 @@ export async function PUT(req) {
 
             const admin_name = formData.get("admin_name");
             const email = formData.get("admin_email");
-            //const password = formData.get("admin_password");
 
             let query = `
                 UPDATE tbl_admin
@@ -185,11 +156,6 @@ export async function PUT(req) {
             `;
 
             let values = [admin_name, email];
-
-            // if (password) {
-            //     query += ", admin_password = ?";
-            //     values.push(password);
-            // }
 
             if (profilePath) {
                 query += ", admin_imagePath = ?";
@@ -208,9 +174,9 @@ export async function PUT(req) {
 
         // ================= MENTOR =================
         if (decoded.role === "mentor") {
+
             const mentor_name = formData.get("mentor_name");
             const email = formData.get("mentor_email");
-            // const password = formData.get("mentor_password");
 
             let query = `
                 UPDATE tbl_mentor
@@ -218,11 +184,6 @@ export async function PUT(req) {
             `;
 
             let values = [mentor_name, email];
-
-            // if (password) {
-            //     query += ", mentor_password = ?";
-            //     values.push(password);
-            // }
 
             if (profilePath) {
                 query += ", mentor_imagePath = ?";
@@ -239,7 +200,7 @@ export async function PUT(req) {
             });
         }
 
-        // ================= STUDENT UPDATE =================
+        // ================= STUDENT =================
         if (decoded.role === "student") {
 
             const name = formData.get("stud_name");
@@ -319,27 +280,6 @@ export async function PUT(req) {
         );
 
     } catch (err) {
-
-        // JWT ERROR
-        if (
-            err.name === "TokenExpiredError" ||
-            err.name === "JsonWebTokenError"
-        ) {
-
-            const response = NextResponse.json(
-                { message: "Token invalid or expired" },
-                { status: 401 }
-            );
-
-            response.cookies.set("token", "", {
-                path: "/",
-                expires: new Date(0),
-            });
-
-            return response;
-        }
-
-        // SERVER ERROR
         return NextResponse.json(
             { message: err.message },
             { status: 500 }
