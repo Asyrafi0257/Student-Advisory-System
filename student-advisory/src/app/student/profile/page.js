@@ -55,7 +55,11 @@ export default function StudentProfile() {
         try {
             api.get("/api/profile").then((res) => {
                 setForm(res.data);
-                setPreview(res.data.image);
+                setPreview(
+                    res.data.image
+                        ? `/profile/mentee/${res.data.image}`
+                        : "/images/logo-profile.png"
+                );
                 console.log(form)
                 console.log("successfully")
             });
