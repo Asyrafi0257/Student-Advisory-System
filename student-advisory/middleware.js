@@ -2,12 +2,14 @@ import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 
 export function middleware(req) {
+    console.log("🔥 MIDDLEWARE HIT:", req.url);
     const token = req.cookies.get("token")?.value;
     const path = req.nextUrl.pathname;
 
     console.log("TOKEN:", token);
     //debug jwt secret
     console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
 
     // ================= NO TOKEN =================
     if (!token) {
@@ -60,5 +62,6 @@ export function middleware(req) {
 }
 
 export const config = {
-    matcher: ["/admin/:path*", "/student/:path*", "/lecturer/:path*"]
+    //matcher: ["/admin/:path*", "/student/:path*", "/lecturer/:path*"]
+    matcher: ["/:path*"]
 };
