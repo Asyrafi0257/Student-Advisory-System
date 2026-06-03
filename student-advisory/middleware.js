@@ -25,6 +25,12 @@ export function middleware(req) {
 
         for (const route in roleRoutes) {
             if (path.startsWith(route)) {
+
+                //nk debug sebentar
+                console.log("PATH:", path);
+                console.log("TOKEN ROLE:", decoded.role);
+                console.log("REQUIRED ROLE:", roleRoutes[route]);
+
                 if (decoded.role !== roleRoutes[route]) {
                     const res = NextResponse.redirect(new URL("/login", req.url));
 
