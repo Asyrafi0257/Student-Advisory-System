@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 
+export const runtime = "nodejs";
+
 export function middleware(req) {
 
     // ================= DEBUG =================
