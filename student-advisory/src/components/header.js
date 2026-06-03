@@ -49,7 +49,13 @@ export default function Header({ profileUrl, setSidebarOpen }) {
                         {/* Image — responsive size */}
                         <div className="relative w-8 h-8 sm:w-9 sm:h-9 lg:w-13 lg:h-13 flex-shrink-0">
                             <Image
-                                src={profile?.image || "/images/logo-profile.png"}
+                                src={
+                                    profile?.image
+                                        ? `/profile/${profile.role === "student"
+                                            ? "mentee"
+                                            : profile.role}/${profile.image}`
+                                        : "/images/logo-profile.png"
+                                }
                                 alt="profile"
                                 fill
                                 sizes="50px"
