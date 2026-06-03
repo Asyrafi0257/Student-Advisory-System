@@ -1,7 +1,6 @@
 "use client";
 
-//import axios from "axios";
-import api from "@/lib/axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { User, Mail, Hash, GraduationCap } from "lucide-react";
@@ -15,7 +14,7 @@ export default function ViewMentee() {
 
     const fetchData = async () => {
         try {
-            const res = await api.get("/api/mentee/dashboard");
+            const res = await axios.get("/api/mentee/dashboard");
             setData(res.data.mentor);
             console.log(data);
         } catch (err) {
