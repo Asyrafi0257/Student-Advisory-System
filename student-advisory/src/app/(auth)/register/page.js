@@ -176,7 +176,8 @@ export default function RegisterPage() {
                                     <div className="flex items-center gap-2 p-3 sm:p-3.5 transition-colors border-b-1 border-gray-300">
                                         <Mail size={20} className="text-gray-500 flex-shrink-0" />
                                         <input
-                                            type="text"
+                                            type="email"
+                                            required
                                             placeholder="name@gmail.com"
                                             className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                             value={email}
@@ -208,7 +209,8 @@ export default function RegisterPage() {
                                     <div className="flex items-center gap-2 border-b-1 border-gray-300 p-3 sm:p-3.5 transition-colors">
                                         <Mail size={20} className="text-gray-500 flex-shrink-0" />
                                         <input
-                                            type="text"
+                                            type="email"
+                                            required
                                             placeholder="name@gmail.com"
                                             className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
                                             value={email}
