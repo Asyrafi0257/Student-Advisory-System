@@ -103,11 +103,8 @@ export async function PUT(req) {
         }
 
         const decoded = verifyToken(token);
-
         const formData = await req.formData();
-
         const file = formData.get("profile");
-
         let profilePath = null;
 
         // ================= IMAGE UPLOAD (PHONE FIX ADDED ONLY) =================
