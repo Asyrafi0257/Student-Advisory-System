@@ -130,24 +130,18 @@ export async function PUT(req) {
             const fs = require("fs");
 
             // CREATE FOLDER IF NOT EXISTS
-            fs.mkdirSync(`./public/profile/${folder}`, { recursive: true });
+            fs.mkdirSync(`./public/uploads/profile/${folder}`, { recursive: true });
 
             // ================= PHONE FIX START =================
-            const ext =
-                file?.type === "image/png"
-                    ? "png"
-                    : file?.type === "image/jpeg"
-                        ? "jpg"
-                        : file?.type === "image/heic"
-                            ? "jpg"
-                            : "jpg";
+            const ext = file.type?.split("/")[1] || "jpg";
 
             const fileName = `${Date.now()}.${ext}`;
-            const filePath = `profile/${folder}/${fileName}`;
+            const filePath = `/uploads/profile/${folder}/${fileName}`;
 
+            //ni simpan dalam server
             fs.writeFileSync(`./public/${filePath}`, buffer);
 
-            profilePath = fileName;
+            profilePath = filePath;
         }
 
         // ================= ADMIN =================
