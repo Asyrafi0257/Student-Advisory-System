@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
+import path from "path";
+import fs from "fs";
 
 export const runtime = "nodejs";
 
@@ -107,7 +109,7 @@ export async function PUT(req) {
         const file = formData.get("profile");
         let profilePath = null;
 
-        // ================= IMAGE UPLOAD (PHONE FIX ADDED ONLY) =================
+        // ================= IMAGE UPLOAD =================
         if (file && file.size > 0) {
 
             const bytes = await file.arrayBuffer();
@@ -119,24 +121,21 @@ export async function PUT(req) {
             console.log(buffer.length);
 
             let folder = "profile";
-
             if (decoded.role === "admin") folder = "admin";
             if (decoded.role === "mentor") folder = "mentor";
             if (decoded.role === "student") folder = "mentee";
 
-            const fs = require("fs");
+            // ================= GUNA ABSOLUTE PATH =================
+            const publicDir = path.join(process.cwd(), "public");
+            const uploadDir = path.join(publicDir, "uploads", "profile", folder);
 
-            // CREATE FOLDER IF NOT EXISTS
-            fs.mkdirSync(`./public/uploads/profile/${folder}`, { recursive: true });
+            fs.mkdirSync(uploadDir, { recursive: true });
 
-            // ================= PHONE FIX START =================
             const ext = file.type?.split("/")[1] || "jpg";
-
             const fileName = `${Date.now()}.${ext}`;
             const filePath = `/uploads/profile/${folder}/${fileName}`;
 
-            //ni simpan dalam server
-            fs.writeFileSync(`./public/${filePath}`, buffer);
+            fs.writeFileSync(path.join(publicDir, filePath), buffer);
 
             profilePath = filePath;
         }
