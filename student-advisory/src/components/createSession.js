@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import api from "@/lib/axios"
 import { Pencil, Trash2, X } from "lucide-react";
 
@@ -55,7 +54,7 @@ export default function CreateSessionPage() {
     const handleDelete = async (session_id) => {
         if (!confirm("Are you sure to delete this session?")) return;
         try {
-            const response = await axios.delete(`/api/mentor/session/[id]?session_id=${session_id}`);
+            const response = await api.delete(`/api/mentor/session/[id]?session_id=${session_id}`);
             console.log(response.data);
             alert("Deleted successfully");
             window.location.reload();
@@ -67,7 +66,7 @@ export default function CreateSessionPage() {
 
     const handleEdit = async (session_id) => {
         try {
-            const res = await axios.get(`/api/mentor/session/${session_id}`);
+            const res = await api.get(`/api/mentor/session/${session_id}`);
             setSelectedSession({
                 ...res.data,
                 session_date: res.data.session_date?.split("T")[0],
@@ -254,13 +253,16 @@ export default function CreateSessionPage() {
                                         📍 {item.session_location}
                                     </span>
                                     <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
-                                        🕔 {item.session_type}
+                                        🏢 {item.session_type}
                                     </span>
                                     <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
                                         🕐 {item.session_start_time}
                                     </span>
                                     <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
                                         🕔 {item.session_end_time}
+                                    </span>
+                                    <span className="text-[11px] bg-gray-50 px-2 py-1 rounded-md border">
+                                        📅 {item.session_date.split("T")[0]}
                                     </span>
                                 </div>
                             </div>
@@ -398,7 +400,7 @@ export default function CreateSessionPage() {
 
                             <button
                                 onClick={async () => {
-                                    await axios.put(
+                                    await api.put(
                                         `/api/mentor/session/${selectedSession.session_id}`,
                                         selectedSession
                                     );

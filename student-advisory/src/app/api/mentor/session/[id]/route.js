@@ -4,11 +4,12 @@ import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 
 export async function DELETE(req) {
-
     try {
+        //ambil token
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
+        //check token 
         if (!token) {
             return NextResponse.json(
                 {
@@ -19,6 +20,7 @@ export async function DELETE(req) {
             );
         }
 
+        //kita verify token sama ada user or not
         const decoded = verifyToken(token);
         const mentor_id = decoded.id;
 
@@ -37,12 +39,7 @@ export async function DELETE(req) {
 
         //only owner can delete session
         const [result] = await pool.query(
-            `
-            DELETE FROM tbl_session
-            WHERE session_id = ?
-            AND mentor_id = ?
-            `,
-            [session_id, mentor_id]
+            `DELETE FROM tbl_session WHERE session_id = ? AND mentor_id = ?`, [session_id, mentor_id]
         );
 
         if (result.affectedRows === 0) {
