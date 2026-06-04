@@ -2,7 +2,7 @@ import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
 export const runtime = "nodejs";
@@ -10,84 +10,196 @@ export const runtime = "nodejs";
 export async function POST(req) {
     try {
 
-        // ambil token
+        // =========================
+        // CHECK TOKEN
+        // =========================
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
         if (!token) {
-            return NextResponse.json({
-                success: false,
-                message: "Unauthorized"
-            }, { status: 401 });
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Unauthorized"
+                },
+                { status: 401 }
+            );
         }
 
-        // verify token
-        const decoded = verifyToken(token);
+        let decoded;
 
-        // ambil mentor_id
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+
+            const response = NextResponse.json(
+                { message: "Token expired or invalid" },
+                { status: 401 }
+            );
+
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        // =========================
+        // GET MENTOR ID
+        // =========================
         const mentor_id = decoded.id;
 
-        // ambil formData
+        // =========================
+        // GET FORMDATA
+        // =========================
         const formData = await req.formData();
 
-        // ambil semua field
         const title = formData.get("title");
         const date = formData.get("date");
         const location = formData.get("location");
         const image = formData.get("image");
 
-        // validate
+        // =========================
+        // VALIDATION
+        // =========================
         if (!title || !date || !location || !image) {
-            return NextResponse.json({
-                success: false,
-                message: "Please fill all required fields"
-            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Please fill all required fields"
+                },
+                { status: 400 }
+            );
         }
 
-        // convert image ke buffer
+        // image type validation
+        if (
+            !image.name.endsWith(".png") &&
+            !image.name.endsWith(".jpg") &&
+            !image.name.endsWith(".jpeg")
+        ) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Only PNG, JPG, JPEG allowed"
+                },
+                { status: 400 }
+            );
+        }
+
+        // image size validation (5MB)
+        if (image.size > 5 * 1024 * 1024) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Image too large (max 5MB)"
+                },
+                { status: 400 }
+            );
+        }
+
+        // =========================
+        // CONVERT IMAGE
+        // =========================
         const bytes = await image.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
-        // generate nama file
+        // =========================
+        // GENERATE FILE NAME
+        // =========================
         const fileName = `${Date.now()}-${image.name}`;
 
-        // path simpan image
-        const imagePath = path.join(
+        // =========================
+        // CREATE FOLDER
+        // =========================
+        const uploadDir = path.join(
             process.cwd(),
-            "public/uploads/report",
-            fileName
+            "public/uploads/report"
         );
 
-        // simpan image
+        await mkdir(uploadDir, { recursive: true });
+
+        // =========================
+        // FILE PATH
+        // =========================
+        const imagePath = path.join(uploadDir, fileName);
+
+        // =========================
+        // SAVE IMAGE
+        // =========================
         await writeFile(imagePath, buffer);
 
-        // save database
+        // path untuk database/frontend
+        const dbPath = `/uploads/report/${fileName}`;
+
+        // =========================
+        // INSERT DATABASE
+        // =========================
         const [result] = await pool.query(
             `INSERT INTO tbl_report
-            (mentor_id, report_imagePath, report_title, report_date, report_location)
+            (
+                mentor_id,
+                report_imagePath,
+                report_title,
+                report_date,
+                report_location
+            )
             VALUES (?, ?, ?, ?, ?)`,
             [
                 mentor_id,
-                `/uploads/report/${fileName}`,
+                dbPath,
                 title,
                 date,
                 location
             ]
         );
 
+        // =========================
+        // SUCCESS
+        // =========================
         return NextResponse.json({
             success: true,
             message: "Report session successfully",
-            report_id: result.insertId
+            report_id: result.insertId,
+            image: dbPath
         });
 
     } catch (err) {
 
-        // JWT ERROR
-        if (
-            err.name === "TokenExpiredError" ||
-            err.name === "JsonWebTokenError"
-        ) {
+        console.error(err);
+
+        return NextResponse.json(
+            {
+                success: false,
+                message: "Upload failed"
+            },
+            { status: 500 }
+        );
+    }
+}
+
+export async function GET(req) {
+    try {
+
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        if (!token) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Unauthorized"
+                },
+                { status: 401 }
+            );
+        }
+
+        let decoded;
+
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
 
             const response = NextResponse.json(
                 { message: "Token invalid or expired" },
@@ -101,29 +213,6 @@ export async function POST(req) {
 
             return response;
         }
-
-        // SERVER ERROR
-        return NextResponse.json(
-            { message: err.message },
-            { status: 500 }
-        );
-    }
-}
-
-export async function GET(req) {
-    try {
-
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token")?.value;
-
-        if (!token) {
-            return NextResponse.json({
-                success: false,
-                message: "Unauthorized"
-            }, { status: 401 });
-        }
-
-        const decoded = verifyToken(token);
 
         const mentor_id = decoded.id;
 
@@ -141,28 +230,13 @@ export async function GET(req) {
 
     } catch (err) {
 
-        // JWT ERROR
-        if (
-            err.name === "TokenExpiredError" ||
-            err.name === "JsonWebTokenError"
-        ) {
+        console.error(err);
 
-            const response = NextResponse.json(
-                { message: "Token invalid or expired" },
-                { status: 401 }
-            );
-
-            response.cookies.set("token", "", {
-                path: "/",
-                expires: new Date(0),
-            });
-
-            return response;
-        }
-
-        // SERVER ERROR
         return NextResponse.json(
-            { message: err.message },
+            {
+                success: false,
+                message: "Server Error"
+            },
             { status: 500 }
         );
     }
