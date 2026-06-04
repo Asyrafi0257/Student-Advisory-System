@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { writeFile } from "fs/promises";
+import { writeFile, mkdir } from "fs/promises";  // tambah mkdir
 import path from "path";
 import * as XLSX from "xlsx";
 import { cookies } from "next/headers";
@@ -15,7 +15,6 @@ export async function POST(req) {
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
-        // ❌ no token
         if (!token) {
             return NextResponse.json(
                 { message: "Unauthorized" },
@@ -25,22 +24,17 @@ export async function POST(req) {
 
         let decoded;
 
-        // ❌ invalid / expired token
         try {
             decoded = verifyToken(token);
         } catch (err) {
-
             const response = NextResponse.json(
                 { message: "Token expired or invalid" },
                 { status: 401 }
             );
-
-            // clear cookie properly
             response.cookies.set("token", "", {
                 path: "/",
                 expires: new Date(0),
             });
-
             return response;
         }
 
@@ -100,11 +94,12 @@ export async function POST(req) {
 
         const fileName = Date.now() + "-" + file.name;
 
-        const filePath = path.join(
-            process.cwd(),
-            "public/uploads/fileStud",
-            fileName
-        );
+        // ================= TAMBAH NI =================
+        const uploadDir = path.join(process.cwd(), "public/uploads/fileStud");
+        await mkdir(uploadDir, { recursive: true }); // auto create folder
+        // ==============================================
+
+        const filePath = path.join(uploadDir, fileName);
 
         await writeFile(filePath, buffer);
 
@@ -168,7 +163,6 @@ export async function POST(req) {
         });
 
     } catch (err) {
-
         return NextResponse.json(
             { message: err.message },
             { status: 500 }

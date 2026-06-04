@@ -55,7 +55,7 @@ export default function StudentProfile() {
         try {
             api.get("/api/profile").then((res) => {
                 setForm(res.data);
-                setPreview(res.data.image);
+                setPreview(res.data?.image);
                 console.log(form)
                 console.log("successfully")
             });
