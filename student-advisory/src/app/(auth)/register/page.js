@@ -32,6 +32,12 @@ export default function RegisterPage() {
     const handleRegister = async () => {
         try {
             if (role === "student") {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(email.trim())) {
+                    alert("Invalid email format");
+                    return;
+                }
                 const res = await axios.post("/api/auth/register/student", {
                     stud_email: email,
                     stud_matric: matric,
@@ -52,6 +58,12 @@ export default function RegisterPage() {
                     setPassword("");
                 }
             } else {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(email.trim())) {
+                    alert("Invalid email format");
+                    return;
+                }
                 const res = await axios.post("/api/auth/register/mentor", {
                     mentor_email: email,
                     mentor_no: staffNo,
