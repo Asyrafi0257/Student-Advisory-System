@@ -63,8 +63,8 @@ export async function POST(req) {
         });
 
         const resetLink =
-            `http://localhost:3000/reset-password?token=${token}`;
-
+            //`http://localhost:3000/reset-password?token=${token}`;
+            `https://soc-advisory.my/reset-password?token=${token}`;
         await sendResetEmail(resetEmail, resetLink);
 
         return NextResponse.json({
