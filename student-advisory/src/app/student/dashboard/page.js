@@ -86,15 +86,15 @@ export default function Dashboard() {
                 <div className="bg-white shadow-lg rounded-2xl col-span-1 border border-gray-100 overflow-hidden">
 
                     {/* Header */}
-                    <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-white">
+                    <div className="flex items-center justify-between px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100 bg-[#000075]">
                         <div className="flex items-center gap-2">
-                            <div className="bg-indigo-100 p-1.5 rounded-lg">
-                                <Calendar className="w-4 h-4 text-indigo-600" />
+                            <div className="bg-white p-1.5 rounded-lg">
+                                <Calendar className="w-4 h-4 text-[#000075]" />
                             </div>
-                            <h3 className="font-semibold text-gray-800 text-sm">Upcoming Session</h3>
+                            <h3 className="font-semibold text-white text-sm">Upcoming Session</h3>
                         </div>
                         <span
-                            className="text-xs text-indigo-500 font-medium cursor-pointer hover:underline"
+                            className="text-xs text-white font-medium cursor-pointer hover:underline"
                             onClick={handleView}
                         >
                             View all
@@ -109,7 +109,7 @@ export default function Dashboard() {
                                     <Video className="w-5 h-5 text-gray-400" />
                                 </div>
                                 <p className="text-sm text-gray-400 font-medium">No upcoming sessions</p>
-                                <p className="text-xs text-gray-300">Your scheduled sessions will appear here</p>
+                                <p className="text-xs text-gray-400">Your scheduled sessions will appear here</p>
                             </div>
                         ) : (
                             <div className="flex flex-col gap-3">

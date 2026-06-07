@@ -29,11 +29,11 @@ export default function SessionPage() {
     return (
         <div className="col-span-1 bg-white shadow-md rounded-xl mx-4 sm:mx-6 lg:mx-8 mt-5 min-h-screen overflow-hidden">
             {/* Header */}
-            <div className="flex items-center gap-3 px-4 sm:px-6 py-4 sm:py-5 border-b border-[#000075]/20 bg-gradient-to-r from-[#000075]/5 to-transparent">
-                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-[#000075]/10 flex-shrink-0">
+            <div className="flex items-center gap-3 px-4 sm:px-6 py-4 sm:py-5 border-b border-[#000075]/20 bg-gradient-to-r from-[#000075]/5 to-transparent bg-[#000075]">
+                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-white flex-shrink-0">
                     <Layers size={18} className="text-[#000075]" />
                 </div>
-                <h2 className="font-bold text-[18px] sm:text-[20px] text-[#000075] tracking-tight">View Sessions</h2>
+                <h2 className="font-bold text-[18px] sm:text-[20px] text-white tracking-tight">View Sessions</h2>
             </div>
 
             {/* Body */}

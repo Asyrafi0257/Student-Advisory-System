@@ -25,9 +25,9 @@ export default function ViewMentee() {
     return (
         <div className="bg-white shadow-lg rounded-2xl col-span-1 border border-gray-100 overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-center gap-2 px-5 py-3 border-b border-[#000075]/20 bg-[#000075]/5">
+            <div className="flex items-center justify-center gap-2 px-5 py-3 border-b border-[#000075]/20 bg-[#000075]">
                 <GraduationCap size={16} className="text-[#000075]" />
-                <h2 className="text-sm font-semibold tracking-wide text-[#000075] uppercase">Mentor Details</h2>
+                <h2 className="text-sm font-semibold tracking-wide text-white uppercase">Mentor Details</h2>
             </div>
             {!data || data.length === 0 ? (
                 <p className="text-[13px] sm:text-[15px] truncate text-gray-400 flex items-center justify-center m-5">You have not been assigned a mentor yet. </p>

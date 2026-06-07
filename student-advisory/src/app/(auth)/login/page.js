@@ -9,7 +9,7 @@ import Alert from "@/components/alert";
 export default function Login() {
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const [selectRole, setSelectRole] = useState("Options");
+    const [selectRole, setSelectRole] = useState("Role");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
