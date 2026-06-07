@@ -191,7 +191,7 @@ export default function RegisterPage() {
                                             type="email"
                                             required
                                             placeholder="name@gmail.com"
-                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
+                                            className="w-full bg-transparent outline-none text-sm text-black sm:text-base placeholder-gray-400"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
@@ -202,7 +202,7 @@ export default function RegisterPage() {
                                         <input
                                             type="text"
                                             placeholder="Matric Number"
-                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
+                                            className="w-full bg-transparent outline-none text-sm text-black sm:text-base placeholder-gray-400"
                                             value={matric}
                                             onChange={(e) => setMatric(e.target.value)}
                                         />
@@ -224,7 +224,7 @@ export default function RegisterPage() {
                                             type="email"
                                             required
                                             placeholder="name@gmail.com"
-                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
+                                            className="w-full bg-transparent outline-none text-sm text-black sm:text-base placeholder-gray-400"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                         />
@@ -235,7 +235,7 @@ export default function RegisterPage() {
                                         <input
                                             type="text"
                                             placeholder="Staff Number"
-                                            className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
+                                            className="w-full bg-transparent outline-none text-sm text-black sm:text-base placeholder-gray-400"
                                             value={staffNo}
                                             onChange={(e) => setStaffNo(e.target.value)}
                                         />
@@ -257,7 +257,7 @@ export default function RegisterPage() {
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Password"
-                                    className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
+                                    className="w-full bg-transparent outline-none text-sm text-black sm:text-base placeholder-gray-400"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
@@ -274,7 +274,7 @@ export default function RegisterPage() {
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
                                     placeholder="Confirm Password"
-                                    className="w-full bg-transparent outline-none text-sm sm:text-base placeholder-gray-400"
+                                    className="w-full bg-transparent outline-none text-sm text-black sm:text-base placeholder-gray-400"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                 />

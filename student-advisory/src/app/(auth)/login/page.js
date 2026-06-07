@@ -169,7 +169,7 @@ export default function Login() {
                                         name="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full h-11 sm:h-12 rounded-lg pl-10 pr-3 py-2.5 text-sm sm:text-base border border-gray-300 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 outline-none transition-colors placeholder-gray-400"
+                                        className="w-full h-11 sm:h-12 rounded-lg pl-10 pr-3 py-2.5 text-sm text-black sm:text-base border border-gray-300 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 outline-none transition-colors placeholder-gray-400"
                                     />
                                 </div>
                             </div>
@@ -184,7 +184,7 @@ export default function Login() {
                                         name="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full h-11 sm:h-12 rounded-lg pl-10 pr-10 py-2.5 text-sm sm:text-base border border-gray-300 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 outline-none transition-colors placeholder-gray-400"
+                                        className="w-full h-11 sm:h-12 rounded-lg pl-10 pr-10 py-2.5 text-sm text-black sm:text-base border border-gray-300 focus:border-gray-300 focus:ring-1 focus:ring-gray-300 outline-none transition-colors placeholder-gray-400"
                                     />
                                     <button
                                         type="button"
