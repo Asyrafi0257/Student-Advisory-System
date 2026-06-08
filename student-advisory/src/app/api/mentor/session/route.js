@@ -153,7 +153,7 @@ export async function GET() {
         }
 
         const [rows] = await pool.query(
-            "SELECT * FROM tbl_session ORDER BY updated_at"
+            "SELECT * FROM tbl_session WHERE mentor_id = ? ORDER BY updated_at", [decoded.id]
         );
 
         if (!rows) {
