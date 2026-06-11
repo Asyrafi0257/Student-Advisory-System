@@ -5,6 +5,7 @@ import { Sun, Coffee, Moon, Sparkles, Calendar, Clock, User, ChevronRight, Video
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
+import Notification from "@/components/message";
 
 export default function Dashboard() {
     const [user, setUser] = useState([]);
@@ -49,6 +50,9 @@ export default function Dashboard() {
 
     return (
         <div className="flex-1 overflow-auto relative z-10 mt-2">
+
+            {/* message for user update */}
+            <Notification />
 
             {/* Hero banner */}
             <div className="relative overflow-hidden bg-gradient-to-r from-[#000075] via-[#0a0090] to-[#1a00a0] shadow-lg rounded-2xl flex flex-row justify-start mx-4 sm:mx-6 lg:mx-8 h-[140px] sm:h-[160px] lg:h-[180px] mt-5">
@@ -137,6 +141,6 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

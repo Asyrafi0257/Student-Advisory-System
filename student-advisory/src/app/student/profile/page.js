@@ -221,7 +221,7 @@ export default function StudentProfile() {
                                 <label className={labelClass}>Program</label>
                                 <div className="relative">
                                     <BookOpen size={15} className={iconClass} />
-                                    <select name="program" value={form.program} onChange={handleChange} className={inputClass}>
+                                    <select name="program" value={form.program || ""} onChange={handleChange} className={inputClass}>
                                         <option value="">Select</option>
                                         {programs.map((p, i) => (
                                             <option key={i} value={p}>
