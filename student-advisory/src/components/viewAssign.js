@@ -1,12 +1,13 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, Trash2, UserPen } from "lucide-react";
 import { useState, useEffect } from "react";
 import api from "@/lib/axios"
 
 export default function viewAssign() {
     const [dataAssign, setDataAssign] = useState([]);
     const [search, setSearch] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
 
     //kita nak group kan mentee yang sama mentor
     const groupData = (data) => {
@@ -16,7 +17,7 @@ export default function viewAssign() {
             if (!grouped[item.mentor]) {
                 grouped[item.mentor] = [];
             }
-            grouped[item.mentor].push(item.mentee);
+            grouped[item.mentor].push(item);
         });
 
         return grouped;
@@ -35,6 +36,23 @@ export default function viewAssign() {
         fetchData();
     }, []);
 
+    //handle edit untuk delete mentee
+    const handleEdit = () => {
+        setIsOpen(prev => !prev);
+    }
+
+    //handle delete mentee
+    const handleDelete = async (id) => {
+        //confirmation before delete data
+        if (!confirm("Are you sure to delete this file?")) return;
+        try {
+            await api.delete(`/api/admin/viewAssign?id=${id}`);
+            fetchData();
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     const filterAssign = dataAssign.filter((data) => (
         data.mentor?.toLowerCase().includes(search.toLowerCase())
     ));
@@ -49,16 +67,31 @@ export default function viewAssign() {
                     Mentor-Mentee Assignments
                 </h2>
 
-                <div className="relative w-full sm:w-auto">
-                    <input
-                        type="text"
-                        placeholder="Search mentor..."
-                        className="w-full sm:w-[280px] lg:w-[320px] px-3 sm:px-4 py-2.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
-                        onChange={(e) => setSearch(e.target.value)}
-                        value={search}
-                    />
-                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
+                <div className="flex flex-row">
+                    <div className="relative w-full sm:w-auto">
+                        <input
+                            type="text"
+                            placeholder="Search mentor..."
+                            className="w-full sm:w-[280px] lg:w-[320px] px-3 sm:px-4 py-2.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors"
+                            onChange={(e) => setSearch(e.target.value)}
+                            value={search}
+                        />
+                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400 pointer-events-none" />
+                    </div>
+
+                    {/* add delete button */}
+                    <div className="w-[80px] flex flex-row ml-5 bg-blue-600 p-2 rounded-md">
+                        <button
+                            className="flex flex-row justify-center items-center text-white w-full cursor-pointer"
+                            onClick={handleEdit}
+                        >
+                            <UserPen className="" />
+                            <span>Edit</span>
+                        </button>
+                    </div>
                 </div>
+
+
             </div>
 
             {/* TABLE HEADER - HIDDEN ON MOBILE */}
@@ -95,13 +128,24 @@ export default function viewAssign() {
                                 {/* MENTEES */}
                                 <div className="p-4 sm:p-4 lg:p-5">
                                     <ul className="space-y-1.5 sm:space-y-2">
-                                        {grouped[mentor].map((mentee, i) => (
+                                        {grouped[mentor].map((item, i) => (
                                             <li
                                                 key={i}
-                                                className="flex items-center text-xs sm:text-sm lg:text-base text-gray-700 px-2 py-1 hover:bg-white rounded transition-colors"
+                                                className="flex items-center justify-between text-xs sm:text-sm lg:text-base text-gray-700 px-2 py-1 hover:bg-white rounded transition-colors"
                                             >
-                                                <span className="inline-block w-1.5 h-1.5 bg-[#02577A] rounded-full mr-2.5 flex-shrink-0"></span>
-                                                <span>{mentee}</span>
+                                                <div>
+                                                    <span className="inline-block w-1.5 h-1.5 bg-[#02577A] rounded-full mr-2.5 flex-shrink-0"></span>
+                                                    <span>{item.mentee}</span>
+                                                </div>
+
+                                                {isOpen && (
+                                                    <button
+                                                        className="bg-red-500 p-1 rounded-md text-gray-100 cursor-pointer"
+                                                        onClick={() => handleDelete(item.stud_id)}
+                                                    >
+                                                        <Trash2 />
+                                                    </button>
+                                                )}
                                             </li>
                                         ))}
                                     </ul>
@@ -135,7 +179,7 @@ export default function viewAssign() {
                                                     className="flex items-center text-xs text-gray-700 px-2 py-1.5 hover:bg-blue-50 rounded transition-colors"
                                                 >
                                                     <span className="inline-block w-1 h-1 bg-[#02577A] rounded-full mr-2 flex-shrink-0"></span>
-                                                    {mentee}
+                                                    {mentee.mentee}
                                                 </li>
                                             ))}
                                         </ul>

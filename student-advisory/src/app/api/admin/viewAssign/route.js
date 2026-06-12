@@ -38,6 +38,8 @@ export async function GET() {
         }
         const [rows] = await pool.query(`
             SELECT 
+                mm.stud_id,
+                mm.id,
                 m.mentor_name AS mentor,
                 s.stud_name AS mentee
             FROM tbl_mentor_mentee mm
@@ -50,5 +52,82 @@ export async function GET() {
     } catch (error) {
         console.log(error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
+    }
+}
+
+export async function DELETE(req) {
+    try {
+        //ambil token dulu
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value
+
+        //check ada token ke tak
+        if (!token) {
+            return NextResponse.json(
+                { message: "unauthorized" },
+                { status: 401 }
+            )
+        }
+
+        let decoded;
+
+        // ❌ invalid / expired token
+        try {
+            decoded = verifyToken(token);
+        } catch (err) {
+
+            const response = NextResponse.json(
+                { message: "Token expired or invalid" },
+                { status: 401 }
+            );
+
+            // clear cookie properly
+            response.cookies.set("token", "", {
+                path: "/",
+                expires: new Date(0),
+            });
+
+            return response;
+        }
+
+        const { searchParams } = new URL(req.url);
+        const id = searchParams.get("id");
+
+        //check id valid ke tak
+        if (!id) {
+            return NextResponse.json(
+                { message: "User id not found" },
+                { status: 400 }
+            )
+        }
+
+        //ambil dulu data mentee
+        const [mentee] = await pool.query(
+            "SELECT * FROM tbl_mentor_mentee WHERE stud_id = ?", [id]
+        )
+
+        //check jika ada data mentee dalam database
+        if (mentee.length === 0) {
+            return NextResponse.json(
+                { message: "Id mentee not found" },
+                { status: 404 }
+            )
+        }
+
+        //delete data mentee dari database
+        await pool.execute(
+            "DELETE FROM tbl_mentor_mentee WHERE stud_id = ?", [id]
+        )
+
+        return NextResponse.json(
+            { message: "mentee deleted successfully" }
+        )
+
+    } catch (e) {
+        console.log(e);
+        return NextResponse.json(
+            { message: "mentee failed to delete!" },
+            { status: 500 }
+        )
     }
 }
