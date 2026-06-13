@@ -64,13 +64,14 @@ export async function GET(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
+    const conn = await pool.getConnection();
+
     try {
 
         // ================= VERIFY TOKEN =================
         const cookieStore = await cookies();
         const token = cookieStore.get("token")?.value;
 
-        // ❌ no token
         if (!token) {
             return NextResponse.json(
                 { message: "Unauthorized" },
@@ -80,7 +81,6 @@ export async function PUT(req, { params }) {
 
         let decoded;
 
-        // ❌ invalid / expired token
         try {
             decoded = verifyToken(token);
         } catch (err) {
@@ -90,7 +90,6 @@ export async function PUT(req, { params }) {
                 { status: 401 }
             );
 
-            // clear cookie properly
             response.cookies.set("token", "", {
                 path: "/",
                 expires: new Date(0),
@@ -110,7 +109,10 @@ export async function PUT(req, { params }) {
             mentor_active
         } = body;
 
-        await pool.query(
+        await conn.beginTransaction();
+
+        // 1. Update mentor
+        await conn.query(
             `
             UPDATE tbl_mentor
             SET mentor_id = ?, mentor_name = ?, mentor_active = ?
@@ -119,11 +121,23 @@ export async function PUT(req, { params }) {
             [mentor_id, mentor_name, mentor_active, id]
         );
 
+        // 2. Kalau deactive, delete semua relationship mentee
+        if (mentor_active === "inactive") {
+            await conn.query(
+                "DELETE FROM tbl_mentor_mentee WHERE mentor_id = ?",
+                [id]
+            );
+        }
+
+        await conn.commit();
+
         return NextResponse.json({
             message: "Mentor updated successfully"
         });
 
     } catch (err) {
+
+        await conn.rollback();
 
         return NextResponse.json(
             {
@@ -134,5 +148,8 @@ export async function PUT(req, { params }) {
                 status: 500
             }
         );
+
+    } finally {
+        conn.release();
     }
 }

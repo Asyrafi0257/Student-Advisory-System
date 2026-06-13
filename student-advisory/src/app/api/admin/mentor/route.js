@@ -1,61 +1,39 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
-import { verifyToken } from "@/lib/jwt";
-import { cookies } from "next/headers";
 
-export async function GET() {
-
+export async function GET(req) {
     try {
+        const { searchParams } = new URL(req.url);
 
-        // ================= VERIFY TOKEN =================
-        const cookieStore = await cookies();
-        const token = cookieStore.get("token")?.value;
+        const status = searchParams.get("status");
+        const id = searchParams.get("id");
 
-        // ❌ no token
-        if (!token) {
-            return NextResponse.json(
-                { message: "Unauthorized" },
-                { status: 401 }
-            );
+        let query = "SELECT * FROM tbl_mentor";
+        let params = [];
+
+        // 🔥 CASE 1: single mentor
+        if (id) {
+            query += " WHERE id = ?";
+            params.push(id);
         }
 
-        let decoded;
-
-        // ❌ invalid / expired token
-        try {
-            decoded = verifyToken(token);
-        } catch (err) {
-
-            const response = NextResponse.json(
-                { message: "Token expired or invalid" },
-                { status: 401 }
-            );
-
-            // clear cookie properly
-            response.cookies.set("token", "", {
-                path: "/",
-                expires: new Date(0),
-            });
-
-            return response;
+        // 🔥 CASE 2: filter by status
+        else if (status) {
+            query += " WHERE mentor_active = ?";
+            params.push(status);
         }
 
-        // ================= API LOGIC =================
-        const [rows] = await pool.query(
-            "SELECT * FROM tbl_mentor ORDER BY mentor_id"
-        );
+        query += " ORDER BY mentor_id";
+
+        const [rows] = await pool.query(query, params);
 
         return NextResponse.json({ rows });
 
     } catch (err) {
-
         return NextResponse.json(
-            {
-                message: err.message
-            },
-            {
-                status: 500
-            }
+            { message: err.message },
+            { status: 500 }
         );
     }
 }
+

@@ -203,7 +203,7 @@ export default function Assigns() {
 
     const fetchAssign = async () => {
         try {
-            const resMentor = await api.get("/api/admin/mentor");
+            const resMentor = await api.get("/api/admin/mentor?status=active");
             const resStudent = await api.get("/api/admin/student?available=true");
             setDataMentor(resMentor.data.rows);
             setDataStudent(resStudent.data.rows);

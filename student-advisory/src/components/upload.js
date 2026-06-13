@@ -13,7 +13,8 @@ export default function Upload({ url, role }) {
     const [showForm, setShowForm] = useState(false);
     const [mentorName, setMentorName] = useState("");
     const [mentorId, setMentorId] = useState("");
-    const [mentorActive, setMentorActive] = useState("");
+    const [mentorActive, setMentorActive] = useState("active");
+    const [errors, setErrors] = useState({});
 
     const uploadFile = async (fileToUpload) => {
 
@@ -82,6 +83,15 @@ export default function Upload({ url, role }) {
     }
 
     const handleSubmit = async () => {
+        // Validate
+        const newErrors = {};
+        if (!mentorId.trim()) newErrors.mentorId = "Mentor ID is required";
+        if (!mentorName.trim()) newErrors.mentorName = "Mentor Name is required";
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
 
         try {
             await api.post("/api/admin/addMentor", {
@@ -91,6 +101,10 @@ export default function Upload({ url, role }) {
             });
 
             setShowForm(false);
+            setMentorId("");
+            setMentorName("");
+            setMentorActive("active");
+            setErrors({});
             alert("Mentor successfully add!");
 
         } catch (err) {
@@ -214,6 +228,9 @@ export default function Upload({ url, role }) {
                             placeholder="Mentor Id"
                             className="w-full p-2.5 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
                         />
+                        {errors.mentorId && (
+                            <p className="text-red-500 text-xs mb-3">{errors.mentorId}</p>
+                        )}
 
                         <input
                             value={mentorName}
@@ -222,14 +239,20 @@ export default function Upload({ url, role }) {
                             placeholder="Mentor Name"
                             className="w-full p-2.5 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
                         />
+                        {errors.mentorName && (
+                            <p className="text-red-500 text-xs mb-3">{errors.mentorName}</p>
+                        )}
 
-                        <input
+                        <select
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors bg-white"
                             value={mentorActive}
-                            onChange={(e) => { setMentorActive(e.target.value) }}
-                            type="email"
-                            placeholder="Status"
-                            className="w-full p-2.5 rounded mb-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-black-300 text-sm sm:text-base"
-                        />
+                            onChange={(e) =>
+                                setMentorActive(e.target.value)
+                            }
+                        >
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
 
                         {/* BUTTON ACTION */}
                         <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">

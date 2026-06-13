@@ -80,7 +80,7 @@ export default function viewAssign() {
                     </div>
 
                     {/* add delete button */}
-                    <div className="w-[80px] flex flex-row ml-5 bg-blue-600 p-2 rounded-md">
+                    <div className="w-[80px] flex flex-row ml-5 bg-[#02577A] p-2 rounded-md">
                         <button
                             className="flex flex-row justify-center items-center text-white w-full cursor-pointer"
                             onClick={handleEdit}
@@ -173,13 +173,25 @@ export default function viewAssign() {
                                             Mentees ({grouped[mentor].length})
                                         </p>
                                         <ul className="space-y-1.5">
-                                            {grouped[mentor].map((mentee, i) => (
+                                            {grouped[mentor].map((item, i) => (
                                                 <li
                                                     key={i}
-                                                    className="flex items-center text-xs text-gray-700 px-2 py-1.5 hover:bg-blue-50 rounded transition-colors"
+                                                    className="flex items-center justify-between text-xs text-gray-700 px-2 py-1.5 hover:bg-blue-50 rounded transition-colors"
                                                 >
-                                                    <span className="inline-block w-1 h-1 bg-[#02577A] rounded-full mr-2 flex-shrink-0"></span>
-                                                    {mentee.mentee}
+                                                    <div>
+                                                        <span className="inline-block w-1 h-1 bg-[#02577A] rounded-full mr-2 flex-shrink-0"></span>
+                                                        {item.mentee}
+                                                    </div>
+
+
+                                                    {isOpen && (
+                                                        <button
+                                                            className="bg-red-500 rounded-md text-gray-100 cursor-pointer w-[25px] h-[25px] ml-1"
+                                                            onClick={() => handleDelete(item.stud_id)}
+                                                        >
+                                                            <Trash2 className="h-[20px] w-[20px] w-full" />
+                                                        </button>
+                                                    )}
                                                 </li>
                                             ))}
                                         </ul>

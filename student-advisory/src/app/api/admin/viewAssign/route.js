@@ -45,6 +45,7 @@ export async function GET() {
             FROM tbl_mentor_mentee mm
             JOIN tbl_mentor m ON mm.mentor_id = m.id
             JOIN tbl_students s ON mm.stud_id = s.stud_id
+            WHERE m.mentor_active = 'active'
             ORDER BY m.mentor_name
         `);
 
@@ -131,3 +132,4 @@ export async function DELETE(req) {
         )
     }
 }
+
