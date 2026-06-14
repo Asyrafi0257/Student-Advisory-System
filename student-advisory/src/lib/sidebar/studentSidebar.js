@@ -15,6 +15,13 @@ export const sidebarStudent = [
         icon: "Presentation"
     },
 
+    { section: "History" },
+    {
+        name: "History Mentor",
+        href: "/student/history",
+        icon: "History"
+    },
+
 
     {
         name: "Logout",
