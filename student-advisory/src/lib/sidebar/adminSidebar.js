@@ -41,6 +41,11 @@ export const sidebarAdmin = [
     href: "/admin/viewAssignment",
     icon: "View"
   },
+  {
+    name: "history assignments",
+    href: "/admin/history",
+    icon: "History"
+  },
 
   { section: "Report" },
   {

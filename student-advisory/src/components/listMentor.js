@@ -206,14 +206,25 @@ export default function ListMentors() {
                                 className="w-full sm:w-auto px-4 py-2.5 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
                                 onClick={async () => {
                                     try {
-                                        await api.put(
+                                        const res = await api.put(
                                             `/api/admin/mentor/${selectedMentor.id}`,
-                                            selectedMentor
+                                            {
+                                                mentor_id: selectedMentor.mentor_id,
+                                                mentor_name: selectedMentor.mentor_name,
+                                                mentor_active: selectedMentor.mentor_active,
+                                            }
                                         );
+
+                                        alert(res.data.message);
+
                                         setOpen(false);
-                                        fetchData();
+                                        setSelectedMentor(null);
+
+                                        fetchData(); // refresh list
+
                                     } catch (err) {
                                         console.log(err);
+                                        alert(err?.response?.data?.message || "Error updating mentor");
                                     }
                                 }}
                             >
