@@ -17,7 +17,7 @@ export default function HistoryMentor() {
 
             const res = await api.get("/api/mentee/history");
 
-            setDataHistory(res.data.data);
+            setDataHistory(res.data.rows);
 
         } catch (e) {
             console.log(e);
@@ -51,7 +51,7 @@ export default function HistoryMentor() {
 
                             <thead className="bg-[#02577A] text-white">
                                 <tr>
-                                    <th className="p-2 text-left whitespace-nowrap">ID</th>
+                                    {/* <th className="p-2 text-left whitespace-nowrap">ID</th> */}
                                     <th className="p-2 text-left whitespace-nowrap">STAFF NO</th>
                                     <th className="p-2 text-left whitespace-nowrap">MENTOR NAME</th>
                                     <th className="p-2 text-left whitespace-nowrap">STATUS</th>
@@ -64,9 +64,9 @@ export default function HistoryMentor() {
                                         key={index}
                                         className="border-b hover:bg-gray-50"
                                     >
-                                        <td className="p-2 whitespace-nowrap">
-                                            {item.id}
-                                        </td>
+                                        {/* <td className="p-2 whitespace-nowrap">
+                                            {item.stud_id}
+                                        </td> */}
 
                                         <td className="p-2 whitespace-nowrap">
                                             {item.mentor_id}

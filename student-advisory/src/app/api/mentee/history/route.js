@@ -16,12 +16,44 @@ export async function GET() {
             );
         }
 
-        // ================= VERIFY TOKEN =================
-        try {
-            verifyToken(token);
-        } catch (err) {
+        const decoded = verifyToken(token);
+        const stud_id = decoded.id;
+
+        // ================= GET HISTORY DATA =================
+        const [rows] = await pool.query(`
+            SELECT 
+                h.id,
+                h.mentor_id,
+                h.stud_id,
+                m.mentor_name,
+                m.mentor_active,
+                h.action,
+                h.created_at
+            FROM tbl_mentor_mentee_history h
+            LEFT JOIN tbl_mentor m 
+                ON h.mentor_id = m.id
+            WHERE h.stud_id = ?
+            ORDER BY h.created_at ASC
+        `, [stud_id]);
+
+        // ================= RESPONSE =================
+        return NextResponse.json(
+            {
+                message: "Success",
+                rows
+            },
+            { status: 200 }
+        );
+
+    } catch (err) {
+        // JWT ERROR
+        if (
+            err.name === "TokenExpiredError" ||
+            err.name === "JsonWebTokenError"
+        ) {
+
             const response = NextResponse.json(
-                { message: "Token expired or invalid" },
+                { message: "Token invalid or expired" },
                 { status: 401 }
             );
 
@@ -33,35 +65,9 @@ export async function GET() {
             return response;
         }
 
-        // ================= GET HISTORY DATA =================
-        const [rows] = await pool.query(`
-            SELECT 
-                h.id,
-                h.mentor_id,
-                m.mentor_name,
-                m.mentor_active,
-                h.action,
-                h.created_at
-            FROM tbl_mentor_mentee_history h
-            LEFT JOIN tbl_mentor m 
-                ON h.mentor_id = m.id
-            ORDER BY h.created_at ASC
-        `);
-
-        // ================= RESPONSE =================
+        // SERVER ERROR
         return NextResponse.json(
-            {
-                message: "Success",
-                data: rows
-            },
-            { status: 200 }
-        );
-
-    } catch (error) {
-        console.error("GET HISTORY ERROR:", error);
-
-        return NextResponse.json(
-            { message: "Internal Server Error" },
+            { message: err.message },
             { status: 500 }
         );
     }
