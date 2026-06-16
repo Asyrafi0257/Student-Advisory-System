@@ -27,7 +27,7 @@ export default function HistoryMentor() {
     };
 
     return (
-        <div className="min-h-screen flex justify-center bg-gray-50 px-2 sm:px-4">
+        <div className="min-h-screen flex justify-center  px-2 sm:px-4">
 
             {/* CENTER CONTAINER */}
             <div className="w-full max-w-6xl bg-white rounded-lg shadow-md mt-6 mb-6">
